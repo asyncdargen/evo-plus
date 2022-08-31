@@ -60,8 +60,13 @@ public class BoosterInfo {
     }
 
     public long getTimeOut() {
-        return Math.min(blocks / 100 + 4, 40) * 1000L;
+        return 15 /*tmp*/;
     }
+
+//    Is incorrect
+//    public long getTimeOut() {
+//        return Math.min(blocks / 100 + 4, 40) * 1000L;
+//    }
 
 
 }

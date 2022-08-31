@@ -18,7 +18,8 @@ public class WorldMixin {
     public void setBlockState(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, CallbackInfoReturnable<Boolean> cir) {
         val lastBreak = Feature.STATS_FEATURE.getLatestBlocks().getIfPresent(pos);
         if (lastBreak != null && !state.isAir() && DiamondWorldUtil.isOnPrisonEvo()) {
-            Feature.STATS_FEATURE.getBoosterInfo().setLastBreak(lastBreak);
+            if (Feature.STATS_FEATURE.getBoosterInfo().getLastBreak() < lastBreak)
+                Feature.STATS_FEATURE.getBoosterInfo().setLastBreak(lastBreak);
             Feature.STATS_FEATURE.getLatestBlocks().invalidate(pos);
             Feature.STATS_FEATURE.getBoosterInfo().cancelBreak();
         }

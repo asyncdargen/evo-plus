@@ -107,8 +107,6 @@ public class ClientPlayNetworkHandlerMixin {
         }
     }
 
-
-
     @Inject(at = @At("HEAD"), method = "onInventory", cancellable = true)
     public void onInventory(InventoryS2CPacket packet, CallbackInfo ci) {
         if (packet.getSyncId() == 0) return;
@@ -135,8 +133,5 @@ public class ClientPlayNetworkHandlerMixin {
         if (packet.getStatus() == 3 && (entity = packet.getEntity(Util.getWorld())) != null)
             EvoPlus.instance().getEventBus().fireEvent(new EntityDeathEvent(entity));
     }
-
-
-
 
 }
