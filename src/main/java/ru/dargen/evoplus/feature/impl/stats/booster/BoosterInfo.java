@@ -32,7 +32,7 @@ public class BoosterInfo {
     }
 
     public boolean isStopBreak() {
-        return lastBreak - getTimeOut() >= 1_000;
+        return  System.currentTimeMillis() - lastBreak >= 1_000;
     }
 
     public BoosterType getNextType() {
