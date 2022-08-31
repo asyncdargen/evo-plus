@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'fabric-loom' version '0.7-SNAPSHOT'
+}
+
+//version = project.mod_version
+group = project.maven_group
+archivesBaseName = "evo-plus"
+
+repositories {
+
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+}
+
+processResources {
+    inputs.property "version", project.mod_version
+    filteringCharset "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.mod_version
+    }
+}
+
+java {
+    archivesBaseName = project.archives_base_name
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE")
+}
+
+runClient {
+    args "--username=DargenCode"
+}
+
+tasks.withType(JavaCompile)*.options*.encoding = "UTF-8"

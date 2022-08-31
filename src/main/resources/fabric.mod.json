@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "evo-plus",
+  "version": "${version}",
+  "name": "Evo Plus",
+  "description": "Open-Source мод, для улучшения качества игры на PrisonEvo (DiamondWorld)",
+  "authors": ["dargen"],
+  "contact": {
+    "website": "https://vk.com/asyncdargen"
+  },
+  "license": "MIT",
+  "icon": "assets/evo-plus/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "ru.dargen.evoplus.EvoPlus"
+    ]
+  },
+  "mixins": [
+    "evo-plus.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "minecraft": ""
+  }
+}
