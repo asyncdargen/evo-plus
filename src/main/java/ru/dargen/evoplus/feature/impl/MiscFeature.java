@@ -91,7 +91,7 @@ public class MiscFeature extends Feature {
         mod.getEventBus().register(HudRenderEvent.class, event -> {
             if (!bossHits.getValue() || !DiamondWorldUtil.isOnPrisonEvo()) return;
             val text = "§e" + hitCount.get();
-            val x = Util.getWidth() / 2 - 112 - Render.getStringWidth(text);
+            val x = Util.getWidth() / 2 - 126 - Render.getStringWidth(text);
             val y = Util.getHeight() - Render.getStringHeight() - 5;
             val matrixStack = event.getMatrixStack();
             val iconScale = 0.63f;
