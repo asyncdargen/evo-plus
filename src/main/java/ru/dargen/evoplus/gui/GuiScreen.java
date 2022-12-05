@@ -1,7 +1,6 @@
 package ru.dargen.evoplus.gui;
 
 import lombok.Getter;
-import lombok.SneakyThrows;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -18,7 +17,6 @@ public abstract class GuiScreen extends Screen {
     protected final List<GuiElement> elements = new LinkedList<>();
     protected final AtomicBoolean initialized = new AtomicBoolean();
 
-    @SneakyThrows
     protected GuiScreen() {
         super(Text.of(""));
     }

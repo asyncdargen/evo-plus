@@ -1,7 +1,6 @@
 package ru.dargen.evoplus.feature;
 
 import lombok.val;
-import lombok.var;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.feature.setting.Setting;
 import ru.dargen.evoplus.gui.GuiScreen;
@@ -52,7 +51,7 @@ public class FeaturesGuiScreen extends GuiScreen {
     private void drawSelector(int width, Set<Feature> features) {
         val index = new AtomicInteger();
         val cunked = new ArrayList<Map<Integer, Feature>>();
-        var map = new HashMap<Integer, Feature>();
+        Map<Integer, Feature> map = new HashMap<>();
         for (Feature feature : features) {
             map.put(index.getAndIncrement(), feature);
             if (index.get() % 4 == 0 || index.get() == features.size())

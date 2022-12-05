@@ -2,7 +2,6 @@ package ru.dargen.evoplus.feature.impl.boss;
 
 import lombok.Getter;
 import lombok.val;
-import lombok.var;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -145,7 +144,7 @@ public class BossTimerFeature extends Feature {
                         if (info != null) {
                             val right = type.getTime() + info - System.currentTimeMillis();
                             val text = Text.of("§fРеспавн через: §e" + TimeFormatter.formatText(right));
-                            var lore = ItemUtil.getTextLore(item);
+                            List<Text> lore = ItemUtil.getTextLore(item);
                             if (lore.get(3).getString().contains("Респавн через"))
                                 lore.set(3, text);
                             else {
