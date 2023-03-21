@@ -40,7 +40,7 @@ jar {
 }
 
 runClient {
-    args "--username=DargenCode"
+    args "--username=EtoShinya"
 }
 
 tasks.withType(JavaCompile)*.options*.encoding = "UTF-8"

@@ -66,7 +66,8 @@ public class MiscFeature extends Feature {
     @Override
     public void onRegister(EvoPlus mod) {
         mod.getTaskBus().runAsync(20, 20, task -> {
-            if (System.currentTimeMillis() - lastHit > bossHitTimeout.getValue() * 1000) hitCount.set(0);
+            if (System.currentTimeMillis() - lastHit > bossHitTimeout.getValue() * 1000)
+                hitCount.set(0);
         });
         mod.getEventBus().register(AttackEntityEvent.class, event -> {
             val target = event.getEntity();
@@ -82,7 +83,8 @@ public class MiscFeature extends Feature {
                 mod.getNotifyManager().notify(Notification.Type.CONFIRM, "§6" + text, 3);
                 event.setCancelled(true);
             }
-            if ((!shardFoundNotify.getValue() && text.contains("Вы нашли шард!")) || text.contains("У вас нет предметов, которые можно продать, но вы можете добыть их в шахте"))
+            if ((!shardFoundNotify.getValue() && text.contains("Вы нашли шард!")) ||
+                    text.contains("У вас нет предметов, которые можно продать, но вы можете добыть их в шахте"))
                 event.setCancelled(true);
 
             if (autoThanks.getValue() && text.contains("активировал глобальный бустер"))

@@ -13,5 +13,4 @@ public class CollectionUtil {
         for (int i = min; i <= max; i += step) list.add(i);
         return list;
     }
-
 }

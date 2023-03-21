@@ -6,7 +6,7 @@ import ru.dargen.evoplus.util.Util;
 @Getter
 public enum BossType {
 
-    ARCHER("Древний Лучник", 15, 1200),
+    KRIEGER("Кригер", 15, 1200),
     SLIME("Слизень", 20, 1800),
     STEEL_GUARD("Стальной страж", 25, 2100),
     NIGHTMARE("Кошмар", 30, 2700),
@@ -32,7 +32,7 @@ public enum BossType {
     SMITH("Кузнец", 140, 18000),
     SHULKER("Могущественный шалкер", 150, 19800),
     CASTER("Заклинатель", 160, 19800),
-    DIE_RIDER("Мёртвый всадник", 170, 21600),
+    DIE_RIDER("Всадник", 170, 21600),
     KOBOLD("Кобольд", 180, 25200),
     SAMURAI("Самурай", 190, 23400),
     DIE_LORD("Повелитель мёртвых", 200, 19800),
@@ -74,9 +74,8 @@ public enum BossType {
     public static BossType getByName(String name) {
         name = Util.stripColor(name);
         for (BossType type : values())
-            if (type.name.equalsIgnoreCase(name))
+            if (name.toLowerCase().contains(type.name.toLowerCase()))
                 return type;
         return null;
     }
-
 }

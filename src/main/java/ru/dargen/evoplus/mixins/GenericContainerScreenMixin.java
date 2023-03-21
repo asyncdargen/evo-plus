@@ -31,14 +31,15 @@ public class GenericContainerScreenMixin {
     @Shadow
     @Final
     private int rows;
-    private static final int[] runesSlots = {21, 22, 23, 28, 34};
+    private static final int[] runesSlots = {11, 13, 15, 18, 26};
     private static final Map<String, RuneStat> runesStats = new HashMap<>();
 
     @Inject(at = @At("TAIL"), method = "render")
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         val screenHandler = ((GenericContainerScreenHandler) Util.getPlayer().currentScreenHandler);
         val screen = ((GenericContainerScreen) Util.getCurrentScreen());
-        if (!Feature.STATS_FEATURE.getRunesStats().getValue() || screenHandler == null || screen == null || !screen.getTitle().getString().toLowerCase().contains("мешок"))
+        if (!Feature.STATS_FEATURE.getRunesStats().getValue() || screenHandler == null ||
+                screen == null || getItemStackIfPaper(screenHandler, runesSlots[0]) == null)
             return;
         runesStats.clear();
 
@@ -74,14 +75,15 @@ public class GenericContainerScreenMixin {
 
     private static ItemStack getItemStackIfPaper(ScreenHandler screen, int slot) {
         val item = screen.getSlot(slot).getStack();
-        return item == null || item.getItem() != Items.PAPER ? null : item;
+        return item == null || item.getItem() != Items.PAPER ||
+                ItemUtil.getDisplayName(item).contains("слот") ? null : item;
     }
 
     private static List<String> getRuneStats(ItemStack itemStack) {
         if (itemStack == null) return Collections.emptyList();
         val lore = ItemUtil.getStringLore(itemStack);
         lore.remove(0);
-        boolean handledStatsBreak = false;
+        boolean handledStatsBreak;
         for (int i = lore.size() - 1; i >= 0; i--) {
             handledStatsBreak = lore.get(i).contains("---");
             lore.remove(i);
@@ -89,6 +91,4 @@ public class GenericContainerScreenMixin {
         }
         return lore;
     }
-
-
 }

@@ -21,5 +21,4 @@ public enum BoosterType {
             if (booster.getBooster() == multiplier) return booster;
         return null;
     }
-
 }

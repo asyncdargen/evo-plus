@@ -81,5 +81,4 @@ public class EvoPlus implements ModInitializer {
         Feature.RENDER_FEATURE = new RenderFeature();
         Feature.MISC_FEATURE = new MiscFeature();
     }
-
 }

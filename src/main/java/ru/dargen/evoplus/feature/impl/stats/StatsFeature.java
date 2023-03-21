@@ -59,10 +59,10 @@ public class StatsFeature extends Feature {
             .name("Отображение информации о бустере от копания")
             .build();
 
-    protected BooleanSetting eliteTimer = BooleanSetting.builder()
-            .id("elite")
-            .name("Таймер элитной шахты")
-            .build();
+//    protected BooleanSetting eliteTimer = BooleanSetting.builder()
+//            .id("elite")
+//            .name("Таймер элитной шахты")
+//            .build();
 
     public StatsFeature() {
         super("Статистика", "statistic");
@@ -149,19 +149,20 @@ public class StatsFeature extends Feature {
         mod.getEventBus().register(ChatReceiveEvent.class, event -> {
             val text = Util.stripColor(event.getText().getString());
             if (!DiamondWorldUtil.isOnPrisonEvo()) return;
-            if (booster.getValue() && text.startsWith("Вы в режиме комбо. Продолжайте копать, чтобы сохранять бустер денег ")) {
+            if (booster.getValue() &&
+                    text.startsWith("Вы в режиме комбо. Продолжайте копать, чтобы сохранять бустер денег ")) {
                 val multiplier = Double.parseDouble(text.substring(69));
                 val type = BoosterType.getByMultiplier(multiplier);
                 if (type == null) return;
                 boosterInfo.setType(type);
                 boosterInfo.update();
             }
-            if (text.contains("Вы получили доступ к элитной шахте")) {
-                eliteEndTime = Integer.parseInt(text.split(" ")[7]) * 60_000L + System.currentTimeMillis();
-            }
+//            if (text.contains("Вы получили доступ к элитной шахте")) {
+//                eliteEndTime = Integer.parseInt(text.split(" ")[7]) * 60_000L + System.currentTimeMillis();
+//            }
         });
         mod.getEventBus().register(BlockBreakEvent.class, event -> {
-            if (DiamondWorldUtil.isOnPrisonEvo()) {
+            if (!event.getBlockState().isAir() && DiamondWorldUtil.isOnPrisonEvo()) {
                 latestBlocks.put(event.getPosition(), getBoosterInfo().getLastBreak());
                 getBoosterInfo().handleBreak();
             }

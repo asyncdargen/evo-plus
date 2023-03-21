@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.feature;
 
 import lombok.val;
+import lombok.var;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.feature.setting.Setting;
 import ru.dargen.evoplus.gui.GuiScreen;

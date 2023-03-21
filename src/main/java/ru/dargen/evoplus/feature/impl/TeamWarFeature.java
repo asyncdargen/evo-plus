@@ -3,6 +3,7 @@ package ru.dargen.evoplus.feature.impl;
 import io.netty.util.internal.ConcurrentSet;
 import lombok.Getter;
 import lombok.val;
+import lombok.var;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.event.inventory.InventorySlotUpdateEvent;
 import ru.dargen.evoplus.feature.Feature;
@@ -63,8 +64,12 @@ public class TeamWarFeature extends Feature {
                 val members = ItemUtil.getStringLore(event.getStack())
                         .stream()
                         .filter(line -> line.contains(")") && !line.contains(Util.getName()))
-                        .map(line -> Util.stripColor(line).split(" ")[1])
                         .map(String::toLowerCase)
+                        .map(line -> Util.stripColor(line)
+                                .split(" \\[")[0]
+                                .replace("[гл.] ", "")
+                                .replace("[м.] ", "")
+                        )
                         .collect(Collectors.toSet());
                 if (clanList.equals(members)) return;
                 clanList.clear();

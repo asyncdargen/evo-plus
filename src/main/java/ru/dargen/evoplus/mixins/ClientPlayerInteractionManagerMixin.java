@@ -46,5 +46,4 @@ public class ClientPlayerInteractionManagerMixin {
     public void breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         EvoPlus.instance().getEventBus().fireEvent(new BlockBreakEvent(pos, Util.getWorld().getBlockState(pos)));
     }
-
 }

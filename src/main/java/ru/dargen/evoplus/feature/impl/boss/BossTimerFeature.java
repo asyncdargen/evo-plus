@@ -2,6 +2,7 @@ package ru.dargen.evoplus.feature.impl.boss;
 
 import lombok.Getter;
 import lombok.val;
+import lombok.var;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -137,14 +138,13 @@ public class BossTimerFeature extends Feature {
                     val containerScreen = ((GenericContainerScreen) screen);
                     val container = containerScreen.getScreenHandler();
                     container.getStacks().forEach(item -> {
-                        val type = BossType.getByName(ItemUtil.getDisplayName(item)
-                                .replace("Всадник", "Мёртвый всадник"));
+                        val type = BossType.getByName(ItemUtil.getDisplayName(item));
                         if (type == null || !inLevelBounds(type)) return;
                         val info = infoMap.get(type);
                         if (info != null) {
                             val right = type.getTime() + info - System.currentTimeMillis();
                             val text = Text.of("§fРеспавн через: §e" + TimeFormatter.formatText(right));
-                            List<Text> lore = ItemUtil.getTextLore(item);
+                            var lore = ItemUtil.getTextLore(item);
                             if (lore.get(3).getString().contains("Респавн через"))
                                 lore.set(3, text);
                             else {
@@ -194,13 +194,18 @@ public class BossTimerFeature extends Feature {
                 .map(Text::getString)
                 .map(Util::stripColor)
                 .collect(Collectors.toList());
-        val bossTypeLine = holograms.stream().filter(line -> line.startsWith("Босс")).findFirst();
-        val respawnLine = holograms.stream().filter(line -> line.startsWith("Респавн")).findFirst();
-        val rightTimeLine = holograms.stream().filter(line -> line.contains("ч.") || line.contains("мин.") || line.contains("сек.")).findFirst();
+        val bossTypeLine = holograms.stream()
+                .filter(line -> line.startsWith("Босс"))
+                .findFirst();
+        val respawnLine = holograms.stream()
+                .filter(line -> line.startsWith("Респавн"))
+                .findFirst();
+        val rightTimeLine = holograms.stream()
+                .filter(line -> line.contains("ч.") || line.contains("мин.") || line.contains("сек."))
+                .findFirst();
         if (!bossTypeLine.isPresent() || !respawnLine.isPresent() || !rightTimeLine.isPresent()) return null;
 
-        val type = BossType.getByName(bossTypeLine.get().substring(5)
-                .replace("Всадник", "Мёртвый всадник"));
+        val type = BossType.getByName(bossTypeLine.get().substring(5));
         if (type == null) return null;
 
         val rightTime = TimeFormatter.parseText(rightTimeLine.get());

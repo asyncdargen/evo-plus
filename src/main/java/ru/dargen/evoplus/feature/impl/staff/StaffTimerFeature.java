@@ -42,7 +42,7 @@ public class StaffTimerFeature extends Feature {
             .build();
 
     protected RangeSetting<Integer> perkLevel = RangeSetting.<Integer>builder()
-            .name("Уровень перка \"Чродей\"")
+            .name("Уровень перка \"Чародей\"")
             .id("magic-level")
             .elements(CollectionUtil.intRange(0, 2, 1))
             .build();
