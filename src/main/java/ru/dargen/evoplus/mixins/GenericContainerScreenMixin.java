@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.feature.Feature;
 import ru.dargen.evoplus.feature.impl.stats.RuneStat;
-import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.util.Util;
 import ru.dargen.evoplus.util.minecraft.ItemUtil;
 import ru.dargen.evoplus.util.minecraft.Render;
@@ -38,9 +38,11 @@ public class GenericContainerScreenMixin {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         val screenHandler = ((GenericContainerScreenHandler) Util.getPlayer().currentScreenHandler);
         val screen = ((GenericContainerScreen) Util.getCurrentScreen());
+
         if (!Feature.STATS_FEATURE.getRunesStats().getValue() || screenHandler == null ||
-                screen == null || getItemStackIfPaper(screenHandler, runesSlots[0]) == null)
+                screen == null || !screen.getTitle().getString().toLowerCase().contains("\uE962")) // this is /runesbag
             return;
+
         runesStats.clear();
 
         for (int slot : runesSlots) {
@@ -75,13 +77,19 @@ public class GenericContainerScreenMixin {
 
     private static ItemStack getItemStackIfPaper(ScreenHandler screen, int slot) {
         val item = screen.getSlot(slot).getStack();
-        return item == null || item.getItem() != Items.PAPER ||
-                ItemUtil.getDisplayName(item).contains("слот") ? null : item;
+        return item == null || (item.getItem() != Items.PAPER &&
+                ItemUtil.getDisplayName(item).contains("слот")) ? null : item;
     }
 
     private static List<String> getRuneStats(ItemStack itemStack) {
-        if (itemStack == null) return Collections.emptyList();
+        if (itemStack == null)
+            return Collections.emptyList();
+
         val lore = ItemUtil.getStringLore(itemStack);
+
+        if (lore == null || lore.isEmpty())
+            return Collections.emptyList();
+
         lore.remove(0);
         boolean handledStatsBreak;
         for (int i = lore.size() - 1; i >= 0; i--) {

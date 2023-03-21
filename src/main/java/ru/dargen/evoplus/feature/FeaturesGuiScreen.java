@@ -52,7 +52,7 @@ public class FeaturesGuiScreen extends GuiScreen {
     private void drawSelector(int width, Set<Feature> features) {
         val index = new AtomicInteger();
         val cunked = new ArrayList<Map<Integer, Feature>>();
-        Map<Integer, Feature> map = new HashMap<>();
+        var map = new HashMap<Integer, Feature>();
         for (Feature feature : features) {
             map.put(index.getAndIncrement(), feature);
             if (index.get() % 4 == 0 || index.get() == features.size())
