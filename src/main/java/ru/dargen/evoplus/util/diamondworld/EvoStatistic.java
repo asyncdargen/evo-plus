@@ -2,9 +2,9 @@ package ru.dargen.evoplus.util.diamondworld;
 
 import lombok.Getter;
 import lombok.val;
-import ru.dargen.evoplus.util.formatter.DoubleFormatter;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.util.Util;
+import ru.dargen.evoplus.util.formatter.DoubleFormatter;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -22,7 +22,9 @@ public class EvoStatistic {
     public EvoStatistic(EvoPlus mod) {
         mod.getTaskBus().runAsync(10, 10, task -> {
             val scores = Util.getSidebarScores();
+
             UPDATE_STATE.set(true);
+
             try {
                 if (!DiamondWorldUtil.isOnDiamondWorld() || scores.isEmpty())
                     UPDATE_STATE.set(false);
@@ -61,7 +63,10 @@ public class EvoStatistic {
             UPDATE_STATE.set(false);
             return 0;
         }
-        return DoubleFormatter.parse(args[1].replace("$", "")); //for money
+        return DoubleFormatter.parse(args[1]
+                .replace("$", "") //for money
+                .replace("I", "") //for level
+                .replace("V", "")
+        );
     }
-
 }

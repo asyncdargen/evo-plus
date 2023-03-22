@@ -45,5 +45,4 @@ public enum StaffType {
 
         return getByName(ItemUtil.getDisplayName(itemStack));
     }
-
 }

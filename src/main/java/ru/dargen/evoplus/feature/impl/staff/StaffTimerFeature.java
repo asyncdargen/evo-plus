@@ -30,6 +30,18 @@ public class StaffTimerFeature extends Feature {
             .id("render")
             .build();
 
+//    protected RangeSetting<Integer> width = RangeSetting.<Integer>builder()
+//            .name("Ширина")
+//            .id("render-width")
+//            .elements(CollectionUtil.intRange(1, 100, 1))
+//            .build();
+//
+//    protected RangeSetting<Integer> height = RangeSetting.<Integer>builder()
+//            .name("Высота")
+//            .id("render-height")
+//            .elements(CollectionUtil.intRange(1, 100, 1))
+//            .build();
+
     protected BooleanSetting messageOnReady = BooleanSetting.builder()
             .name("Сообщение при окончании задержки")
             .id("message")
@@ -95,9 +107,13 @@ public class StaffTimerFeature extends Feature {
             val matrixStack = event.getMatrixStack();
             for (StaffType type : StaffType.values()) {
                 val info = infoMap.get(type);
-                val state = hasCooldown(type) ? "§6" + (info.getUsedTime() + info.getDelay() - System.currentTimeMillis()) / 1000 : "§2§l✓";
-                Render.drawCenteredString(matrixStack, state, startX + 20 * type.ordinal() + 10, height - 24 - Render.getStringHeight() / 2, -1);
-                Render.drawItem(type.getRenderItem(), startX + 20 * type.ordinal(), height - 20);
+                val state = hasCooldown(type) ?
+                        "§6" + (info.getUsedTime() + info.getDelay() - System.currentTimeMillis()) / 1000 : "§2§l✓";
+                Render.drawCenteredString(matrixStack, state,
+                        startX + 20 * type.ordinal() + 10,
+                        height - 24 - Render.getStringHeight() / 2, -1);
+                Render.drawItem(type.getRenderItem(),
+                        startX + 20 * type.ordinal(), height - 20);
                 if (!hasCooldown(type) && infoMap.remove(type) != null) {
                     if (notifyOnReady.getValue())
                         mod.getNotifyManager().notify(Notification.Type.CONFIRM, "§aПосох снова доступен", 3, "§e" + type.getName());
@@ -116,5 +132,4 @@ public class StaffTimerFeature extends Feature {
     public void putCooldown(StaffType type, int duration) {
         infoMap.put(type, new StaffInfo(System.currentTimeMillis(), duration * 1000L));
     }
-
 }

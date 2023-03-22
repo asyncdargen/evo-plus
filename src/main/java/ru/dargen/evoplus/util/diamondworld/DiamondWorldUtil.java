@@ -29,7 +29,8 @@ public class DiamondWorldUtil {
         mod.getEventBus().register(ChangeServerEvent.class, event -> onPrisonEvo = false);
         mod.getEventBus().register(DisconnectServerEvent.class, event -> onPrisonEvo = false);
         mod.getEventBus().register(ChangeServerEvent.class, event -> {
-            if (isOnDiamondWorld()) Util.sendMessage("/modinfo server");
+            if (isOnDiamondWorld())
+                Util.sendMessage("/modinfo server");
         });
         mod.getEventBus().register(ChatReceiveEvent.class, event -> {
             try {
@@ -39,16 +40,18 @@ public class DiamondWorldUtil {
                     onPrisonEvo = isOnDiamondWorld() && evoServerInfo;
                     event.setCancelled(true);
                 }
-            } catch (Throwable ignored) { }
+            } catch (Throwable ignored) {
+            }
         });
         mod.getTaskBus().runAsync(150, 150, task -> {
-            if (onDiamondWorld = isOnDiamondWorld0()) Util.sendMessage("/modinfo server");
+            if (onDiamondWorld = isOnDiamondWorld0())
+                Util.sendMessage("/modinfo server");
         });
 
         mod.getTaskBus().runAsync(35, 35, task -> {
             if (isOnPrisonEvo() && Util.getBossBarInfos().size() > 1 && Util.getSidebarObjective() == null) {
                 Util.printMessage(EvoPlus.PREFIX + "§cДля работы мода необходим интерфейс со скорбордом. Переключаюсь...");
-                Util.sendMessage("/interface change");
+                Util.sendMessage("/interface");
             }
         });
     }

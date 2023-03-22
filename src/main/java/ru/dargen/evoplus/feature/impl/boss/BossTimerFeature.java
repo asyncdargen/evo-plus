@@ -37,6 +37,20 @@ public class BossTimerFeature extends Feature {
             .id("render")
             .build();
 
+    protected RangeSetting<Integer> width = RangeSetting.<Integer>builder()
+            .name("Ширина")
+            .id("render-width")
+            .index(10)
+            .elements(CollectionUtil.intRange(10, 1000, 10))
+            .build();
+
+    protected RangeSetting<Integer> height = RangeSetting.<Integer>builder()
+            .name("Высота")
+            .id("render-height")
+            .index(10)
+            .elements(CollectionUtil.intRange(10, 1000, 10))
+            .build();
+
     protected RangeSetting<Integer> scale = RangeSetting.<Integer>builder()
             .name("Размер (%)")
             .id("render-scale")
@@ -126,7 +140,9 @@ public class BossTimerFeature extends Feature {
                                     "§6" + info.getKey().getName()
                                             + "§7 [§c" + info.getKey().getLevel() + "§7] - §a"
                                             + TimeFormatter.formatText(right),
-                                    (int) (5 / scale), (int) (((5 / scale) + Render.getStringHeight() * index[0]++) / scale), -1
+                                    (int) (5 / scale + width.getValue()),
+                                    (int) (((5 / scale + height.getValue()) +
+                                            Render.getStringHeight() * index[0]++) / scale), -1
                             );
                         });
             });
@@ -219,5 +235,4 @@ public class BossTimerFeature extends Feature {
     private static long fixTime(long time) {
         return (time / 1000) * 1000;
     }
-
 }

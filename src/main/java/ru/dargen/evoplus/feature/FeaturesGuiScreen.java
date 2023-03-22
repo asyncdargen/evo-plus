@@ -89,5 +89,4 @@ public class FeaturesGuiScreen extends GuiScreen {
     public void handleClose() {
         EvoPlus.instance().getFeatureManager().saveSettings();
     }
-
 }

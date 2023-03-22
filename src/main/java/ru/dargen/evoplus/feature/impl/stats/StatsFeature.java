@@ -120,8 +120,11 @@ public class StatsFeature extends Feature {
                             val name = info[0].trim();
                             val requireAmount = info[1].split("/")[1].trim();
                             val type = RequireType.getByName(name);
-                            if (type == null) return null;
-                            else return new LevelRequire(name, type, DoubleFormatter.parse(requireAmount));
+
+                            if (type == null)
+                                return null;
+                            else
+                                return new LevelRequire(name, type, DoubleFormatter.parse(requireAmount));
                         })
                         .filter(Objects::nonNull)
                         .collect(Collectors.toSet());

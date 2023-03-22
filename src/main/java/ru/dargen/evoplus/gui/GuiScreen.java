@@ -24,7 +24,7 @@ public abstract class GuiScreen extends Screen {
     @Override
     public void init(MinecraftClient client, int width, int height) {
         initialized.set(false);
-        super.init(client, width, height);
+        super.init(Util.getClient(), width, height);
         elements.clear();
         handleInit(width, height);
         initialized.set(true);

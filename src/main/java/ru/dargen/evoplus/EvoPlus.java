@@ -70,14 +70,13 @@ public class EvoPlus implements ModInitializer {
         notifyManager = new NotificationsManager(this);
 
         commandManager.registerCommands(
-                new TeamCommand(), new WarCommand(), new HelpCommand()/*, new ClanWebHookCommand()*//*, new SellCommand()*/
+                new TeamCommand(), new WarCommand(), new HelpCommand()
         );
 
         Feature.STATS_FEATURE = new StatsFeature();
         Feature.BOSS_TIMER_FEATURE = new BossTimerFeature();
         Feature.STAFF_TIMER_FEATURE = new StaffTimerFeature();
         Feature.TEAM_WAR_FEATURE = new TeamWarFeature();
-//        Feature.CLAN_FEATURE = new ClanFeature();
         Feature.RENDER_FEATURE = new RenderFeature();
         Feature.MISC_FEATURE = new MiscFeature();
     }

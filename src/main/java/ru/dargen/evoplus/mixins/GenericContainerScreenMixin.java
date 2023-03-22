@@ -77,8 +77,7 @@ public class GenericContainerScreenMixin {
 
     private static ItemStack getItemStackIfPaper(ScreenHandler screen, int slot) {
         val item = screen.getSlot(slot).getStack();
-        return item == null || (item.getItem() != Items.PAPER &&
-                ItemUtil.getDisplayName(item).contains("слот")) ? null : item;
+        return item == null || item.getItem() != Items.PAPER ? null : item;
     }
 
     private static List<String> getRuneStats(ItemStack itemStack) {

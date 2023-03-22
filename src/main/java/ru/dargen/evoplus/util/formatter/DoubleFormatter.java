@@ -22,6 +22,7 @@ public class DoubleFormatter {
 
     public String format(double number) {
         String suffix = "";
+
         for (Map.Entry<String, Double> modifierEntry : MODIFIERS.entrySet()) {
             if (number / modifierEntry.getValue() >= 1) {
                 suffix = modifierEntry.getKey();
@@ -34,7 +35,6 @@ public class DoubleFormatter {
 
         while (formatted.contains(".") && (formatted.endsWith("0") || formatted.endsWith(".")))
             formatted = formatted.substring(0, formatted.length() - 1);
-
         return formatted + suffix;
     }
 
@@ -49,5 +49,4 @@ public class DoubleFormatter {
 
         return amount * modifier;
     }
-
 }

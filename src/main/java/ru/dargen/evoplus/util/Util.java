@@ -83,7 +83,8 @@ public class Util {
     }
 
     public Map<UUID, ClientBossBar> getBossBarInfos() {
-        return getClient() == null || getClient().inGameHud == null ? Collections.emptyMap() : ((BossBarHudAccessor) getClient().inGameHud.getBossBarHud()).getInfos();
+        return getClient() == null || getClient().inGameHud == null ?
+                Collections.emptyMap() : ((BossBarHudAccessor) getClient().inGameHud.getBossBarHud()).getInfos();
     }
 
     public boolean isOpenedScreen() {
@@ -140,5 +141,4 @@ public class Util {
         lookupField.setAccessible(true);
         return (MethodHandles.Lookup) lookupField.get(null);
     }
-
 }

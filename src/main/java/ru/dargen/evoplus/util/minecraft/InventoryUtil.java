@@ -10,5 +10,4 @@ public class InventoryUtil {
     public void closeInventory(int syncId) {
         Util.sendPacket(new CloseHandledScreenC2SPacket(syncId));
     }
-
 }
