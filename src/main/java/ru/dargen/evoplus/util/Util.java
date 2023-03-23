@@ -1,6 +1,5 @@
 package ru.dargen.evoplus.util;
 
-import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.client.MinecraftClient;
@@ -19,7 +18,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.world.World;
 import ru.dargen.evoplus.mixins.BossBarHudAccessor;
 
-import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -27,7 +25,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class Util {
 
-    public final MethodHandles.Lookup LOOKUP = getLookup();
+    //    public final MethodHandles.Lookup LOOKUP = getLookup();
     public final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)§[\\dA-FK-ORX]");
 
     public MinecraftClient getClient() {
@@ -135,10 +133,10 @@ public class Util {
             Util.getPlayer().networkHandler.sendPacket(packet);
     }
 
-    @SneakyThrows
-    private MethodHandles.Lookup getLookup() {
-        val lookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-        lookupField.setAccessible(true);
-        return (MethodHandles.Lookup) lookupField.get(null);
-    }
+//    @SneakyThrows
+//    private MethodHandles.Lookup getLookup() {
+//        val lookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
+//        lookupField.setAccessible(true);
+//        return (MethodHandles.Lookup) lookupField.get(null);
+//    }
 }
