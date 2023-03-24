@@ -3,6 +3,9 @@ package ru.dargen.evoplus.feature.impl.boss;
 import lombok.Getter;
 import ru.dargen.evoplus.util.Util;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 public enum BossType {
 
@@ -71,11 +74,20 @@ public enum BossType {
         this.time = time * 1000L;
     }
 
+    private static final List<String> medals = Arrays.asList("\uE124", "\uE125", "\uE126");
+
     public static BossType getByName(String name) {
         name = Util.stripColor(name);
-        name = name.replace(" \uE124", "") //for medals
-                .replace(" \uE125", "")
-                .replace(" \uE126", "");
+
+        //for medals
+        for (String medal : medals) {
+            medal = " " + medal;
+
+            if (!name.contains(medal))
+                continue;
+
+            name = name.split(medal)[0];
+        }
         for (BossType type : values())
             if (type.name.equalsIgnoreCase(name))
                 return type;
