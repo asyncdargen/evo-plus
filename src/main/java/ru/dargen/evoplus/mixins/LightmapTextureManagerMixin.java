@@ -20,21 +20,33 @@ import ru.dargen.evoplus.feature.Feature;
 @Mixin(LightmapTextureManager.class)
 public abstract class LightmapTextureManagerMixin {
 
-    @Shadow private boolean dirty;
+    @Shadow
+    private boolean dirty;
 
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
-    @Shadow private float field_21528;
+    @Shadow
+    private float field_21528;
 
-    @Shadow protected abstract float getBrightness(World world, int i);
+    @Shadow
+    protected abstract float getBrightness(World world, int i);
 
-    @Shadow @Final private GameRenderer renderer;
+    @Shadow
+    @Final
+    private GameRenderer renderer;
 
-    @Shadow protected abstract float method_23795(float f);
+    @Shadow
+    protected abstract float method_23795(float f);
 
-    @Shadow @Final private NativeImage image;
+    @Shadow
+    @Final
+    private NativeImage image;
 
-    @Shadow @Final private NativeImageBackedTexture texture;
+    @Shadow
+    @Final
+    private NativeImageBackedTexture texture;
 
     @Inject(at = @At("HEAD"), method = "update")
     public void update(float delta, CallbackInfo ci) {
@@ -66,8 +78,8 @@ public abstract class LightmapTextureManagerMixin {
                 float m = field_21528 + 1.5F;
                 Vector3f vector3f2 = new Vector3f();
 
-                for(int n = 0; n < 16; ++n) {
-                    for(int o = 0; o < 16; ++o) {
+                for (int n = 0; n < 16; ++n) {
+                    for (int o = 0; o < 16; ++o) {
                         float p = getBrightness(clientWorld, n) * h;
                         float q = getBrightness(clientWorld, o) * m;
                         float s = q * ((q * 0.6F + 0.4F) * 0.6F + 0.4F);
@@ -102,16 +114,17 @@ public abstract class LightmapTextureManagerMixin {
                             }
                         }
 
-                        v = Feature.RENDER_FEATURE.getFullBright().getValue() ? 100f : (float)this.client.options.gamma;
+                        v = Feature.RENDER_FEATURE.getFullBright().getValue() ?
+                                100f : (float) this.client.options.gamma;
                         Vector3f vector3f6 = vector3f2.copy();
                         vector3f6.modify(this::method_23795);
                         vector3f2.lerp(vector3f6, v);
                         vector3f2.lerp(new Vector3f(0.75F, 0.75F, 0.75F), 0.04F);
                         vector3f2.clamp(0.0F, 1.0F);
                         vector3f2.scale(255.0F);
-                        int z = (int)vector3f2.getX();
-                        int aa = (int)vector3f2.getY();
-                        int ab = (int)vector3f2.getZ();
+                        int z = (int) vector3f2.getX();
+                        int aa = (int) vector3f2.getY();
+                        int ab = (int) vector3f2.getZ();
                         image.setPixelColor(o, n, -16777216 | ab << 16 | aa << 8 | z);
                     }
                 }
@@ -121,5 +134,4 @@ public abstract class LightmapTextureManagerMixin {
             }
         }
     }
-
 }

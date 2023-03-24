@@ -3,13 +3,8 @@ plugins {
     id 'fabric-loom' version '0.7-SNAPSHOT'
 }
 
-//version = project.mod_version
 group = project.maven_group
 archivesBaseName = "evo-plus"
-
-repositories {
-
-}
 
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
@@ -19,6 +14,14 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    Set<String> apiModules = [
+            "fabric-key-binding-api-v1"
+    ]
+
+    apiModules.forEach {
+        include(modImplementation(fabricApi.module(it, project.fabric_version)))
+    }
 }
 
 processResources {

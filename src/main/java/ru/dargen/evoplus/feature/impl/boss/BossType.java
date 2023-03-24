@@ -73,8 +73,11 @@ public enum BossType {
 
     public static BossType getByName(String name) {
         name = Util.stripColor(name);
+        name = name.replace(" \uE124", "") //for medals
+                .replace(" \uE125", "")
+                .replace(" \uE126", "");
         for (BossType type : values())
-            if (name.contains(type.name))
+            if (type.name.equalsIgnoreCase(name))
                 return type;
         return null;
     }

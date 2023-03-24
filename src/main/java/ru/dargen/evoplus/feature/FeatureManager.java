@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.options.KeyBinding;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.util.Util;
@@ -16,12 +17,14 @@ import java.util.Set;
 public class FeatureManager {
 
     private final Set<Feature> features = new HashSet<>();
-    private KeyBinding keyBinding = new KeyBinding("Открыть меню", 344, "EvoPlus");
+    private final KeyBinding keyBinding = new KeyBinding("Открыть меню", 344, "EvoPlus");
     private final JsonObject config;
     private final EvoPlus mod;
 
     public FeatureManager(EvoPlus mod) {
         this.mod = mod;
+
+        KeyBindingHelper.registerKeyBinding(keyBinding);
 
         mod.getTaskBus().runAsync(1, 1, task -> {
             if (keyBinding.isPressed() && !Util.isOpenedScreen())

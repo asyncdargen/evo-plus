@@ -20,5 +20,4 @@ public enum BossRenderOrder {
     public String toString() {
         return name;
     }
-
 }

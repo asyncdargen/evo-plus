@@ -227,16 +227,18 @@ public class BossTimerFeature extends Feature {
         val rightTimeLine = holograms.stream()
                 .filter(line -> line.contains("ч.") || line.contains("мин.") || line.contains("сек."))
                 .findFirst();
-        if (!bossTypeLine.isPresent() || !respawnLine.isPresent() || !rightTimeLine.isPresent()) return null;
+        if (!bossTypeLine.isPresent() || !respawnLine.isPresent() || !rightTimeLine.isPresent())
+            return null;
 
         val type = BossType.getByName(bossTypeLine.get().substring(5));
-        if (type == null) return null;
+        if (type == null)
+            return null;
 
         val rightTime = TimeFormatter.parseText(rightTimeLine.get());
-        if (rightTime == 0) return null;
+        if (rightTime == 0)
+            return null;
 
         val killTime = System.currentTimeMillis() - (type.getTime() - rightTime);
-
         return Pair.of(type, killTime);
     }
 
