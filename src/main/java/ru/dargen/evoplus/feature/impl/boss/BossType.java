@@ -8,10 +8,10 @@ public enum BossType {
 
     KRIEGER("Кригер", 15, 1200),
     SLIME("Слизень", 20, 1800),
-    STEEL_GUARD("Стальной страж", 25, 2100),
+    STEEL_GUARD("Стальной Страж", 25, 2100),
     NIGHTMARE("Кошмар", 30, 2700),
     TWINS("Близнецы", 35, 7200),
-    FIRE_LORD("Повелитель огня", 40, 3600),
+    FIRE_LORD("Повелитель Огня", 40, 3600),
     SPIDER("Паучиха", 45, 10800),
     DROWNED("Утопленник", 50, 5400),
     MAGICIAN("Колдун", 55, 14400),
@@ -74,7 +74,7 @@ public enum BossType {
     public static BossType getByName(String name) {
         name = Util.stripColor(name);
         for (BossType type : values())
-            if (name.toLowerCase().contains(type.name.toLowerCase()))
+            if (name.contains(type.name))
                 return type;
         return null;
     }

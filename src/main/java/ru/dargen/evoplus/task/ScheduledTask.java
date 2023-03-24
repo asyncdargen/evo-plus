@@ -24,5 +24,4 @@ public class ScheduledTask extends BaseTask {
             }
         } else delay--;
     }
-
 }

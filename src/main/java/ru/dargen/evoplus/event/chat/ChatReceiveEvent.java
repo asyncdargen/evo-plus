@@ -15,5 +15,4 @@ public class ChatReceiveEvent extends CancellableEvent {
     public void setText(String text) {
         this.text = Text.of(text);
     }
-
 }

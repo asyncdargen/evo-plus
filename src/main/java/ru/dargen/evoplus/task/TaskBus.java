@@ -30,7 +30,6 @@ public class TaskBus {
         val task = new ScheduledTask(delay, period, true, handler);
 
         tasks.put(task.getId(), task);
-
         return task;
     }
 
@@ -38,7 +37,6 @@ public class TaskBus {
         val task = new ScheduledTask(delay, period, false, handler);
 
         tasks.put(task.getId(), task);
-
         return task;
     }
 
@@ -46,7 +44,6 @@ public class TaskBus {
         val task = new LaterTask(delay, true, handler);
 
         tasks.put(task.getId(), task);
-
         return task;
     }
 
@@ -54,7 +51,6 @@ public class TaskBus {
         val task = new LaterTask(delay, false, handler);
 
         tasks.put(task.getId(), task);
-
         return task;
     }
 
@@ -62,6 +58,7 @@ public class TaskBus {
     private void run() {
         while (!thread.isInterrupted()) {
             val currentTick = System.currentTimeMillis();
+
             tasks.values().forEach(task -> {
                 if (task.isSync()) {
                     try {
@@ -80,5 +77,4 @@ public class TaskBus {
             Thread.sleep(50);
         }
     }
-
 }

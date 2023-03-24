@@ -99,5 +99,4 @@ public class DiamondWorldUtil {
     public boolean isOnPrisonEvo() {
         return onPrisonEvo && isOnDiamondWorld();
     }
-
 }

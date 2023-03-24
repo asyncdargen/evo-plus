@@ -107,10 +107,12 @@ public class BossTimerFeature extends Feature {
     @Override
     public void onRegister(EvoPlus mod) {
         mod.getTaskBus().runAsync(20, 20, task -> {
-            if (!DiamondWorldUtil.isOnPrisonEvo()) return;
+            if (!DiamondWorldUtil.isOnPrisonEvo())
+                return;
 
             for (BossType type : BossType.values()) {
-                if (!hasCooldown(type) && infoMap.remove(type) != null && DiamondWorldUtil.isOnPrisonEvo() && inLevelBounds(type)) {
+                if (!hasCooldown(type) && infoMap.remove(type) != null &&
+                        DiamondWorldUtil.isOnPrisonEvo() && inLevelBounds(type)) {
                     if (notifyOnReady.getValue())
                         mod.getNotifyManager().notify(Notification.Type.CONFIRM, "§aБосс возрожден", 3, "§6" + type.getName());
                     if (messageOnReady.getValue())
@@ -121,10 +123,14 @@ public class BossTimerFeature extends Feature {
             }
 
             val info = getNearbyBossInfo();
-            if (info != null) infoMap.put(info.getKey(), fixTime(info.getValue()));
+
+            if (info != null)
+                infoMap.put(info.getKey(), fixTime(info.getValue()));
         });
         mod.getEventBus().register(HudRenderEvent.class, event -> {
-            if (!render.getValue() || !DiamondWorldUtil.isOnPrisonEvo()) return;
+            if (!render.getValue() || !DiamondWorldUtil.isOnPrisonEvo())
+                return;
+
             val matrixStack = event.getMatrixStack();
             val index = new int[]{0};
             val scale = this.scale.getValue() / 100f;
@@ -201,7 +207,9 @@ public class BossTimerFeature extends Feature {
     }
 
     public Pair<BossType, Long> getNearbyBossInfo() {
-        if (Util.getWorld() == null) return null;
+        if (Util.getWorld() == null)
+            return null;
+
         val holograms = StreamSupport.stream(
                         Spliterators.spliteratorUnknownSize(((ClientWorld) Util.getWorld()).getEntities().iterator(), 0),
                         false
