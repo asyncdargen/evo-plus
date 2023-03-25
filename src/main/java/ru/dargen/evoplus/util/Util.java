@@ -133,6 +133,15 @@ public class Util {
             Util.getPlayer().networkHandler.sendPacket(packet);
     }
 
+    public boolean isInteger(String number) {
+        try {
+            Integer.parseInt(number);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+        return true;
+    }
+
 //    @SneakyThrows
 //    private MethodHandles.Lookup getLookup() {
 //        val lookupField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");

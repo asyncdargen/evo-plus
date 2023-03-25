@@ -2,6 +2,7 @@ package ru.dargen.evoplus.util.formatter;
 
 import lombok.experimental.UtilityClass;
 import lombok.val;
+import ru.dargen.evoplus.util.Util;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ public class TimeFormatter {
 
     private final Map<String, Long> MODIFIERS = new HashMap<>();
     private final Long[] VALUES = {2419200L, 604800L, 86400L, 3600L, 60L, 1L};
-    private final String[] FORMATS = {" %s мес.", " %s нед.", " %s дн.", " %s час.", " %s мин.", " %s сек." };
+    private final String[] FORMATS = {" %s мес.", " %s нед.", " %s дн.", " %s час.", " %s мин.", " %s сек."};
 
     static {
         MODIFIERS.put("дн.", 86_400_000L);
@@ -37,9 +38,14 @@ public class TimeFormatter {
     public long parseText(String input) {
         long time = 0L;
         val args = input.split(" ");
-        if (args.length % 2 != 0) return 0;
+
+        if (args.length % 2 != 0)
+            return 0;
 
         for (int i = 0; i < args.length; i += 2) {
+            if (!Util.isInteger(args[i]))
+                continue;
+
             val element = Integer.parseInt(args[i]);
             val modifier = MODIFIERS.getOrDefault(args[i + 1], 1L);
             time += element * modifier;
@@ -47,5 +53,4 @@ public class TimeFormatter {
 
         return time;
     }
-
 }
