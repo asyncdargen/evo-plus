@@ -8,13 +8,13 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.Window;
-import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ServerPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.world.World;
 import ru.dargen.evoplus.mixins.BossBarHudAccessor;
 
@@ -114,11 +114,11 @@ public class Util {
     }
 
     public void printMessage(String text) {
-        if (getPlayer() != null) getPlayer().sendMessage(new LiteralText(text), false);
+        if (getPlayer() != null) getPlayer().sendMessage(Text.of(text), false);
     }
 
     public void sendMessage(String text) {
-        if (getPlayer() != null) getPlayer().sendChatMessage(text);
+        if (getPlayer() != null) getPlayer().networkHandler.sendChatMessage(text);
     }
 
     public String stripColor(String input) {

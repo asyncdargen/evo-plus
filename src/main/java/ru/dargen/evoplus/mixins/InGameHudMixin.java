@@ -14,19 +14,18 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.tag.FluidTags;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -51,7 +50,7 @@ import static net.minecraft.client.gui.DrawableHelper.fill;
 public abstract class InGameHudMixin {
 
     @Shadow
-    public abstract TextRenderer getFontRenderer();
+    public abstract TextRenderer getTextRenderer();
 
     @Shadow
     private int scaledHeight;
@@ -115,11 +114,11 @@ public abstract class InGameHudMixin {
 //        }
 //    }
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;color4f(FFFF)V"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;render(Lnet/minecraft/client/util/math/MatrixStack;ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreboardObjective;)V")))
+    @Inject(method = "render", at = @At(value = "TAIL"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;render(Lnet/minecraft/client/util/math/MatrixStack;ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreboardObjective;)V")))
     private void setOverlayMessage(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
-        GL11.glPushMatrix();
+        matrices.push();
         EvoPlus.instance().getEventBus().fireEvent(new HudRenderEvent(matrices, tickDelta));
-        GL11.glPopMatrix();
+        matrices.pop();
     }
 
 
@@ -327,16 +326,16 @@ public abstract class InGameHudMixin {
 
         List<Pair<ScoreboardPlayerScore, Text>> list2 = Lists.newArrayList();
         Text text = objective.getDisplayName();
-        int i = getFontRenderer().getWidth(text);
+        int i = getTextRenderer().getWidth(text);
         int j = i;
-        int k = getFontRenderer().getWidth(": ");
+        int k = getTextRenderer().getWidth(": ");
 
         ScoreboardPlayerScore scoreboardPlayerScore;
         MutableText text2;
-        for (Iterator var11 = ((Collection) collection).iterator(); var11.hasNext(); j = Math.max(j, this.getFontRenderer().getWidth(text2) + k + this.getFontRenderer().getWidth(Integer.toString(scoreboardPlayerScore.getScore())))) {
+        for (Iterator var11 = ((Collection) collection).iterator(); var11.hasNext(); j = Math.max(j, this.getTextRenderer().getWidth(text2) + k + this.getTextRenderer().getWidth(Integer.toString(scoreboardPlayerScore.getScore())))) {
             scoreboardPlayerScore = (ScoreboardPlayerScore) var11.next();
             Team team = scoreboard.getPlayerTeam(scoreboardPlayerScore.getPlayerName());
-            text2 = Team.modifyText(team, new LiteralText(scoreboardPlayerScore.getPlayerName()));
+            text2 = Team.decorateName(team, Text.of(scoreboardPlayerScore.getPlayerName()));
             list2.add(Pair.of(scoreboardPlayerScore, text2));
             val info = Feature.STATS_FEATURE.getBoosterInfo();
             if (scoreboardPlayerScore.getScore() == 3 && DiamondWorldUtil.isOnPrisonEvo()) {
@@ -377,22 +376,22 @@ public abstract class InGameHudMixin {
             ScoreboardPlayerScore scoreboardPlayerScore2 = pair.getFirst();
             Text text3 = pair.getSecond();
             String string = Feature.RENDER_FEATURE.getScores().getValue() ? (Formatting.RED + "" + scoreboardPlayerScore2.getScore()) : "";
-            this.getFontRenderer().getClass();
+            this.getTextRenderer().getClass();
             int t = m - p * 9;
             int u = this.scaledWidth - 3 + 2;
             int var10001 = o - 2;
-            this.getFontRenderer().getClass();
+            this.getTextRenderer().getClass();
             fill(matrices, var10001, t, u, t + 9, q);
-            this.getFontRenderer().draw(matrices, text3, (float) o, (float) t, -1);
-            this.getFontRenderer().draw(matrices, string, (float) (u - this.getFontRenderer().getWidth(string)), (float) t, -1);
+            this.getTextRenderer().draw(matrices, text3, (float) o, (float) t, -1);
+            this.getTextRenderer().draw(matrices, string, (float) (u - this.getTextRenderer().getWidth(string)), (float) t, -1);
             if (p == list2.size()) {
                 var10001 = o - 2;
-                this.getFontRenderer().getClass();
+                this.getTextRenderer().getClass();
                 fill(matrices, var10001, t - 9 - 1, u, t - 1, r);
                 fill(matrices, o - 2, t - 1, u, t, q);
-                TextRenderer var31 = this.getFontRenderer();
+                TextRenderer var31 = this.getTextRenderer();
                 float var10003 = (float) (o + j / 2 - i / 2);
-                this.getFontRenderer().getClass();
+                this.getTextRenderer().getClass();
                 var31.draw(matrices, text, var10003, (float) (t - 9), -1);
             }
         }
@@ -426,13 +425,13 @@ public abstract class InGameHudMixin {
         if (this.client.player.experienceLevel > 0) {
             this.client.getProfiler().push("expLevel");
             String string = "" + this.client.player.experienceLevel;
-            m = (this.scaledWidth - this.getFontRenderer().getWidth(string)) / 2;
+            m = (this.scaledWidth - this.getTextRenderer().getWidth(string)) / 2;
             n = this.scaledHeight - 30;
-            this.getFontRenderer().draw(matrices, string, (float) (m + 1), (float) n, 0);
-            this.getFontRenderer().draw(matrices, string, (float) (m - 1), (float) n, 0);
-            this.getFontRenderer().draw(matrices, string, (float) m, (float) (n + 1), 0);
-            this.getFontRenderer().draw(matrices, string, (float) m, (float) (n - 1), 0);
-            this.getFontRenderer().draw(matrices, string, (float) m, (float) n, 8453920);
+            this.getTextRenderer().draw(matrices, string, (float) (m + 1), (float) n, 0);
+            this.getTextRenderer().draw(matrices, string, (float) (m - 1), (float) n, 0);
+            this.getTextRenderer().draw(matrices, string, (float) m, (float) (n + 1), 0);
+            this.getTextRenderer().draw(matrices, string, (float) m, (float) (n - 1), 0);
+            this.getTextRenderer().draw(matrices, string, (float) m, (float) n, 8453920);
             this.client.getProfiler().pop();
         }
 

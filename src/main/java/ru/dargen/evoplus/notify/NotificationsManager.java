@@ -35,7 +35,7 @@ public class NotificationsManager {
         notify.y = SPLIT_Y;
         notifications.add(notify);
         if (Util.getPlayer() != null && Feature.MISC_FEATURE.getNotifySound().getValue())
-            Util.getPlayer().playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING, 1F, 1F);
+            Util.getPlayer().playSound(SoundEvents.BLOCK_NOTE_BLOCK_PLING.value(), 1F, 1F);
         return notify;
     }
 

@@ -2,14 +2,12 @@ package ru.dargen.evoplus.mixins;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,14 +29,14 @@ public class ClientPlayerInteractionManagerMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "interactItem", cancellable = true)
-    public void interactItem(PlayerEntity player, World world, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        if (EvoPlus.instance().getEventBus().fireEvent(new InteractItemEvent(world, player.getStackInHand(hand))).isCancelled())
+    public void interactItem(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+        if (EvoPlus.instance().getEventBus().fireEvent(new InteractItemEvent(player.world, player.getStackInHand(hand))).isCancelled())
             cir.setReturnValue(ActionResult.SUCCESS);
     }
 
     @Inject(at = @At("HEAD"), method = "interactBlock", cancellable = true)
-    public void interactBlock(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
-        if (EvoPlus.instance().getEventBus().fireEvent(new InteractItemEvent(world, player.getStackInHand(hand))).isCancelled())
+    public void interactBlock(ClientPlayerEntity player, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+        if (EvoPlus.instance().getEventBus().fireEvent(new InteractItemEvent(player.world, player.getStackInHand(hand))).isCancelled())
             cir.setReturnValue(ActionResult.SUCCESS);
     }
 

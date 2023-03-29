@@ -5,10 +5,11 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.world.World;
+import net.minecraft.util.math.MathHelper;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,17 +29,11 @@ public abstract class LightmapTextureManagerMixin {
     private MinecraftClient client;
 
     @Shadow
-    private float field_21528;
-
-    @Shadow
-    protected abstract float getBrightness(World world, int i);
+    private float flickerIntensity;
 
     @Shadow
     @Final
     private GameRenderer renderer;
-
-    @Shadow
-    protected abstract float method_23795(float f);
 
     @Shadow
     @Final
@@ -48,90 +43,107 @@ public abstract class LightmapTextureManagerMixin {
     @Final
     private NativeImageBackedTexture texture;
 
+    @Shadow protected abstract float getDarknessFactor(float delta);
+
+    @Shadow protected abstract float getDarkness(LivingEntity entity, float factor, float delta);
+
+    @Shadow protected abstract float easeOutQuart(float x);
+
     @Inject(at = @At("HEAD"), method = "update")
     public void update(float delta, CallbackInfo ci) {
-        if (dirty) {
-            dirty = false;
-            client.getProfiler().push("lightTex");
+        if (this.dirty) {
+            this.dirty = false;
+            this.client.getProfiler().push("lightTex");
             ClientWorld clientWorld = this.client.world;
             if (clientWorld != null) {
-                float f = clientWorld.method_23783(1.0F);
-                float h;
+                float f = clientWorld.getSkyBrightness(1.0F);
+                float g;
                 if (clientWorld.getLightningTicksLeft() > 0) {
-                    h = 1.0F;
+                    g = 1.0F;
                 } else {
-                    h = f * 0.95F + 0.05F;
+                    g = f * 0.95F + 0.05F;
                 }
 
-                float i = this.client.player.getUnderwaterVisibility();
+                float h = this.client.options.getDarknessEffectScale().getValue().floatValue();
+                float i = getDarknessFactor(delta) * h;
+                float j = getDarkness(this.client.player, i, delta) * h;
+                float k = this.client.player.getUnderwaterVisibility();
                 float l;
                 if (this.client.player.hasStatusEffect(StatusEffects.NIGHT_VISION)) {
                     l = GameRenderer.getNightVisionStrength(this.client.player, delta);
-                } else if (i > 0.0F && this.client.player.hasStatusEffect(StatusEffects.CONDUIT_POWER)) {
-                    l = i;
+                } else if (k > 0.0F && this.client.player.hasStatusEffect(StatusEffects.CONDUIT_POWER)) {
+                    l = k;
                 } else {
                     l = 0.0F;
                 }
 
-                Vector3f vector3f = new Vector3f(f, f, 1.0F);
-                vector3f.lerp(new Vector3f(1.0F, 1.0F, 1.0F), 0.35F);
-                float m = field_21528 + 1.5F;
+                Vector3f vector3f = (new Vector3f(f, f, 1.0F)).lerp(new Vector3f(1.0F, 1.0F, 1.0F), 0.35F);
+                float m = this.flickerIntensity + 1.5F;
                 Vector3f vector3f2 = new Vector3f();
 
-                for (int n = 0; n < 16; ++n) {
-                    for (int o = 0; o < 16; ++o) {
-                        float p = getBrightness(clientWorld, n) * h;
-                        float q = getBrightness(clientWorld, o) * m;
+                for(int n = 0; n < 16; ++n) {
+                    for(int o = 0; o < 16; ++o) {
+                        float p = LightmapTextureManager.getBrightness(clientWorld.getDimension(), n) * g;
+                        float q = LightmapTextureManager.getBrightness(clientWorld.getDimension(), o) * m;
                         float s = q * ((q * 0.6F + 0.4F) * 0.6F + 0.4F);
                         float t = q * (q * q * 0.6F + 0.4F);
                         vector3f2.set(q, s, t);
-                        float w;
-                        Vector3f vector3f5;
-                        if (clientWorld.getSkyProperties().shouldBrightenLighting()) {
+                        boolean bl = clientWorld.getDimensionEffects().shouldBrightenLighting();
+                        float u;
+                        Vector3f vector3f4;
+                        if (bl) {
                             vector3f2.lerp(new Vector3f(0.99F, 1.12F, 1.0F), 0.25F);
+                            clamp(vector3f2);
                         } else {
-                            Vector3f vector3f3 = vector3f.copy();
-                            vector3f3.scale(p);
+                            Vector3f vector3f3 = (new Vector3f(vector3f)).mul(p);
                             vector3f2.add(vector3f3);
                             vector3f2.lerp(new Vector3f(0.75F, 0.75F, 0.75F), 0.04F);
-                            if (renderer.getSkyDarkness(delta) > 0.0F) {
-                                w = renderer.getSkyDarkness(delta);
-                                vector3f5 = vector3f2.copy();
-                                vector3f5.multiplyComponentwise(0.7F, 0.6F, 0.6F);
-                                vector3f2.lerp(vector3f5, w);
+                            if (this.renderer.getSkyDarkness(delta) > 0.0F) {
+                                u = this.renderer.getSkyDarkness(delta);
+                                vector3f4 = (new Vector3f(vector3f2)).mul(0.7F, 0.6F, 0.6F);
+                                vector3f2.lerp(vector3f4, u);
                             }
                         }
 
-                        vector3f2.clamp(0.0F, 1.0F);
                         float v;
                         if (l > 0.0F) {
-                            v = Math.max(vector3f2.getX(), Math.max(vector3f2.getY(), vector3f2.getZ()));
+                            v = Math.max(vector3f2.x(), Math.max(vector3f2.y(), vector3f2.z()));
                             if (v < 1.0F) {
-                                w = 1.0F / v;
-                                vector3f5 = vector3f2.copy();
-                                vector3f5.scale(w);
-                                vector3f2.lerp(vector3f5, l);
+                                u = 1.0F / v;
+                                vector3f4 = (new Vector3f(vector3f2)).mul(u);
+                                vector3f2.lerp(vector3f4, l);
                             }
+                        }
+
+                        if (!bl) {
+                            if (j > 0.0F) {
+                                vector3f2.add(-j, -j, -j);
+                            }
+
+                            clamp(vector3f2);
                         }
 
                         v = Feature.RENDER_FEATURE.getFullBright().getValue() ?
-                                100f : (float) this.client.options.gamma;
-                        Vector3f vector3f6 = vector3f2.copy();
-                        vector3f6.modify(this::method_23795);
-                        vector3f2.lerp(vector3f6, v);
+                                100f : this.client.options.getGamma().getValue().floatValue();
+                        Vector3f vector3f5 = new Vector3f(this.easeOutQuart(vector3f2.x), this.easeOutQuart(vector3f2.y), this.easeOutQuart(vector3f2.z));
+                        vector3f2.lerp(vector3f5, Math.max(0.0F, v - i));
                         vector3f2.lerp(new Vector3f(0.75F, 0.75F, 0.75F), 0.04F);
-                        vector3f2.clamp(0.0F, 1.0F);
-                        vector3f2.scale(255.0F);
-                        int z = (int) vector3f2.getX();
-                        int aa = (int) vector3f2.getY();
-                        int ab = (int) vector3f2.getZ();
-                        image.setPixelColor(o, n, -16777216 | ab << 16 | aa << 8 | z);
+                        clamp(vector3f2);
+                        vector3f2.mul(255.0F);
+                        int x = (int)vector3f2.x();
+                        int y = (int)vector3f2.y();
+                        int z = (int)vector3f2.z();
+                        this.image.setColor(o, n, -16777216 | z << 16 | y << 8 | x);
                     }
                 }
 
-                texture.upload();
+                this.texture.upload();
                 this.client.getProfiler().pop();
             }
         }
+    }
+
+    private static void clamp(Vector3f vec) {
+        vec.set(MathHelper.clamp(vec.x, 0.0F, 1.0F), MathHelper.clamp(vec.y, 0.0F, 1.0F), MathHelper.clamp(vec.z, 0.0F, 1.0F));
     }
 }

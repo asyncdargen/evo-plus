@@ -26,9 +26,9 @@ public enum StaffType {
         this.name = name;
         this.modelId = modelId;
         renderItem = Items.WOODEN_HOE.getDefaultStack().copy();
-        val tag = renderItem.getOrCreateTag();
+        val tag = renderItem.getOrCreateNbt();
         tag.putInt("CustomModelData", modelId);
-        renderItem.setTag(tag);
+        renderItem.setNbt(tag);
     }
 
     public static StaffType getByName(String name) {

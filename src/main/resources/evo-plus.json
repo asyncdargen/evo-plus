@@ -6,6 +6,7 @@
   "mixins": [
     "BossBarHudAccessor",
     "ChatHudMixin",
+    "KeyboardMixin",
     "ClientBrandRetrieverMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayerInteractionManagerMixin",

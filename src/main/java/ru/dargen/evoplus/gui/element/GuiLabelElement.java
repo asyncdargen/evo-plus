@@ -41,7 +41,7 @@ public class GuiLabelElement implements GuiElement {
             hovered = false;
         else {
             hovered = isInside(mx, my);
-            Render.scaledRunner(scale, (__, ___) -> Render.drawStringWithShadow(matrixStack, text, (int) (x / scale), (int) (y / scale), -1));
+            Render.scaledRunner(matrixStack, scale, (__, ___) -> Render.drawStringWithShadow(matrixStack, text, (int) (x / scale), (int) (y / scale), -1));
         }
     }
 

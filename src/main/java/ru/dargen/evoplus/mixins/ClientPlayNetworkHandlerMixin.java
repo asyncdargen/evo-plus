@@ -9,12 +9,12 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkThreadUtils;
-import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.*;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,6 +38,7 @@ public class ClientPlayNetworkHandlerMixin {
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .build();
 
+    @Final
     @Shadow
     private MinecraftClient client;
 
@@ -79,28 +80,29 @@ public class ClientPlayNetworkHandlerMixin {
                 this.client.getTutorialManager().onSlotUpdate(itemStack);
                 if (event.getSyncId() == -1) {
                     if (!(this.client.currentScreen instanceof CreativeInventoryScreen)) {
-                        playerEntity.inventory.setCursorStack(itemStack);
+                        playerEntity.currentScreenHandler.setCursorStack(itemStack);
                     }
                 } else if (event.getSyncId() == -2) {
-                    playerEntity.inventory.setStack(i, itemStack);
+                    playerEntity.getInventory().setStack(i, itemStack);
                 } else {
                     boolean bl = false;
                     if (this.client.currentScreen instanceof CreativeInventoryScreen) {
                         CreativeInventoryScreen creativeInventoryScreen = (CreativeInventoryScreen)this.client.currentScreen;
-                        bl = creativeInventoryScreen.getSelectedTab() != ItemGroup.INVENTORY.getIndex();
+                        bl = creativeInventoryScreen.isInventoryTabSelected();
                     }
 
                     if (event.getSyncId() == 0 && event.getSlot() >= 36 && i < 45) {
                         if (!itemStack.isEmpty()) {
                             ItemStack itemStack2 = playerEntity.playerScreenHandler.getSlot(i).getStack();
                             if (itemStack2.isEmpty() || itemStack2.getCount() < itemStack.getCount()) {
-                                itemStack.setCooldown(5);
+                                playerEntity.getItemCooldownManager()
+                                        .set(itemStack.getItem(), 5);
                             }
                         }
 
-                        playerEntity.playerScreenHandler.setStackInSlot(i, itemStack);
+                        playerEntity.playerScreenHandler.setStackInSlot(i, i, itemStack);
                     } else if (event.getSyncId() == playerEntity.currentScreenHandler.syncId && (event.getSyncId() != 0 || !bl)) {
-                        playerEntity.currentScreenHandler.setStackInSlot(i, itemStack);
+                        playerEntity.currentScreenHandler.setStackInSlot(i, i, itemStack);
                     }
                 }
             }
@@ -122,7 +124,7 @@ public class ClientPlayNetworkHandlerMixin {
                 NetworkThreadUtils.forceMainThread((Packet) packet, (PacketListener) this, client);
                 PlayerEntity playerEntity = client.player;
                 if (event.getSyncId() == playerEntity.currentScreenHandler.syncId)
-                    playerEntity.currentScreenHandler.updateSlotStacks(event.getContents());
+                    playerEntity.currentScreenHandler.updateSlotStacks(1, event.getContents(), playerEntity.getInventory().getMainHandStack());
             }
         }
     }

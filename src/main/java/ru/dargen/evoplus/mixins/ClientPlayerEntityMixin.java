@@ -3,6 +3,7 @@ package ru.dargen.evoplus.mixins;
 import lombok.val;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,9 +18,9 @@ public abstract class ClientPlayerEntityMixin {
 
     @Shadow @Final public ClientPlayNetworkHandler networkHandler;
 
-    @Inject(at = @At("HEAD"), method = "sendChatMessage", cancellable = true)
-    public void sendMessage(String message, CallbackInfo ci) {
-        val event = new ChatSendEvent(message);
+    @Inject(at = @At("HEAD"), method = "sendMessage(Lnet/minecraft/text/Text;Z)V", cancellable = true)
+    public void sendMessage(Text message, boolean overlay, CallbackInfo ci) {
+        val event = new ChatSendEvent(message.getString());
         if (EvoPlus.instance().getEventBus().fireEvent(event).isCancelled())
             ci.cancel();
 //            networkHandler.sendPacket(new ChatMessageC2SPacket(event.getText()));

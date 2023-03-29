@@ -2,7 +2,7 @@ package ru.dargen.evoplus.feature.impl.staff;
 
 import lombok.Getter;
 import lombok.val;
-import net.minecraft.util.ChatUtil;
+import net.minecraft.util.Formatting;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.event.interact.InteractItemEvent;
 import ru.dargen.evoplus.event.inventory.InventorySlotUpdateEvent;
@@ -78,7 +78,7 @@ public class StaffTimerFeature extends Feature {
         });
         mod.getEventBus().register(InventorySlotUpdateEvent.class, event -> {
             val itemStack = event.getStack();
-            val displayName = itemStack == null ? null : ChatUtil.stripTextFormat(ItemUtil.getDisplayName(itemStack));
+            val displayName = itemStack == null ? null : Formatting.strip(ItemUtil.getDisplayName(itemStack));
             if (displayName == null || !displayName.contains("Чародей")) return;
             val level = ItemUtil.getStringLore(itemStack)
                     .stream()
@@ -112,7 +112,7 @@ public class StaffTimerFeature extends Feature {
                 Render.drawCenteredString(matrixStack, state,
                         startX + 20 * type.ordinal() + 10,
                         height - 24 - Render.getStringHeight() / 2, -1);
-                Render.drawItem(type.getRenderItem(),
+                Render.drawItem(matrixStack, type.getRenderItem(),
                         startX + 20 * type.ordinal(), height - 20);
                 if (!hasCooldown(type) && infoMap.remove(type) != null) {
                     if (notifyOnReady.getValue())
