@@ -2,7 +2,6 @@ package ru.dargen.evoplus.command;
 
 import lombok.Getter;
 import lombok.val;
-import lombok.var;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.event.chat.ChatSendEvent;
 

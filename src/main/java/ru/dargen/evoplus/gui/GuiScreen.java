@@ -1,7 +1,6 @@
 package ru.dargen.evoplus.gui;
 
 import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -22,9 +21,8 @@ public abstract class GuiScreen extends Screen {
     }
 
     @Override
-    public void init(MinecraftClient client, int width, int height) {
+    public void init() {
         initialized.set(false);
-        super.init(Util.getClient(), width, height);
         elements.clear();
         handleInit(width, height);
         initialized.set(true);
@@ -98,11 +96,12 @@ public abstract class GuiScreen extends Screen {
     }
 
     public void display() {
-        Util.getClient().openScreen(this);
+        Util.getClient().setScreen(this);
     }
 
+    @Override
     public void close() {
-        onClose();
+        super.close();
     }
 
 }

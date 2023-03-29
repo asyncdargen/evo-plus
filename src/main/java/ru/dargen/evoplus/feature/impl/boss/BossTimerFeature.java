@@ -2,7 +2,6 @@ package ru.dargen.evoplus.feature.impl.boss;
 
 import lombok.Getter;
 import lombok.val;
-import lombok.var;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -134,7 +133,7 @@ public class BossTimerFeature extends Feature {
             val matrixStack = event.getMatrixStack();
             val index = new int[]{0};
             val scale = this.scale.getValue() / 100f;
-            Render.scaledRunner(scale, (__, ___) -> {
+            Render.scaledRunner(matrixStack, scale, (__, ___) -> {
                 infoMap.entrySet()
                         .stream()
                         .filter(info -> hasCooldown(info.getKey()) && inLevelBounds(info.getKey()))

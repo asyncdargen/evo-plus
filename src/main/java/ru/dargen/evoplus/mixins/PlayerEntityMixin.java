@@ -26,7 +26,7 @@ public abstract class PlayerEntityMixin {
     public void getDisplayName(CallbackInfoReturnable<Text> cir) {
         val name = getEntityName();
         val color = Feature.TEAM_WAR_FEATURE.getTagColorForPlayer(name);
-        if (color != null) cir.setReturnValue(Team.modifyText(
+        if (color != null) cir.setReturnValue(Team.decorateName(
                 Util.getClient().world.getScoreboard().getPlayerTeam(name),
                 Text.of(color + name))
         );

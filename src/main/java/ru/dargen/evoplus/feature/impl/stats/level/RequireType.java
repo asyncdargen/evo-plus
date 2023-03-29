@@ -16,7 +16,7 @@ public enum RequireType {
         @Override
         double getCurrentAmount(LevelRequire levelRequire) {
             if (Util.getPlayer() == null) return 0;
-            return Util.getPlayer().inventory.main
+            return Util.getPlayer().getInventory().main
                     .stream()
                     .filter(item -> item != null && Util.stripColor(ItemUtil.getDisplayName(item)).equalsIgnoreCase(levelRequire.getName()))
                     .mapToInt(ItemStack::getCount)

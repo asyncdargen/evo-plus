@@ -3,7 +3,6 @@ package ru.dargen.evoplus.feature.impl;
 import io.netty.util.internal.ConcurrentSet;
 import lombok.Getter;
 import lombok.val;
-import lombok.var;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.event.inventory.InventorySlotUpdateEvent;
 import ru.dargen.evoplus.feature.Feature;

@@ -4,7 +4,6 @@ import lombok.val;
 import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,8 +25,8 @@ public abstract class PlayerListHudMixin {
         if (color != null)
             cir.setReturnValue(
                     entry.getDisplayName() != null
-                            ? applyGameModeFormatting(entry, entry.getDisplayName().shallowCopy())
-                            : this.applyGameModeFormatting(entry, Team.modifyText(entry.getScoreboardTeam(), new LiteralText(color + name)))
+                            ? applyGameModeFormatting(entry, entry.getDisplayName().copy())
+                            : this.applyGameModeFormatting(entry, Team.decorateName(entry.getScoreboardTeam(), Text.of(color + name)))
             );
     }
 

@@ -4,9 +4,9 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 import lombok.val;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 
 import java.lang.reflect.Constructor;
@@ -33,26 +33,26 @@ public class ItemUtil {
 
     public List<Text> getTextLore(ItemStack itemStack) {
         if (itemStack == null) return Collections.emptyList();
-        val tag = itemStack.getOrCreateSubTag("display");
+        val tag = itemStack.getSubNbt("display");
         val loreTag = tag.getList("Lore", 8);
         if (loreTag == null) return Collections.emptyList();
         return loreTag.stream()
-                .map(Tag::asString)
+                .map(NbtElement::asString)
                 .map(Text.Serializer::fromJson)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    private final Constructor<ListTag> LIST_TAG_CONSTRUCTOR = getListTagConstructor();
+    private final Constructor<NbtList> LIST_TAG_CONSTRUCTOR = getListTagConstructor();
 
     @SneakyThrows
-    private Constructor<ListTag> getListTagConstructor() {
-        val constructor = Arrays.stream(ListTag.class.getDeclaredConstructors())
+    private Constructor<NbtList> getListTagConstructor() {
+        val constructor = Arrays.stream(NbtList.class.getDeclaredConstructors())
                 .filter(c -> c.getParameterCount() == 2)
                 .findFirst()
                 .get();
         constructor.setAccessible(true);
-        return (Constructor<ListTag>) constructor;
+        return (Constructor<NbtList>) constructor;
     }
 
     @SneakyThrows
@@ -63,11 +63,11 @@ public class ItemUtil {
     @SneakyThrows
     public void setTextLore(ItemStack itemStack, List<Text> lore) {
         if (itemStack == null || lore == null) return;
-        val tag = itemStack.getOrCreateSubTag("display");
+        val tag = itemStack.getOrCreateSubNbt("display");
         val loreTag = LIST_TAG_CONSTRUCTOR.newInstance(
                 lore.stream()
                         .map(Text.Serializer::toJson)
-                        .map(StringTag::of)
+                        .map(NbtString::of)
                         .collect(Collectors.toList()),
                 ((byte) 8)
         );

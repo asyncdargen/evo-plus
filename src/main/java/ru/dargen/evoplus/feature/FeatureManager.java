@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 import ru.dargen.evoplus.EvoPlus;
+import ru.dargen.evoplus.event.game.KeyboardEvent;
 import ru.dargen.evoplus.util.Util;
 import ru.dargen.evoplus.util.common.FileUtil;
 
@@ -26,8 +27,8 @@ public class FeatureManager {
 
         KeyBindingHelper.registerKeyBinding(keyBinding);
 
-        mod.getTaskBus().runAsync(1, 1, task -> {
-            if (keyBinding.isPressed() && !Util.isOpenedScreen())
+        mod.getEventBus().register(KeyboardEvent.class, event -> {
+            if (keyBinding.matchesKey(event.getKey(), 0) && !Util.isOpenedScreen())
                 new FeaturesGuiScreen().display();
         });
 

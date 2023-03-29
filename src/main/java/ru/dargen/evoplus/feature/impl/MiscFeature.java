@@ -97,8 +97,8 @@ public class MiscFeature extends Feature {
             val y = Util.getHeight() - Render.getStringHeight() - 5;
             val matrixStack = event.getMatrixStack();
             val iconScale = 0.63f;
-            Render.scaledRunner(iconScale, (__, ___) -> {
-                Render.drawItem(hitRenderIconStack, (int) ((x - 10) / iconScale), (int) ((y - 2) / iconScale));
+            Render.scaledRunner(matrixStack, iconScale, (__, ___) -> {
+                Render.drawItem(matrixStack, hitRenderIconStack, (int) ((x - 10) / iconScale), (int) ((y - 2) / iconScale));
             });
             Render.drawStringWithShadow(matrixStack, text, x, y, -1);
         });
