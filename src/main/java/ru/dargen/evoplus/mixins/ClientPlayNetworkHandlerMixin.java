@@ -123,8 +123,11 @@ public class ClientPlayNetworkHandlerMixin {
             if (!event.isHidden()) {
                 NetworkThreadUtils.forceMainThread((Packet) packet, (PacketListener) this, client);
                 PlayerEntity playerEntity = client.player;
-                if (event.getSyncId() == playerEntity.currentScreenHandler.syncId)
-                    playerEntity.currentScreenHandler.updateSlotStacks(1, event.getContents(), playerEntity.getInventory().getMainHandStack());
+                if (packet.getSyncId() == 0) {
+                    playerEntity.playerScreenHandler.updateSlotStacks(packet.getRevision(), packet.getContents(), packet.getCursorStack());
+                } else if (packet.getSyncId() == playerEntity.currentScreenHandler.syncId) {
+                    playerEntity.currentScreenHandler.updateSlotStacks(packet.getRevision(), packet.getContents(), packet.getCursorStack());
+                }
             }
         }
     }
