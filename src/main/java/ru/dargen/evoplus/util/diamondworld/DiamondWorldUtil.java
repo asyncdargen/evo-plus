@@ -30,7 +30,7 @@ public class DiamondWorldUtil {
         mod.getEventBus().register(DisconnectServerEvent.class, event -> onPrisonEvo = false);
         mod.getEventBus().register(ChangeServerEvent.class, event -> {
             if (isOnDiamondWorld())
-                Util.sendMessage("/modinfo server");
+                Util.performCommand("modinfo server");
         });
         mod.getEventBus().register(ChatReceiveEvent.class, event -> {
             try {
@@ -45,13 +45,13 @@ public class DiamondWorldUtil {
         });
         mod.getTaskBus().runAsync(150, 150, task -> {
             if (onDiamondWorld = isOnDiamondWorld0())
-                Util.sendMessage("/modinfo server");
+                Util.performCommand("modinfo server");
         });
 
         mod.getTaskBus().runAsync(35, 35, task -> {
             if (isOnPrisonEvo() && Util.getBossBarInfos().size() > 1 && Util.getSidebarObjective() == null) {
                 Util.printMessage(EvoPlus.PREFIX + "§cДля работы мода необходим интерфейс со скорбордом. Переключаюсь...");
-                Util.sendMessage("/interface");
+                Util.performCommand("interface");
             }
         });
     }

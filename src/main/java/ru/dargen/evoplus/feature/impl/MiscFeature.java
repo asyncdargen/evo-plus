@@ -88,7 +88,7 @@ public class MiscFeature extends Feature {
                 event.setCancelled(true);
 
             if (autoThanks.getValue() && text.contains("активировал глобальный бустер"))
-                EvoPlus.instance().getTaskBus().runLaterAsync(1, task -> Util.sendMessage("/thanks"));
+                EvoPlus.instance().getTaskBus().runLaterAsync(1, task -> Util.performCommand("thanks"));
         });
         mod.getEventBus().register(HudRenderEvent.class, event -> {
             if (!bossHits.getValue() || !DiamondWorldUtil.isOnPrisonEvo()) return;

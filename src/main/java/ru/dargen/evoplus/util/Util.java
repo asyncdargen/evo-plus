@@ -121,6 +121,10 @@ public class Util {
         if (getPlayer() != null) getPlayer().networkHandler.sendChatMessage(text);
     }
 
+    public void performCommand(String command) {
+        if (getPlayer() != null) getPlayer().networkHandler.sendChatCommand(command);
+    }
+
     public String stripColor(String input) {
         if (input == null)
             return null;
