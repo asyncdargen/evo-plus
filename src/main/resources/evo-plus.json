@@ -1,24 +1,16 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "ru.dargen.evoplus.mixins",
+  "package": "ru.dargen.evoplus.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "BossBarHudAccessor",
-    "ChatHudMixin",
-    "KeyboardMixin",
-    "ClientBrandRetrieverMixin",
-    "ClientPlayerEntityMixin",
-    "ClientPlayerInteractionManagerMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "GenericContainerScreenMixin",
-    "InGameHudMixin",
-    "LightmapTextureManagerMixin",
+    "input.KeyboardMixin",
+    "input.MouseMixin",
+
     "MinecraftClientMixin",
-    "PlayerEntityMixin",
-    "PlayerListHudAccessor",
-    "PlayerListHudMixin",
-    "WorldMixin"
+    "ClientPlayerEntityMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,49 +1,55 @@
 plugins {
-    id 'java'
     id 'fabric-loom' version '1.1-SNAPSHOT'
+
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.0'
+    id 'org.jetbrains.kotlin.plugin.allopen' version '1.5.0'
 }
 
+version = project.mod_version
 group = project.maven_group
-archivesBaseName = "evo-plus"
+archivesBaseName = project.archives_base_name
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
 dependencies {
+    //Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
+    // Fabric
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    Set<String> apiModules = [
-            "fabric-key-binding-api-v1"
-    ]
-
-    apiModules.forEach {
-        include(modImplementation(fabricApi.module(it, project.fabric_version)))
-    }
+    //Kotlin
+    modImplementation 'net.fabricmc:fabric-language-kotlin:1.10.8+kotlin.1.9.0'
 }
 
 processResources {
-    inputs.property "version", project.mod_version
-    filteringCharset "UTF-8"
+    inputs.property 'version', version
+    filteringCharset 'UTF-8'
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.mod_version
+    filesMatching('fabric.mod.json') {
+        expand 'version': version
     }
 }
 
-java {
-    archivesBaseName = project.archives_base_name
-    withSourcesJar()
+jar {
+    from('LICENSE')
 }
 
-jar {
-    from("LICENSE")
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding('UTF-8')
 }
 
 runClient {
-    args "--username=DargenCode"
+    args '--username=DargenCode'
 }
 
-tasks.withType(JavaCompile)*.options*.encoding = "UTF-8"
+allOpen {
+    annotation('ru.dargen.evoplus.util.kotlin.KotlinOpens')
+}
+
+tasks.withType(JavaCompile)*.options*.encoding = 'UTF-8'
