@@ -1,0 +1,53 @@
+package ru.dargen.evoplus.api.render.node.input
+
+import net.minecraft.sound.SoundEvents
+import ru.dargen.evoplus.api.render.Relative
+import ru.dargen.evoplus.api.render.node.RectangleNode
+import ru.dargen.evoplus.api.render.node.hover
+import ru.dargen.evoplus.api.render.node.leftClick
+import ru.dargen.evoplus.api.render.node.text
+import ru.dargen.evoplus.util.kotlin.KotlinOpens
+import ru.dargen.evoplus.util.math.Vector3
+import ru.dargen.evoplus.util.playSound
+
+@KotlinOpens
+class ButtonNode(label: String = "") : RectangleNode() {
+
+    val label = +text(label) {
+        align = Relative.Center
+        origin = Relative.Center
+    }
+
+    var buttonColor = ru.dargen.evoplus.api.render.Colors.Primary
+        set(value) {
+            field = value
+            color = buttonColor()
+        }
+
+    var isSilent = false
+    var clickHandler: ButtonNode.(mouse: Vector3) -> Unit = {}
+
+    init {
+        color = buttonColor()
+        size = Vector3(100.0, 20.0)
+
+        hover { _, hovered ->
+            color = buttonColor(hovered)
+        }
+        leftClick { mouse, state ->
+            if (isHovered && state) {
+                clickHandler(mouse)
+                if (!isSilent) {
+                    playSound(SoundEvents.UI_BUTTON_CLICK)
+                }
+            }
+        }
+    }
+
+    protected fun buttonColor(hovered: Boolean = isHovered) = if (hovered) buttonColor.darker() else buttonColor
+
+    fun on(handler: ButtonNode.(mouse: Vector3) -> Unit = {}) = apply { clickHandler = handler }
+
+}
+
+fun button(label: String = "", block: ButtonNode.() -> Unit = {}) = ButtonNode(label).apply(block)

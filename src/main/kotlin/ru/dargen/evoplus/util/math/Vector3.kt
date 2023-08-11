@@ -121,6 +121,11 @@ class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
 
     operator fun unaryMinus() = not()
 
+    fun distance(x: Double, y: Double, z: Double) =
+        sqrt(square(this.x - x) + square(this.y - y) + square(this.z - z))
+
+    fun distance(v: Vector3) = distance(v.x, v.y, v.z)
+
     fun clone() = Vector3(x, y, z)
 
     fun isBetween(start: Vector3, end: Vector3) =
@@ -139,8 +144,14 @@ class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
     override fun equals(other: Any?) =
         other is Vector3 && other.x == x && other.y == other.y && other.z == other.z
 
+    fun toMap() = mapOf("x" to x, "y" to y, "z" to z)
+
     override fun toString(): String {
         return "Vector3(x=%.2f, y=%.2f, z=%.2f)".format(x, y, z)
     }
+
+    operator fun component1() = x
+    operator fun component2() = y
+    operator fun component3() = z
 
 }

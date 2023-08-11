@@ -7,10 +7,17 @@
     "input.KeyboardMixin",
     "input.MouseMixin",
 
+    "input.keybind.GameOptionsMixin",
+    "input.keybind.KeyBindingAccessor",
+
+    "world.ParticleManagerAccessor",
+
+    "render.WindowMixin",
+    "render.InGameHudMixin",
+
     "MinecraftClientMixin",
     "ClientPlayerEntityMixin",
-    "ClientPlayNetworkHandlerMixin",
-    "InGameHudMixin"
+    "ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
