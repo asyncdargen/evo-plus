@@ -6,6 +6,7 @@ import ru.dargen.evoplus.api.render.node.DummyNode
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.scroll.vScrollView
 import ru.dargen.evoplus.feature.FeaturesScreen
+import ru.dargen.evoplus.util.isNull
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.selector.Selector
 
@@ -44,7 +45,7 @@ class SettingsGroup(id: String, name: String) : Setting<MutableList<Setting<*>>>
         if (!element.isJsonObject) return
 
         value.associateWith { element.asJsonObject[it.id] }
-            .filterValues { !it.isJsonNull }
+            .filterValues { !it.isNull }
             .forEach { (setting, settingElement) -> setting.load(settingElement) }
     }
 

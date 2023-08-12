@@ -25,7 +25,7 @@ class Widget(id: String, name: String, supplier: Node.() -> Node) : Setting<Node
             }
         }) { _, delta ->
             if (FeaturesScreen.isInWidgetEditor()){
-                translation = delta
+                translation = delta / OverlayContext.Scale
 
                 val minX = position.x + translation.x
                 val minY = position.y + translation.y

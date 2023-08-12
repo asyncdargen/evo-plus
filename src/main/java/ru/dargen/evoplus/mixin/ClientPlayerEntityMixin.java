@@ -13,11 +13,5 @@ import ru.dargen.evoplus.api.event.chat.OverlayEvent;
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin {
 
-    @Inject(at = @At("HEAD"), method = "sendMessage(Lnet/minecraft/text/Text;Z)V", cancellable = true)
-    public void sendMessage(Text message, boolean overlay, CallbackInfo ci) {
-        if (!EventBus.INSTANCE.fireResult(new ChatReceiveEvent(message, overlay))
-                || !EventBus.INSTANCE.fireResult(new OverlayEvent(message))
-        ) ci.cancel();
-    }
 
 }

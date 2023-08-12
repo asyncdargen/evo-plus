@@ -15,11 +15,12 @@ public abstract class ParticleManagerMixin {
 
     @Inject(method = "addBlockBreakParticles", at = @At("HEAD"), cancellable = true)
     private void onAddBlockBreakParticles(BlockPos blockPos, BlockState state, CallbackInfo info) {
-        if (!RenderFeature.INSTANCE.getBlockBreakParticles()) info.cancel();
+        if (RenderFeature.INSTANCE.getNoBlockParticles()) info.cancel();
     }
 
     @Inject(method = "addBlockBreakingParticles", at = @At("HEAD"), cancellable = true)
     private void onAddBlockBreakingParticles(BlockPos blockPos, Direction direction, CallbackInfo info) {
-        if (!RenderFeature.INSTANCE.getBlockBreakParticles()) info.cancel();
+        if (RenderFeature.INSTANCE.getNoBlockParticles()) info.cancel();
     }
+
 }

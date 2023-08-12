@@ -38,7 +38,10 @@ fun printHoveredCommandMessage(message: String, hover: String, command: String) 
         Player?.sendMessage(this, false)
     }
 
-fun sendChatMessage(message: String) = Player?.networkHandler?.sendChatMessage(message)
+fun sendChatMessage(message: String) =
+    Player?.networkHandler?.sendChatMessage(message.replace('§', '&'))
+
+fun sendClanMessage(message: String) = sendChatMessage("@$message")
 
 fun sendCommand(command: String) = Player?.networkHandler?.sendChatCommand(command)
 

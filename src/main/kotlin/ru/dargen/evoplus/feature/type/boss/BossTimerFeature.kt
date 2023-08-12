@@ -1,138 +1,130 @@
 package ru.dargen.evoplus.feature.type.boss
 
 import net.minecraft.item.Items
-import ru.dargen.evoplus.Executor
 import ru.dargen.evoplus.ModLabel
+import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.render.node.tick
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.feature.misc.Notifies
 import ru.dargen.evoplus.util.*
+import ru.dargen.evoplus.util.concurrent.every
+import ru.dargen.evoplus.util.format.asTextTime
+import ru.dargen.evoplus.util.format.fromTextTime
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.time.Duration.Companion.milliseconds
 
 object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Items.CLOCK) {
 
-    val bosses: MutableMap<BossType, Long> = EnumMap(BossType::class.java)
-    val alerted = mutableSetOf<BossType>()
-    val timeRegex = "((\\d+)\\s(ч|мин|сек))".toRegex()
+    val Bosses: MutableMap<BossType, Long> = EnumMap(BossType::class.java)
+    private val Alerted = mutableSetOf<BossType>()
 
-    val widget by widgets.add("bosses", "Таймер боссов") {
-        +text {
-            tick {
-                lines = bosses
-                    .filterKeys { it.inLevelBounds }
-                    .entries
-                    .sortedBy { it.value }
-                    .take(bossesCount)
-                    .map { (type, timestamp) -> "$type§8: §f${(timestamp - System.currentTimeMillis()).format}" }
-            }
-        }
-    }
-    val enabled by settings.boolean(
+    private val BossesText = text()
+    val Widget by widgets.add("bosses", "Таймер боссов") { +BossesText }
+    val Enabled by settings.boolean(
         "enabled",
         "Отображение таймера боссов",
         true
-    ) on { widget.enabled = it }
-    val minLevel by settings.selector(
+    ) on { Widget.enabled = it }
+    val MinLevel by settings.selector(
         "min-level",
         "Мин. уровень босса",
         enumSelector<BossType>()
     ) { "${it?.level}" }
-    val maxLevel by settings.selector(
+    val MaxLevel by settings.selector(
         "max-level",
         "Макс. уровень босса",
         enumSelector<BossType>(-1)
     ) { "${it?.level}" }
-    val bossesCount by settings.selector(
+    val BossesCount by settings.selector(
         "render-count",
         "Кол-во отображаемых боссов",
         (0..<BossType.entries.size).toList().toSelector(-1)
     )
-    val alertDelay by settings.selector(
+    val AlertDelay by settings.selector(
         "alert-time",
         "За сколько предупреждать о боссе",
         (0..120 step 5).toList().toSelector()
     ) { "$it сек." }
-    val inlineMenuTime by settings.boolean(
+    val InlineMenuTime by settings.boolean(
         "menu-time",
         "Отображать время до спавна в меню",
         true
     )
-    val message by settings.boolean(
+    val Message by settings.boolean(
         "message",
         "Сообщение о спавне",
         false
     )
-    val clanMessage by settings.boolean(
+    val ClanMessage by settings.boolean(
         "clan-messages",
         "Сообщение о спавне в клановый чат",
         false
     )
+    val Notify by settings.boolean(
+        "notify",
+        "Уведомления о спавне",
+        false
+    )
 
-    val BossType.inLevelBounds get() = level in minLevel.level..maxLevel.level
-    private val String.time
-        get() = run {
-            val timeData = replace(".", "").split("\\s".toRegex())
-
-            if (timeData.size != 2) return@run 0L
-
-            val multi = timeData[0].toLong()
-            val defaultValue = when (timeData[1]) {
-                "ч" -> 3_600_000L
-                "мин" -> 60_000L
-                "сек" -> 1000L
-                else -> 0L
-            }
-
-            multi * defaultValue
-        }
-
-    private val String.totalTime
-        get() = timeRegex.findAll(this).fold(0L) { acc, match -> acc + match.groupValues[1].time }
+    private val Long.fixSeconds get() = div(1000).times(1000)
+    private val BossType.inLevelBounds get() = level in MinLevel.level..MaxLevel.level
 
     init {
-        Executor.scheduleAtFixedRate({
-            bosses
-                .asSequence()
-                .forEach { (type, timestamp) ->
-                    val displayName = type.toString()
-                    val remainTime = timestamp - System.currentTimeMillis()
+        every(100) {
+            Bosses.forEach { (type, timestamp) ->
+                val displayName = type.toString()
+                val remainTime = timestamp - System.currentTimeMillis()
 
-                    if (alertDelay > 0 && type !in alerted && remainTime / 1000 <= alertDelay) {
-                        printHoveredCommandMessage("Босс §6$displayName §fвозродится через §f$alertDelay секунд.", "§aНажмите, чтобы начать телепортацию", "/boss ${type.level}")
-                        alerted.add(type)
-                    }
+                if (AlertDelay > 0 && type !in Alerted && remainTime / 1000 <= AlertDelay) {
+                    if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §f$AlertDelay секунд.", type)
+                    if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §f$AlertDelay секунд.")
+                    if (Notify) notify("Босс §6$displayName §fвозродится\nчерез §f$AlertDelay секунд.", type)
 
-                    if (remainTime <= 0) {
-                        bosses.remove(type)
-                        alerted.remove(type)
-                        when {
-                            message -> printHoveredCommandMessage("Босс §6$displayName §fвозродился.", "§aНажмите, чтобы начать телепортацию", "/boss ${type.level}")
-                            clanMessage -> sendChatMessage("@${ModLabel}§8: §fБосс $displayName §fвозродился.")
-                        }
-                    }
+                    Alerted.add(type)
                 }
 
+                if (remainTime <= 0) {
+                    Bosses.remove(type)
+                    Alerted.remove(type)
+
+                    if (Message) printAlertMessage("Босс §6$displayName §fвозродился.", type)
+                    if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс $displayName §fвозродился.")
+                    if (Notify) notify("Босс §6$displayName §fвозродился.", type)
+                }
+            }
+
+            BossesText.lines = Bosses
+                .filterKeys { it.inLevelBounds }
+                .entries
+                .sortedBy { it.value }
+                .take(BossesCount)
+                .map { (type, timestamp) -> "$type§8: §f${(timestamp - System.currentTimeMillis()).asTextTime}" }
+
             fillBossData()
-        }, 50, 50, TimeUnit.MILLISECONDS)
+        }
     }
-    fun fillBossData() {
-        val (bossType, additionTime) = getBossData() ?: return
+
+    fun notify(text: String, type: BossType) = Notifies.show(text) {
+        +button("§aТелепортироваться") { on { sendCommand("boss ${type.level}") } }
+    }
+
+    fun printAlertMessage(text: String, type: BossType) =
+        printHoveredCommandMessage(text, "§aНажмите, чтобы начать телепортацию", "/boss ${type.level}")
+
+    private fun fillBossData() {
+        val (bossType, additionTime) = fetchWorldBossData() ?: return
 
         val totalTime = System.currentTimeMillis() + additionTime
-        val currentTime = bosses[bossType] ?: 0
+        val currentTime = Bosses[bossType] ?: 0
 
-        if (totalTime - currentTime < 10000) return
+        if (totalTime - currentTime < 5000) return
 
-        bosses[bossType] = totalTime
+        Bosses[bossType] = totalTime
     }
 
-    fun getBossData() = Client?.world
-        ?.entities
-        ?.map { it.displayName.string.uncolored.replace("۞", "") }
+    private fun fetchWorldBossData() = Client?.world?.entities
+        ?.map { it.displayName.string.uncolored().replace("۞", "") }
         ?.sortedByDescending { it.startsWith("Босс") }
         ?.mapNotNull {
             when {
@@ -142,13 +134,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
             }
         }
         ?.run {
-            (BossType[getOrNull(0) ?: return@run null] ?: return@run null) to (getOrNull(1) ?: return@run null).totalTime
+            (BossType[getOrNull(0) ?: return@run null] ?: return@run null) to (getOrNull(1)
+                ?: return@run null).fromTextTime.fixSeconds
         }
 
 }
-
-private val Long.format
-    get() = if (this < 1000L) "сейчас"
-    else milliseconds.toComponents { hours, minutes, seconds, _ ->
-        "${if (hours > 0) "$hours ч. " else ""}${if (minutes > 0) "$minutes мин. " else ""}${if (seconds > 0) "$seconds сек." else ""}"
-    }

@@ -7,14 +7,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkThreadUtils;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
-import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
-import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,10 +22,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.dargen.evoplus.EvoPlus;
 import ru.dargen.evoplus.api.event.EventBus;
+import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent;
 import ru.dargen.evoplus.api.event.chat.ChatSendEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryOpenEvent;
 import ru.dargen.evoplus.api.event.inventory.InventorySlotUpdateEvent;
+import ru.dargen.evoplus.feature.misc.MiscFeature;
+import ru.dargen.evoplus.feature.type.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.Inventories;
 
 import java.util.concurrent.TimeUnit;
@@ -42,6 +44,20 @@ public class ClientPlayNetworkHandlerMixin {
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
     private void sendChatMessage(String content, CallbackInfo ci) {
         if (!EventBus.INSTANCE.fireResult(new ChatSendEvent(content))) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "onChatMessage", at = @At("HEAD"), cancellable = true)
+    private void sendChatMessage(ChatMessageS2CPacket packet, CallbackInfo ci) {
+        if (!EventBus.INSTANCE.fireResult(new ChatReceiveEvent(packet.unsignedContent()))) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "onEntitySpawn", at = @At("HEAD"), cancellable = true)
+    private void sendChatMessage(EntitySpawnS2CPacket packet, CallbackInfo ci) {
+        if (packet.getEntityType() == EntityType.LIGHTNING_BOLT && RenderFeature.INSTANCE.getNoStrikes()) {
             ci.cancel();
         }
     }

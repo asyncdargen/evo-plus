@@ -1,5 +1,5 @@
 package ru.dargen.evoplus.util
 
-private val colorPattern = "(?i)§[\\dA-FK-ORX]".toRegex()
+private val ColorPattern = "(?i)§[\\dA-FK-ORX]".toRegex()
 
-val String.uncolored get() = colorPattern.replace(this, "")
+fun String.uncolored() = ColorPattern.replace(this, "")

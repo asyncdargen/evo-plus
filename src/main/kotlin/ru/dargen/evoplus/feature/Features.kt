@@ -5,10 +5,11 @@ import ru.dargen.evoplus.api.event.game.MinecraftLoadedEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.keybind.Keybinds.MenuKey
 import ru.dargen.evoplus.api.keybind.on
-import ru.dargen.evoplus.feature.type.MiscFeature
+import ru.dargen.evoplus.feature.misc.MiscFeature
 import ru.dargen.evoplus.feature.type.RenderFeature
 import ru.dargen.evoplus.feature.type.boss.BossTimerFeature
 import ru.dargen.evoplus.util.Gson
+import ru.dargen.evoplus.util.isNull
 import ru.dargen.evoplus.util.log
 import java.nio.file.Paths
 import kotlin.concurrent.thread
@@ -19,7 +20,8 @@ import kotlin.io.path.writeText
 
 data object Features {
 
-    val SettingsFile = Paths.get("config/evo-plus.json")
+    val Folder = Paths.get("evo-plus").createDirectories()
+    val SettingsFile = Folder.resolve("evo-plus.json")
     val List = mutableListOf<Feature>()
     
     init {
@@ -39,15 +41,11 @@ data object Features {
     }
 
     fun loadSettings() {
-        if (SettingsFile.parent?.exists() != true) {
-            SettingsFile.parent?.createDirectories()
-        }
-
         if (SettingsFile.exists()) runCatching {
             val json = Gson.fromJson(SettingsFile.reader(), JsonObject::class.java)
 
             List.associateBy { json.asJsonObject[it.settings.id] }
-                .filterKeys { !it.isJsonNull }
+                .filterKeys { !it.isNull }
                 .forEach { (element, feature) -> feature.settings.load(element) }
         }.exceptionOrNull()?.log("Error while loading features settings")
     }

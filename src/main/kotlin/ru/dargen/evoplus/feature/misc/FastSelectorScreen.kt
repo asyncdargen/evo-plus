@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.feature.type
+package ru.dargen.evoplus.feature.misc
 
 import net.minecraft.item.Item
 import net.minecraft.item.Items
@@ -9,19 +9,16 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.box
-import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.feature.FeaturesScreen
 import ru.dargen.evoplus.util.customItem
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.sendCommand
 
-object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
-
-    var fastSelector by settings.boolean("fast-selector", "Быстрый доступ", true)
+object FastSelectorScreen {
 
     init {
         Keybinds.FastSelector.on {
-            if (!fastSelector) return@on
+            if (!MiscFeature.FastSelector) return@on
 
             screen {
                 val itemTitle = +text {
