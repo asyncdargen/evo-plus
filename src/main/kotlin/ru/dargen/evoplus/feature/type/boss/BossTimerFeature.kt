@@ -102,7 +102,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                     val remainTime = timestamp - System.currentTimeMillis()
 
                     if (alertDelay > 0 && type !in alerted && remainTime / 1000 <= alertDelay) {
-                        printHoveredCommandMessage("Босс §6$displayName возродится через §f$alertDelay секунд.", "§aНажмите, чтобы начать телепортацию", "/boss ${type.level}")
+                        printHoveredCommandMessage("Босс §6$displayName §fвозродится через §f$alertDelay секунд.", "§aНажмите, чтобы начать телепортацию", "/boss ${type.level}")
                         alerted.add(type)
                     }
 
