@@ -10,7 +10,8 @@
     "input.keybind.GameOptionsMixin",
     "input.keybind.KeyBindingAccessor",
 
-    "world.ParticleManagerAccessor",
+    "world.LightmapTextureManagerMixin",
+    "world.ParticleManagerMixin",
 
     "render.WindowMixin",
     "render.InGameHudMixin",

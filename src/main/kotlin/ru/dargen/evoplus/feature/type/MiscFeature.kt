@@ -49,22 +49,22 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
                 }
 
                 val items = listOf(
+                    +commandItem(Items.EMERALD, 0, "shop", "Магазин"),
                     +commandItem(Items.ANVIL, 0, "upgrades", "Прокачки"),
                     +commandItem(Items.COMMAND_BLOCK, 54, "runesbag", "Руны"),
-                    +commandItem(Items.COMMAND_BLOCK, 1, "backpack", "Рюкзак"),
-                    +commandItem(Items.CLOCK, 0, "hide", "Скрыть игроков"),
-                    +commandItem(Items.ANVIL, 0, "shop", "Магазин"),
-
-                    +commandItem(Items.SPIDER_SPAWN_EGG, 0, "pets", "Питомцы"),
-                    +commandItem(Items.ZOMBIE_HEAD, 0, "bosses", "Боссы"),
-                    +commandItem(Items.NETHER_STAR, 0, "menu", "Меню"),
-                    +commandItem(Items.DIAMOND_PICKAXE, 0, "mine", "Шахты"),
                     +commandItem(Items.BONE, 0, "collections", "Коллекции"),
+                    +commandItem(Items.SPIDER_SPAWN_EGG, 0, "pets", "Питомцы"),
 
                     +commandItem(Items.BEACON, 0, "spawn", "Спавн"),
+                    +commandItem(Items.DIAMOND_PICKAXE, 0, "mine", "Шахты"),
+                    +commandItem(Items.NETHER_STAR, 0, "menu", "Меню"),
+                    +commandItem(Items.ZOMBIE_HEAD, 0, "bosses", "Боссы"),
+                    +commandItem(Items.CLOCK, 0, "hide", "Скрыть игроков"),
+
                     +commandItem(Items.FISHING_ROD, 0, "warp fish", "Рыбалка"),
                     +commandItem(Items.DIAMOND, 0, "diamondpass", "DiamondPass"),
-                    +commandItem(Items.EXPERIENCE_BOTTLE, 0, "achievements", "Ачивки"),
+                    +commandItem(Items.COMMAND_BLOCK, 1, "backpack", "Рюкзак"),
+                    +commandItem(Items.EXPERIENCE_BOTTLE, 0, "achievements", "Достижения"),
                     +commandItem(Items.COMMAND_BLOCK, 77, "warp mine", "Шахтеры"),
                 )
                 +box {

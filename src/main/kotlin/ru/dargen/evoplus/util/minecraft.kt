@@ -4,7 +4,10 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.network.packet.Packet
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.sound.SoundEvent
+import net.minecraft.text.ClickEvent
+import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
+import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.util.math.Vector3
 
 val Client get() = MinecraftClient.getInstance()
@@ -25,8 +28,18 @@ val MousePosition
 fun playSound(event: SoundEvent) = Player?.playSound(event, 1f, 1f)
 fun playSound(event: RegistryEntry.Reference<SoundEvent>) = playSound(event.value())
 
-fun printMessage(message: String) = Player?.sendMessage(Text.of(message), false)
+fun printMessage(message: String) = Player?.sendMessage(Text.of("$ModLabel§8: §f$message"), false)
 
-fun sendCommand(command: String) = Player?.networkHandler?.sendCommand(command)
+fun printHoveredCommandMessage(message: String, hover: String, command: String) =
+    Text.literal("$ModLabel§8: §f$message").run {
+        style = style.withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.of(hover)))
+            .withClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
+
+        Player?.sendMessage(this, false)
+    }
+
+fun sendChatMessage(message: String) = Player?.networkHandler?.sendChatMessage(message)
+
+fun sendCommand(command: String) = Player?.networkHandler?.sendChatCommand(command)
 
 fun sendPacket(packet: Packet<*>) = Player?.networkHandler?.sendPacket(packet)

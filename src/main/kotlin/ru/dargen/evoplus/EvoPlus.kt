@@ -8,7 +8,7 @@ import ru.dargen.evoplus.api.render.context.OverlayContext
 import ru.dargen.evoplus.feature.Features
 import java.util.concurrent.Executors
 
-val ModLabel = "§fEvo§6Plus"
+val ModLabel = "§f§lEvo§6§lPlus"
 
 val Logger = java.util.logging.Logger.getLogger("EvoPlus")
 val Executor = Executors.newScheduledThreadPool(2)

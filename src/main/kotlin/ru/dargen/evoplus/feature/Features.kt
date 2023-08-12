@@ -7,7 +7,6 @@ import ru.dargen.evoplus.api.keybind.Keybinds.MenuKey
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.feature.type.MiscFeature
 import ru.dargen.evoplus.feature.type.RenderFeature
-import ru.dargen.evoplus.feature.type.SexFeature
 import ru.dargen.evoplus.feature.type.boss.BossTimerFeature
 import ru.dargen.evoplus.util.Gson
 import ru.dargen.evoplus.util.log
@@ -22,8 +21,7 @@ data object Features {
 
     val SettingsFile = Paths.get("config/evo-plus.json")
     val List = mutableListOf<Feature>()
-
-
+    
     init {
         on<MinecraftLoadedEvent> {
             load()
@@ -35,7 +33,6 @@ data object Features {
     }
 
     fun load() {
-        SexFeature
         MiscFeature
         BossTimerFeature
         RenderFeature
