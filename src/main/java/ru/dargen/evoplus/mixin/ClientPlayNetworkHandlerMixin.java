@@ -105,13 +105,14 @@ public class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "onScreenHandlerSlotUpdate", at = @At("HEAD"), cancellable = true)
     private void onScreenHandlerSlotUpdate(ScreenHandlerSlotUpdateS2CPacket packet, CallbackInfo ci) {
-
         if (packet.getSyncId() == 0) return;
         ci.cancel();
+
         val event = EventBus.INSTANCE.fire(
                 new InventorySlotUpdateEvent(packet.getSyncId(), packet.getSlot(), packet.getItemStack(),
                         EVENTS.getIfPresent(packet.getSyncId()), false)
         );
+
         if (!event.isCancelled()) {
             if (!event.isHidden()) {
                 NetworkThreadUtils.forceMainThread((Packet) packet, (PacketListener) this, this.client);

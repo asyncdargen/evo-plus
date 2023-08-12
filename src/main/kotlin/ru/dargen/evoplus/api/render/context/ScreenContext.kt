@@ -8,6 +8,7 @@ import ru.dargen.evoplus.util.Client
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.toText
 
 @KotlinOpens
 class ScreenContext(id: String, title: String) : RenderContext() {
@@ -35,7 +36,7 @@ class ScreenContext(id: String, title: String) : RenderContext() {
 
     }
 
-    inner class Screen(title: String) : net.minecraft.client.gui.screen.Screen(Text.of(title)) {
+    inner class Screen(title: String) : net.minecraft.client.gui.screen.Screen(title.toText) {
 
         val context = this@ScreenContext
 

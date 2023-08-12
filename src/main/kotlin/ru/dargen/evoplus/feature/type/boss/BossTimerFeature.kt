@@ -1,5 +1,6 @@
 package ru.dargen.evoplus.feature.type.boss
 
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.api.render.node.input.button
@@ -72,35 +73,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
     init {
         every(100) {
-            Bosses.forEach { (type, timestamp) ->
-                val displayName = type.toString()
-                val remainTime = timestamp - System.currentTimeMillis()
-
-                if (AlertDelay > 0 && type !in Alerted && remainTime / 1000 <= AlertDelay) {
-                    if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §f$AlertDelay секунд.", type)
-                    if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §f$AlertDelay секунд.")
-                    if (Notify) notify("Босс §6$displayName §fвозродится\nчерез §f$AlertDelay секунд.", type)
-
-                    Alerted.add(type)
-                }
-
-                if (remainTime <= 0) {
-                    Bosses.remove(type)
-                    Alerted.remove(type)
-
-                    if (Message) printAlertMessage("Босс §6$displayName §fвозродился.", type)
-                    if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс $displayName §fвозродился.")
-                    if (Notify) notify("Босс §6$displayName §fвозродился.", type)
-                }
-            }
-
-            BossesText.lines = Bosses
-                .filterKeys { it.inLevelBounds }
-                .entries
-                .sortedBy { it.value }
-                .take(BossesCount)
-                .map { (type, timestamp) -> "$type§8: §f${(timestamp - System.currentTimeMillis()).asTextTime}" }
-
+            updateBosses()
+            fillInventory()
             fillBossData()
         }
     }
@@ -111,6 +85,63 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
     fun printAlertMessage(text: String, type: BossType) =
         printHoveredCommandMessage(text, "§aНажмите, чтобы начать телепортацию", "/boss ${type.level}")
+
+    private fun fillInventory() {
+        if (!InlineMenuTime) return
+
+        val screen = Client.currentScreen
+
+        if (screen !is GenericContainerScreen) return
+
+        screen.screenHandler.stacks.forEach {
+            val type = BossType[it.displayName ?: return@forEach] ?: return@forEach
+            val timeText = ((Bosses[type] ?: return@forEach) - System.currentTimeMillis()).asTextTime
+
+            val resetText = "§fВозрождение: §e$timeText".toText
+
+            val lore = it.lore
+            val firstRow = lore[0].string
+
+            it.setLore(
+                lore.apply {
+                    if ("Возрождение" in firstRow) set(0, resetText)
+                    else add(0, resetText)
+                }
+            )
+        }
+    }
+
+    private fun updateBosses() {
+        Bosses.forEach { (type, timestamp) ->
+            val displayName = type.toString()
+            val remainTime = timestamp - System.currentTimeMillis()
+
+            if (AlertDelay > 0 && type !in Alerted && remainTime / 1000 <= AlertDelay) {
+                val remainTimeText = remainTime.asTextTime.toText
+                if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §6$remainTimeText секунд§f.", type)
+                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$remainTimeText секунд§f.")
+                if (Notify) notify("Босс §6$displayName §fвозродится\nчерез §f$remainTimeText секунд.", type)
+
+                Alerted.add(type)
+            }
+
+            if (remainTime <= 0) {
+                Bosses.remove(type)
+                Alerted.remove(type)
+
+                if (Message) printAlertMessage("Босс §6$displayName §fвозродился.", type)
+                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс $displayName §fвозродился.")
+                if (Notify) notify("Босс §6$displayName §fвозродился.", type)
+            }
+        }
+
+        BossesText.lines = Bosses
+            .filterKeys { it.inLevelBounds }
+            .entries
+            .sortedBy { it.value }
+            .take(BossesCount)
+            .map { (type, timestamp) -> "$type§8: §f${(timestamp - System.currentTimeMillis()).asTextTime}" }
+    }
 
     private fun fillBossData() {
         val (bossType, additionTime) = fetchWorldBossData() ?: return

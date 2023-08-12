@@ -3,6 +3,7 @@ package ru.dargen.evoplus.api.event.inventory
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.text.Text
 import ru.dargen.evoplus.api.event.CancellableEvent
+import ru.dargen.evoplus.util.toText
 
 class InventoryOpenEvent(
     var syncId: Int,
@@ -15,7 +16,7 @@ class InventoryOpenEvent(
         get() = name.string
 
     fun setName(name: String) {
-        this.name = Text.of(name)
+        this.name = name.toText
     }
 
 }

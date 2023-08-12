@@ -40,6 +40,7 @@ object FastSelectorScreen {
                             itemTitle.text = title
                         }
                     }
+                    hoverOut { _, _ -> itemTitle.text = "" }
                     typeKey { key -> if (key == -1 && isHovered) sendCommand(command) }
                     align = Relative.Center
                     origin = Relative.Center

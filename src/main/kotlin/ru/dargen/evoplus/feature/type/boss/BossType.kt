@@ -1,5 +1,7 @@
 package ru.dargen.evoplus.feature.type.boss
 
+import ru.dargen.evoplus.util.uncolored
+
 
 enum class BossType(val displayName: String, val level: Int, val secondName: String = displayName) {
 
@@ -60,9 +62,12 @@ enum class BossType(val displayName: String, val level: Int, val secondName: Str
 
     companion object {
 
-        val Name2Type = entries.associateBy(BossType::displayName).mapKeys { (name, _) -> name.lowercase() }
+        private val name2Type = entries.associateBy(BossType::displayName).mapKeys { (name, _) -> name.lowercase() }
+        private val medalRegex = "\\s(\uE124|\uE125|\uE126)\\sx\\d+".toRegex()
 
-        operator fun get(displayName: String) = Name2Type[displayName.lowercase()]
+        operator fun get(displayName: String) = name2Type[displayName.lowercase().uncolored().run {
+            medalRegex.replace(this, "")
+        }]
 
     }
 }
