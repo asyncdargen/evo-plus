@@ -119,6 +119,17 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
             fillBossData()
         }, 50, 50, TimeUnit.MILLISECONDS)
     }
+    fun fillBossData() {
+        val (bossType, additionTime) = getBossData() ?: return
+
+        val totalTime = System.currentTimeMillis() + additionTime
+        val currentTime = bosses[bossType] ?: 0
+
+        if (totalTime - currentTime < 10000) return
+
+        bosses[bossType] = totalTime
+    }
+
     fun getBossData() = Client?.world
         ?.entities
         ?.map { it.displayName.string.uncolored.replace("۞", "") }
@@ -133,12 +144,6 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
         ?.run {
             (BossType[getOrNull(0) ?: return@run null] ?: return@run null) to (getOrNull(1) ?: return@run null).totalTime
         }
-
-    fun fillBossData() {
-        val (bossType, additionTime) = getBossData() ?: return
-
-        bosses[bossType] = System.currentTimeMillis() + additionTime
-    }
 
 }
 
