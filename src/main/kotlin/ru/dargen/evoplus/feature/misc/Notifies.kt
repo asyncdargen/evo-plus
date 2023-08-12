@@ -1,6 +1,5 @@
 package ru.dargen.evoplus.feature.misc
 
-import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.OverlayContext
 import ru.dargen.evoplus.api.render.node.Node
@@ -13,33 +12,29 @@ import ru.dargen.evoplus.util.math.v3
 
 object Notifies {
 
-    val Box = OverlayContext + hbox {
-        align = Relative.RightTop
-        origin = Relative.RightTop
-
+    val Box = OverlayContext + vbox {
         fixChildSize = true
 
         indent = v3(8.0, 8.0, .0)
         space = 8.0
     }
 
-    fun show(text: String, delay: Double = 9.0, block: Node.() -> Unit = {}) = hbox {
-        translation = v3(x = 200.0)
-        indent = v3(8.0, 8.0, .0)
-        space = 8.0
+    fun show(text: String, delay: Double = 9.0, block: Node.() -> Unit = {}) =
+        Box + hbox {
+            indent = v3(8.0, 8.0, .0)
+            space = 8.0
 
-        fixChildSize = true
+            +text(text)
+            +vbox(block)
 
-        +text(text)
-        +vbox(block)
-
-        animate("show", .2) {
-            translation = v3()
-        }.next("stay", delay) {
-        }.next("hide", .2) {
-            translation = v3(x = 200.0)
-            after { Box -= this@hbox }
+            animate("show", .2) {
+                enabled = true
+                translation = v3(x = 200.0)
+            }.next("stay", delay) {
+            }.next("hide", 0.2) {
+                translation = v3(x = -10.0)
+                after { enabled = false; Box -= this@hbox }
+            }
         }
-    }
 
 }
