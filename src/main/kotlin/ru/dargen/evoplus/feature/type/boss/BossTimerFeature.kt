@@ -114,9 +114,9 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
     private fun updateBosses() {
         Bosses.forEach { (type, timestamp) ->
             val displayName = type.toString()
-            val remainTime = timestamp - System.currentTimeMillis()
+            val remainTime = (timestamp - System.currentTimeMillis()).fixSeconds
 
-            if (AlertDelay > 0 && type !in Alerted && remainTime / 1000 <= AlertDelay) {
+            if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 <= AlertDelay) {
                 val remainTimeText = remainTime.asTextTime.toText
                 if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §6$remainTimeText секунд§f.", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$remainTimeText секунд§f.")
@@ -129,6 +129,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                 Bosses.remove(type)
                 Alerted.remove(type)
 
+                if (!type.inLevelBounds) return@forEach
                 if (Message) printAlertMessage("Босс §6$displayName §fвозродился.", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс $displayName §fвозродился.")
                 if (Notify) notify("Босс §6$displayName §fвозродился.", type)
@@ -166,7 +167,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
         }
         ?.run {
             (BossType[getOrNull(0) ?: return@run null] ?: return@run null) to (getOrNull(1)
-                ?: return@run null).fromTextTime.fixSeconds
+                ?: return@run null).fromTextTime
         }
 
 }

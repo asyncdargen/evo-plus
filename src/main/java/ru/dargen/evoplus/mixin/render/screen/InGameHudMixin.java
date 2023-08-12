@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.mixin.render;
+package ru.dargen.evoplus.mixin.render.screen;
 
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;

@@ -15,6 +15,7 @@ public class GameRendererMixin {
             method = "tiltViewWhenHurt(Lnet/minecraft/client/util/math/MatrixStack;F)V",
             cancellable = true)
     private void onTiltViewWhenHurt(MatrixStack matrixStack, float f, CallbackInfo ci) {
-        if(RenderFeature.INSTANCE.getNoDamageShake()) ci.cancel();
+        if (RenderFeature.INSTANCE.getNoDamageShake()) ci.cancel();
     }
+
 }

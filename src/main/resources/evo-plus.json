@@ -14,11 +14,13 @@
     "world.ParticleManagerMixin",
 
     "render.WindowMixin",
-    "render.InGameHudMixin",
     "render.InGameOverlayRendererMixin",
     "render.GameRendererMixin",
+    "render.screen.InGameHudMixin",
+    "render.screen.ChatHudMixin",
 
     "MinecraftClientMixin",
+    "MessageHandlerMixin",
     "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin"
   ],

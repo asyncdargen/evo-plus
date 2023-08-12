@@ -16,4 +16,5 @@ public class InGameOverlayRendererMixin {
     private static void onRenderFireOverlay(MinecraftClient minecraftClient, MatrixStack matrixStack, CallbackInfo info) {
         if (RenderFeature.INSTANCE.getNoFire()) info.cancel();
     }
+
 }

@@ -1,20 +1,19 @@
 package ru.dargen.evoplus.api.render.animation
 
-import com.google.common.collect.HashBasedTable
-import com.google.common.collect.Table
 import ru.dargen.evoplus.api.render.node.DummyNode
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.util.Client
 import ru.dargen.evoplus.util.WindowInitialized
 import ru.dargen.evoplus.util.log
 import ru.dargen.evoplus.util.math.fix
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.concurrent.thread
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 object AnimationRunner {
 
-    val Animations: Table<Node, String, Animation<*>> = HashBasedTable.create()
+    val Animations: MutableMap<Node, MutableMap<String, Animation<*>>> = ConcurrentHashMap()
 
     init {
         thread(isDaemon = true, name = "Animation-Thread") {
@@ -31,7 +30,7 @@ object AnimationRunner {
     fun <N : Node?> run(context: AnimationContext<N>, builder: AnimationBlock<N>): Animation<N> {
         val node = context.safeNode
 
-        Animations.get(node, context.id)?.run {
+        Animations[node]?.get(context.id)?.run {
             cancel()
             finalizeAnimation()
         }
@@ -39,25 +38,29 @@ object AnimationRunner {
         context.builder()
 
         val animation = Animation(context)
-        Animations.put(node, context.id, animation)
+        Animations.getOrPut(node, ::ConcurrentHashMap)[context.id] = animation
 
         return animation
     }
 
     @Synchronized
     private fun run() {
-        Animations.values().removeIf { animation ->
-            animation.runCatching(Animation<*>::run)
-                .exceptionOrNull()
-                ?.log("Error while animation run for ${animation.node}:${animation.id}")
+        Animations.values
+            .asSequence()
+            .flatMap { it.values }
+            .forEach { animation ->
+                animation.runCatching(Animation<*>::run)
+                    .exceptionOrNull()
+                    ?.log("Error while animation run for ${animation.node}:${animation.id}")
 
-            val running = animation.isRunning
-            if (!running && !animation.isCancelled) {
-                animation.finalizeAnimation()
+                if (!animation.isRunning) {
+                    if (Animations[animation.context.safeNode]?.apply {remove(animation.id)}?.isEmpty() == true) {
+                        Animations.remove(animation.context.safeNode)
+                    }
+
+                    if (!animation.isCancelled) animation.finalizeAnimation()
+                }
             }
-
-            return@removeIf !running
-        }
     }
 
     private inline val AnimationContext<*>.safeNode get() = node ?: DummyNode
@@ -66,11 +69,11 @@ object AnimationRunner {
 
 }
 
-fun Node.hasAnimation(id: String) = AnimationRunner.Animations.contains(this, id)
+fun Node.hasAnimation(id: String) = AnimationRunner.Animations[this]?.containsKey(id)
 
-fun Node.cancelAnimation(id: String) = AnimationRunner.Animations.get(this, id)?.cancel()
+fun Node.cancelAnimation(id: String) = AnimationRunner.Animations[this]?.get(id)?.cancel()
 
-val Node.animations get() = AnimationRunner.Animations.row(this)?.values ?: emptyList<Animation<*>>()
+val Node.animations get() = AnimationRunner.Animations[this] ?: emptyMap()
 
 fun <N : Node> animate(
     id: String,

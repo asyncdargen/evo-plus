@@ -62,13 +62,11 @@ enum class BossType(val displayName: String, val level: Int, val secondName: Str
 
     companion object {
 
-        private val name2Type = entries.associateBy(BossType::displayName).mapKeys { (name, _) -> name.lowercase() }
-        private val medalRegex = "\\s(\uE124|\uE125|\uE126)\\sx\\d+".toRegex()
+        private val Name2Type = entries.associateBy(BossType::displayName).mapKeys { (name, _) -> name.lowercase() }
+        private val MedalPattern = "\\s([\uE124\uE125\uE126])\\sx\\d+".toRegex()
 
-        operator fun get(displayName: String) = name2Type[displayName.lowercase().uncolored().run {
-            medalRegex.replace(this, "")
-        }]
-
+        operator fun get(displayName: String) =
+            Name2Type[displayName.lowercase().uncolored().replace(MedalPattern, "")]
     }
 }
 
