@@ -9,7 +9,6 @@ import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.feature.config.JsonConfig
 import ru.dargen.evoplus.feature.misc.MiscFeature
 import ru.dargen.evoplus.feature.type.RenderFeature
-import ru.dargen.evoplus.feature.type.SexFeature
 import ru.dargen.evoplus.feature.type.boss.BossTimerFeature
 import ru.dargen.evoplus.util.Gson
 import ru.dargen.evoplus.util.concurrent.every
@@ -50,8 +49,6 @@ data object Features {
         MiscFeature
         BossTimerFeature
         RenderFeature
-
-        SexFeature
     }
 
     inline fun <reified T> config(name: String, value: T) = JsonConfig(name, object : TypeToken<T>() {}, value).apply {
