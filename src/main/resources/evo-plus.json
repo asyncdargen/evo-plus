@@ -21,7 +21,6 @@
 
     "MinecraftClientMixin",
     "MessageHandlerMixin",
-    "ClientPlayerEntityMixin",
     "ClientPlayNetworkHandlerMixin"
   ],
   "injectors": {
