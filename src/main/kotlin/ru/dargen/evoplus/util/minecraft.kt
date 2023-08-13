@@ -29,10 +29,10 @@ val MousePosition
 fun playSound(event: SoundEvent) = Player?.playSound(event, 1f, 1f)
 fun playSound(event: RegistryEntry.Reference<SoundEvent>) = playSound(event.value())
 
-fun printMessage(message: String?) = Player?.sendMessage("$ModLabel§8: §f$message".toText, false)
+fun printMessage(message: String?) = Player?.sendMessage("$ModLabel§8: §a$message".toText, false)
 
 fun printHoveredCommandMessage(message: String, hover: String, command: String) =
-    Text.literal("$ModLabel§8: §f$message").run {
+    Text.literal("$ModLabel§8: §a$message").run {
         style = style.withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, hover.toText))
             .withClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
 

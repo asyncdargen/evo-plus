@@ -116,9 +116,9 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
             if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 == AlertDelay.toLong()) {
                 val timeText = remainTime.asTextTime
-                if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §6$timeText", type)
-                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$timeText")
-                if (Notify) notify(type, "Босс §6$displayName", "через §6$timeText")
+                if (Message) printAlertMessage("Босс §6$displayName §aвозродится через §6$timeText", type)
+                if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс §6$displayName §aвозродится через §6$timeText")
+                if (Notify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
 
                 Alerted.add(type)
             }
@@ -128,8 +128,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                 Alerted.remove(type)
 
                 if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
-                if (Message) printAlertMessage("Босс §6$displayName §fвозродился.", type)
-                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс $displayName §fвозродился.")
+                if (Message) printAlertMessage("Босс §6$displayName §aвозродился.", type)
+                if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс $displayName §aвозродился.")
                 if (Notify) notify(type, "Босс §6$displayName §fвозродился.")
             }
         }

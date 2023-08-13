@@ -44,19 +44,19 @@ enum class BossType(val entityName: String, val level: Int) {
     SPECTRAL_CUBE("Спектральный куб", 270),
     SHADOW("Тень", 280),
     CYNTHIA("Синтия", 290),
-    MAGNUS("Магнус", 300),
-    HELL_HERALD("Вестник ада", 310),
-    HELL_HOUND("Цербер", 320),
-    IFRIT("Ифрит", 330),
-    BAPHOMET("Бафомет", 340),
-    PIGLIN("Пиглин", 350),
-    QUEEN_PIGLIN("Королева пиглинов", 360),
-    HOGLIN("Хоглин", 370),
-    ZOMBIE_PIGLIN("Зомби пиглин", 380),
-    BRUTAL_PIGLIN("Брутальный пиглин", 390),
-    MAGMA("Магма", 400),
-    ZOGLIN("Зоглин", 410),
-    HELL_KNIGHT("Адский рыцарь", 410);
+    MAGNUS("Магнус", 310),
+    HELL_HERALD("Вестник ада", 330),
+    HELL_HOUND("Цербер", 350),
+    IFRIT("Ифрит", 360),
+    BAPHOMET("Бафомет", 370),
+    PIGLIN("Пиглин", 380),
+    QUEEN_PIGLIN("Королева пиглинов", 390),
+    HOGLIN("Хоглин", 400),
+    ZOMBIE_PIGLIN("Зомби пиглин", 410),
+    BRUTAL_PIGLIN("Брутальный пиглин", 420),
+    MAGMA("Магма", 430),
+    ZOGLIN("Зоглин", 440),
+    HELL_KNIGHT("Адский рыцарь", 440);
 
     val displayName = "§6$entityName §8[§6$level§8]"
 
