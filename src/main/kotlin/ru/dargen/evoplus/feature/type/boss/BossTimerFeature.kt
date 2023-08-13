@@ -115,9 +115,9 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
             if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 == AlertDelay.toLong()) {
                 val timeText = remainTime.asTextTime
-                if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §6$timeText секунд§f.", type)
-                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$timeText секунд§f.")
-                if (Notify) notify(type, "Босс §6$displayName", "через §6$timeText секунд§f.")
+                if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §6$timeText", type)
+                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$timeText")
+                if (Notify) notify(type, "Босс §6$displayName", "через §6$timeText")
 
                 Alerted.add(type)
             }
