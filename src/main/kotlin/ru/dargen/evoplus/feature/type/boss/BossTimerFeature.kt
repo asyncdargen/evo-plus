@@ -130,7 +130,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                 if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
                 if (Message) printAlertMessage("Босс §6$displayName §aвозродился.", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс $displayName §aвозродился.")
-                if (Notify) notify(type, "Босс §6$displayName §fвозродился.")
+                if (Notify) notify(type, "Босс §6$displayName §fвозродился")
             }
         }
 
@@ -150,7 +150,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
         if ((spawnTime - currentSpawnTime).absoluteValue < 13000) return
 
-        Notifies.showText("Босс §6${bossType.displayName} §fобновлен", "возрождение через §6${additionTime.asTextTime}")
+        Notifies.showText("Босс §6${bossType.displayName} §fобновлен", "Возрождение через §6${additionTime.asTextTime}")
         Bosses[bossType] = spawnTime
     }
 

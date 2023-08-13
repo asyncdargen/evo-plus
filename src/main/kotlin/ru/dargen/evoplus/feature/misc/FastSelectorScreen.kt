@@ -70,7 +70,7 @@ object FastSelectorScreen {
 
                     animate("stage", .15) {
                         var index = 0
-                        for (y in -1..1) {
+                        for (y in -1..2) {
                             for (x in -2..2) {
                                 items[index++].apply {
                                     translation = v3(x * 48.0, y * 48.0)
