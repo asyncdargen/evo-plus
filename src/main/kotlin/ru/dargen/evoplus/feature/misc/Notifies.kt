@@ -1,13 +1,17 @@
 package ru.dargen.evoplus.feature.misc
 
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
+import ru.dargen.evoplus.api.render.animation.Easings
 import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.OverlayContext
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
+import ru.dargen.evoplus.util.concurrent.after
 import ru.dargen.evoplus.util.math.v3
 import java.awt.Color
+import java.util.concurrent.TimeUnit
 
 object Notifies {
 
@@ -18,37 +22,49 @@ object Notifies {
         align = Relative.RightTop
         origin = Relative.RightTop
 
+        childrenRelative = 1.0
         fixChildSize = true
 
         indent = v3(8.0, 8.0, .0)
+        translation = v3(-indent.x * 2) //fucked hbox recompose...
     }
 
-    fun show(delay: Double = 5.0, block: Node.() -> Unit = {}) =
-        Box + hbox {
-            color = DefaultBackgroundColor
+    fun showText(vararg text: String, delay: Double = 6.0, block: Node.() -> Unit = {}) = show(delay) {
+        +text(*text) { scale = v3(1.2, 1.2, 1.2) }
+        block()
+    }
 
-            align = Relative.RightTop
-            origin = Relative.RightTop
-            indent = v3(7.0, 5.0, .0)
+    fun show(delay: Double = 3.0, block: Node.() -> Unit = {}) =
+        Box + hbox {
+            color = Colors.TransparentBlack
+
+            scale = v3()
+            translation = v3(x = 200.0)
+            indent = v3(7.0, 7.0)
 
             fixChildSize = true
+            block()
 
-            block(this)
-            click { _, _, state ->
-                if (isHovered && state) animate("click-hide", 1.0) {
-                    translation = v3(y = -500.0)
-                    after { Box -= this@hbox }
+            fun hide() = animate("state", .8, Easings.BackIn) {
+                translation = v3(x = 200.0)
+                scale = v3()
+                after { Box - this@hbox }
+            }
+
+            click { _, _, state -> if (isHovered && state) hide() }
+            hover { _, hovered ->
+                animate("scale", .2) {
+                    scale = if (hovered) v3(1.2, 1.2, 1.2) else v3(1.0, 1.0, 1.0)
                 }
+                color = if (hovered) Colors.TransparentBlack.darker() else Colors.TransparentBlack
             }
-            hover { _, hovered -> color = if (hovered) BackgroundColor.brighter() else DefaultBackgroundColor }
 
-            animate("show", 1.75) {
-                translation = v3(x = -1.0)
-            }.next("stay", delay) {
-            }.next("hide", 1.3) {
-                translation = v3(y = -500.0)
-                after { Box -= this@hbox }
+            animate("state", .8, Easings.BackOut) {
+                scale = v3(1.0, 1.0, 1.0)
+                translation = v3()
             }
+
+            after((delay * 1000).toLong(), TimeUnit.MILLISECONDS) { hide() }
         }
 
 }

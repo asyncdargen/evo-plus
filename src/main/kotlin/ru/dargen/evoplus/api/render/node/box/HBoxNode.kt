@@ -1,6 +1,5 @@
 package ru.dargen.evoplus.api.render.node.box
 
-import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
@@ -17,8 +16,8 @@ class HBoxNode : AbstractGridBoxNode() {
                 translateX += space
             }
 
-            node.align = Relative.LeftCenter
-            node.origin = Relative.LeftCenter
+            node.align = v3(childrenRelative, .5)
+            node.origin = v3(childrenRelative, .5)
             node.position = v3(translateX, .0, .0)
 
             if (node.size.y * node.scale.y > maxY) {

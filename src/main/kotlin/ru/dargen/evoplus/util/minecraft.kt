@@ -7,6 +7,7 @@ import net.minecraft.sound.SoundEvent
 import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
+import net.minecraft.util.Identifier
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.util.math.Vector3
 

@@ -11,7 +11,6 @@ import ru.dargen.evoplus.util.*
 import ru.dargen.evoplus.util.concurrent.every
 import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.format.fromTextTime
-import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 import java.util.*
@@ -80,11 +79,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
         }
     }
 
-    fun notify(type: BossType, vararg text: String) = Notifies.show {
-        scale = v3(1.25, 1.5)
+    fun notify(type: BossType, vararg text: String) = Notifies.showText(*text) {
         leftClick { _, state -> if (isHovered && state) sendCommand("boss ${type.level}") }
-
-        +text(*text)
     }
 
     fun printAlertMessage(text: String, type: BossType) =

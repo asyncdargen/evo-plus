@@ -66,6 +66,6 @@ class Widget(id: String, name: String, supplier: Node.() -> Node) : Setting<Node
     }
 
     override fun store(): JsonElement =
-        Gson.toJsonTree(mapOf("translation" to value.translation.toMap(), "scale" to value.scale.toMap()))
+        Gson.toJsonTree(mapOf("position" to value.translation.toMap(), "scale" to value.scale.toMap()))
 
 }

@@ -10,7 +10,7 @@ import ru.dargen.evoplus.util.uncolored
 
 object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
 
-    private val BoosterMessagePattern = "^[\\w\\s]+ активировал глобальный бустер .*".toRegex()
+    private val BoosterMessagePattern = "^[\\w\\s]+ активировал глобальный бустер".toRegex()
 
     val AutoThanks by settings.boolean("auto-settings", "Авто /thx", true)
     var NoShardMessage by settings.boolean("no-shard-message", "Отключение сообщений о шардах", true)
@@ -24,8 +24,7 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
                 cancel()
             }
 
-            if (BoosterMessagePattern.matches(
-                    text)) thx()
+            if (BoosterMessagePattern.containsMatchIn(text)) thx()
             if (NoShardMessage && text == "Вы нашли шард!") cancel()
         }
         FastSelectorScreen

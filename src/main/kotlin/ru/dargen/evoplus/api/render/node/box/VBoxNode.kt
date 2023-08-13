@@ -1,12 +1,12 @@
 package ru.dargen.evoplus.api.render.node.box
 
-import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
 
 @KotlinOpens
 class VBoxNode : AbstractGridBoxNode() {
+
     override fun recompose() {
         var translateY = indent.y
         var maxX = .0
@@ -16,8 +16,8 @@ class VBoxNode : AbstractGridBoxNode() {
                 translateY += space
             }
 
-            node.align = Relative.LeftTop
-            node.origin = Relative.LeftTop
+            node.align = v3(childrenRelative)
+            node.origin = v3(childrenRelative)
             node.position = v3(indent.x, translateY, .0)
 
             if (node.size.x * node.scale.x > maxX) {
