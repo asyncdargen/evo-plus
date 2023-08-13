@@ -16,8 +16,7 @@ val Long.asTextTime
     }
 
 val String.fromTextTime
-    get() = TextTimePattern.findAll(this)
-        .fold(0L) { acc, match -> acc + parseTimeTextPart(match.groupValues[1], match.groupValues[2]) }
+    get() = TextTimePattern.findAll(this).sumOf { parseTimeTextPart(it.groupValues[1], it.groupValues[2]) }
 
 fun parseTimeTextPart(time: String, modifier: String) =
     TextTimeModifiers.getOrDefault(modifier, 0) * (time.toIntOrNull() ?: 0)
