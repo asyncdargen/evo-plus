@@ -3,7 +3,7 @@ package ru.dargen.evoplus.feature.type.boss
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
 import ru.dargen.evoplus.ModLabel
-import ru.dargen.evoplus.api.render.node.input.button
+import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.feature.misc.Notifies
@@ -11,6 +11,7 @@ import ru.dargen.evoplus.util.*
 import ru.dargen.evoplus.util.concurrent.every
 import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.format.fromTextTime
+import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 import java.util.*
@@ -59,12 +60,12 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
     )
     val ClanMessage by settings.boolean(
         "clan-messages",
-        "Сообщение о спавне в клановый чат",
+        "Сообщения в клановый чат",
         false
     )
     val Notify by settings.boolean(
         "notify",
-        "Уведомления о спавне",
+        "Уведомления",
         false
     )
 
@@ -79,8 +80,11 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
         }
     }
 
-    fun notify(text: String, type: BossType) = Notifies.show(text) {
-        +button("§aТелепортироваться") { on { sendCommand("boss ${type.level}") } }
+    fun notify(type: BossType, vararg text: String) = Notifies.show {
+        scale = v3(1.25, 1.5)
+        leftClick { _, state -> if (isHovered && state) sendCommand("boss ${type.level}") }
+
+        +text(*text)
     }
 
     fun printAlertMessage(text: String, type: BossType) =
@@ -118,9 +122,12 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
             if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 <= AlertDelay) {
                 val remainTimeText = remainTime.asTextTime.toText
-                if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §6$remainTimeText секунд§f.", type)
+                if (Message) printAlertMessage(
+                    "Босс §6$displayName §fвозродится через §6$remainTimeText секунд§f.",
+                    type
+                )
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$remainTimeText секунд§f.")
-                if (Notify) notify("Босс §6$displayName §fвозродится\nчерез §f$remainTimeText секунд.", type)
+                if (Notify) notify(type, "Босс §6$displayName", "через §6$remainTimeText секунд§f.")
 
                 Alerted.add(type)
             }
@@ -132,7 +139,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                 if (!type.inLevelBounds) return@forEach
                 if (Message) printAlertMessage("Босс §6$displayName §fвозродился.", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс $displayName §fвозродился.")
-                if (Notify) notify("Босс §6$displayName §fвозродился.", type)
+                if (Notify) notify(type, "Босс §6$displayName §fвозродился.")
             }
         }
 

@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.api.render.node.input
 
 import net.minecraft.sound.SoundEvents
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.RectangleNode
 import ru.dargen.evoplus.api.render.node.hover
@@ -9,6 +10,7 @@ import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.playSound
+import java.awt.Color
 
 @KotlinOpens
 class ButtonNode(label: String = "") : RectangleNode() {
@@ -18,7 +20,7 @@ class ButtonNode(label: String = "") : RectangleNode() {
         origin = Relative.Center
     }
 
-    var buttonColor = ru.dargen.evoplus.api.render.Colors.Primary
+    var buttonColor: Color = Colors.Primary
         set(value) {
             field = value
             color = buttonColor()
