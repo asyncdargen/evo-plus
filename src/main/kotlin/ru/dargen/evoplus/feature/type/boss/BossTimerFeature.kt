@@ -13,6 +13,7 @@ import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.format.fromTextTime
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
+import kotlin.math.absoluteValue
 
 object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Items.CLOCK) {
 
@@ -144,12 +145,13 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
     private fun fillBossData() {
         val (bossType, additionTime) = fetchWorldBossData() ?: return
 
-        val totalTime = System.currentTimeMillis() + additionTime
-        val currentTime = Bosses[bossType] ?: 0
+        val spawnTime = System.currentTimeMillis() + additionTime
+        val currentSpawnTime = Bosses[bossType] ?: 0
 
-        if (totalTime - currentTime < 5000) return
+        if ((spawnTime - currentSpawnTime).absoluteValue < 13000) return
 
-        Bosses[bossType] = totalTime
+        Notifies.showText("Босс §6${bossType.displayName} §fобновлен", "возрождение через §6${additionTime.asTextTime}")
+        Bosses[bossType] = spawnTime
     }
 
     private fun fetchWorldBossData() = Client?.world?.entities
