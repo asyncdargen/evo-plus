@@ -148,9 +148,9 @@ abstract class Node {
         val hovered = mouse.isBetween(positionStart, positionEnd)
 
         if (hovered == isHovered) return
-        else hoverHandlers.forEach { it(mouse, hovered) }
 
         isHovered = hovered
+        hoverHandlers.forEach { it(mouse, hovered) }
 
         children.forEach { it.updateHover(mouse) }
     }
