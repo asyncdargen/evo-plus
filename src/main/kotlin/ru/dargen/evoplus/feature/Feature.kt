@@ -18,4 +18,6 @@ abstract class Feature(id: String, name: String, val icon: Item) {
         Features.List.add(this)
     }
 
+    inline fun <reified T> config(name: String, value: T) = Features.config(name, value)
+
 }

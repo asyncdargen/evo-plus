@@ -13,11 +13,10 @@ import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.format.fromTextTime
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
-import java.util.*
 
 object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Items.CLOCK) {
 
-    val Bosses: MutableMap<BossType, Long> = EnumMap(BossType::class.java)
+    val Bosses: MutableMap<BossType, Long> by config("bosses", mutableMapOf())
     private val Alerted = mutableSetOf<BossType>()
 
     private val BossesText = text()
@@ -68,7 +67,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
         false
     )
 
-    private val Long.fixSeconds get() = div(1000).times(1000)
+    private val Long.fixSeconds get() = (this / 1000) * 1000
     private val BossType.inLevelBounds get() = level in MinLevel.level..MaxLevel.level
 
     init {
@@ -99,40 +98,35 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
             val resetText = "§fВозрождение: §e$timeText".toText
 
-            val lore = it.lore
-            val firstRow = lore[0].string
+            var lore = it.lore
 
-            it.setLore(
-                lore.apply {
-                    if ("Возрождение" in firstRow) set(0, resetText)
-                    else add(0, resetText)
-                }
-            )
+            if (lore.getOrNull(1)?.string?.contains("Возрождение") == true) lore[1] = resetText
+            else lore = (listOf(lore.first(), resetText) + lore.drop(1)).toMutableList()
+
+            it.lore = lore
         }
     }
 
     private fun updateBosses() {
+        val currentTime = System.currentTimeMillis()
         Bosses.forEach { (type, timestamp) ->
-            val displayName = type.toString()
-            val remainTime = (timestamp - System.currentTimeMillis()).fixSeconds
+            val displayName = type.displayName
+            val remainTime = timestamp - currentTime
 
-            if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 <= AlertDelay) {
-                val remainTimeText = remainTime.asTextTime.toText
-                if (Message) printAlertMessage(
-                    "Босс §6$displayName §fвозродится через §6$remainTimeText секунд§f.",
-                    type
-                )
-                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$remainTimeText секунд§f.")
-                if (Notify) notify(type, "Босс §6$displayName", "через §6$remainTimeText секунд§f.")
+            if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 == AlertDelay.toLong()) {
+                val timeText = remainTime.asTextTime
+                if (Message) printAlertMessage("Босс §6$displayName §fвозродится через §6$timeText секунд§f.", type)
+                if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс §6$displayName §fвозродится через §6$timeText секунд§f.")
+                if (Notify) notify(type, "Босс §6$displayName", "через §6$timeText секунд§f.")
 
                 Alerted.add(type)
             }
 
-            if (remainTime <= 0) {
+            if (remainTime < 0) {
                 Bosses.remove(type)
                 Alerted.remove(type)
 
-                if (!type.inLevelBounds) return@forEach
+                if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
                 if (Message) printAlertMessage("Босс §6$displayName §fвозродился.", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §fБосс $displayName §fвозродился.")
                 if (Notify) notify(type, "Босс §6$displayName §fвозродился.")
@@ -144,7 +138,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
             .entries
             .sortedBy { it.value }
             .take(BossesCount)
-            .map { (type, timestamp) -> "$type§8: §f${(timestamp - System.currentTimeMillis()).asTextTime}" }
+            .map { (type, timestamp) -> "${type.displayName}§8: §f${(timestamp - currentTime).fixSeconds.asTextTime}" }
     }
 
     private fun fillBossData() {
@@ -169,8 +163,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
             }
         }
         ?.run {
-            (BossType[getOrNull(0) ?: return@run null] ?: return@run null) to (getOrNull(1)
-                ?: return@run null).fromTextTime
+            (BossType[getOrNull(0) ?: return@run null] ?: return@run null) to (getOrNull(1)?.fromTextTime?.takeIf { it > 6000 }
+                ?: return@run null)
         }
 
 }

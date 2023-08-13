@@ -3,7 +3,7 @@ package ru.dargen.evoplus.feature.type.boss
 import ru.dargen.evoplus.util.uncolored
 
 
-enum class BossType(val displayName: String, val level: Int, val secondName: String = displayName) {
+enum class BossType(val entityName: String, val level: Int) {
 
     KRIEGER("Кригер", 15),
     SLIME("Слизень", 20),
@@ -58,15 +58,16 @@ enum class BossType(val displayName: String, val level: Int, val secondName: Str
     ZOGLIN("Зоглин", 410),
     HELL_KNIGHT("Адский рыцарь", 410);
 
-    override fun toString() = "§6$displayName §8[§6$level§8]"
+    val displayName = "§6$entityName §8[§6$level§8]"
 
     companion object {
 
-        private val Name2Type = entries.associateBy(BossType::displayName).mapKeys { (name, _) -> name.lowercase() }
+        private val Name2Type = entries.associateBy(BossType::entityName).mapKeys { (name, _) -> name.lowercase() }
         private val MedalPattern = "\\s([\uE124\uE125\uE126])(\\sx\\d+|)".toRegex()
 
         operator fun get(displayName: String) =
             Name2Type[displayName.lowercase().uncolored().replace(MedalPattern, "")]
+
     }
 }
 

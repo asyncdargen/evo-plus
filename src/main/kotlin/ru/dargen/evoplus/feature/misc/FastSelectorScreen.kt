@@ -4,12 +4,12 @@ import net.minecraft.item.Item
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.keybind.Keybinds
 import ru.dargen.evoplus.api.keybind.on
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.box
-import ru.dargen.evoplus.feature.FeaturesScreen
 import ru.dargen.evoplus.util.customItem
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.sendCommand
@@ -32,18 +32,16 @@ object FastSelectorScreen {
                     type: Item, data: Int = 0,
                     command: String, title: String
                 ) = item(customItem(type, data)) {
+                    align = Relative.Center
+                    origin = Relative.Center
+
                     hover { _, state ->
                         animate("hover", .07) {
                             scale = if (state) v3(3.1, 3.1, 3.1) else v3(2.7, 2.7, 2.7)
                         }
-                        if (state) {
-                            itemTitle.text = title
-                        }
+                        itemTitle.text = if (state) title else ""
                     }
-                    hoverOut { _, _ -> itemTitle.text = "" }
                     typeKey { key -> if (key == -1 && isHovered) sendCommand(command) }
-                    align = Relative.Center
-                    origin = Relative.Center
                 }
 
                 val items = listOf(
@@ -66,7 +64,7 @@ object FastSelectorScreen {
                     +commandItem(Items.COMMAND_BLOCK, 77, "warp mine", "Шахтеры"),
                 )
                 +box {
-                    color = FeaturesScreen.BackgroundColor
+                    color = Colors.TransparentBlack
                     align = Relative.Center
                     origin = Relative.Center
 

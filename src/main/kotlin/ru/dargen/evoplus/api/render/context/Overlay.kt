@@ -14,16 +14,16 @@ import ru.dargen.evoplus.util.Window
 import ru.dargen.evoplus.util.WindowInitialized
 import ru.dargen.evoplus.util.math.Vector3
 
-data object OverlayContext : RenderContext() {
+data object Overlay : RenderContext() {
 
     val ScaleFactor get() = if (!WindowInitialized) 1.0 else Window.scaleFactor
     val BaseScaleFactor = 2.0
-
     val WindowSize
         get() = if (!WindowInitialized) Vector3()
         else Vector3(Window.scaledWidth.toDouble(), Window.scaledHeight.toDouble(), .0)
-    val Resolution get() = size.clone()
 
+    val ScaledMouse get() = MousePosition / Scale
+    val ScaledResolution get() = size.clone()
     @get:JvmName("_scale")
     val Scale get() = scale.clone()
 

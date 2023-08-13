@@ -2,7 +2,6 @@ package ru.dargen.evoplus.api.render.context
 
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.Text
 import ru.dargen.evoplus.api.render.node.resize
 import ru.dargen.evoplus.util.Client
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
@@ -42,8 +41,8 @@ class ScreenContext(id: String, title: String) : RenderContext() {
 
         init {
             resize {
-                size = OverlayContext.Resolution
-                scale = OverlayContext.Scale
+                size = Overlay.ScaledResolution
+                scale = Overlay.Scale
             }
         }
 

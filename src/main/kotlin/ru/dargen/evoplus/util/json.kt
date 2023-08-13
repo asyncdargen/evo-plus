@@ -17,4 +17,4 @@ fun JsonElement.asDouble(default: Double = .0) =
 
 fun JsonElement.asObject() = if (isJsonObject) asJsonObject else null
 
-val JsonElement?.isNull get() = this?.isJsonNull != true
+val JsonElement?.isNull get() = this?.isJsonNull != false

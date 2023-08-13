@@ -1,9 +1,8 @@
 package ru.dargen.evoplus.api.render.node.input.selector.scroll
 
-import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.Easings
 import ru.dargen.evoplus.api.render.animation.animate
-import ru.dargen.evoplus.api.render.context.OverlayContext
+import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.node.drag
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.text
@@ -28,7 +27,7 @@ class VScrollSelectorNode<T> : AbstractScrollSelectorNode<T>() {
         set(value) {
             field = value
             label.rotation = if (value)
-                v3(z = if (wholePosition.x + wholeSize.x / 2 > OverlayContext.Resolution.x / 2) 90.0 else -90.0).radians()
+                v3(z = if (wholePosition.x + wholeSize.x / 2 > Overlay.ScaledResolution.x / 2) 90.0 else -90.0).radians()
             else v3()
         }
     override var size: Vector3

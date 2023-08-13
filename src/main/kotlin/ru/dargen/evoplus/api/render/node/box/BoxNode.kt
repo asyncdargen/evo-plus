@@ -18,7 +18,6 @@ class BoxNode : RectangleNode() {
         val sizeY = children.maxOfOrNull { it.y } ?: .0
 
         size = v3(sizeX, sizeY, .0)
-
     }
 
 }

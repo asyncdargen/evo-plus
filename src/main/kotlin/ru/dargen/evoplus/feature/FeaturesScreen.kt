@@ -6,7 +6,7 @@ import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.Easings
 import ru.dargen.evoplus.api.render.animation.animate
-import ru.dargen.evoplus.api.render.context.OverlayContext.Resolution
+import ru.dargen.evoplus.api.render.context.Overlay.ScaledResolution
 import ru.dargen.evoplus.api.render.context.ScreenContext
 import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
@@ -59,7 +59,7 @@ object FeaturesScreen {
                                 SelectedFeature = it
 
                                 val newSettings = SelectedFeature.settingsSection
-                                newSettings.translation = v3(x = Resolution.x * -slide)
+                                newSettings.translation = v3(x = ScaledResolution.x * -slide)
                                 settingsBox + newSettings
 
                                 box.animate("switch", .2, Easings.BackOut) {
@@ -90,8 +90,8 @@ object FeaturesScreen {
             }
 
             resize {
-                selector.size = v3(Resolution.x * .7, 35.0, .0)
-                settingsBox.size = Resolution.times(.7, .7, .0).minus(.0, selector.size.y, .0)
+                selector.size = v3(ScaledResolution.x * .7, 35.0, .0)
+                settingsBox.size = ScaledResolution.times(.7, .7, .0).minus(.0, selector.size.y, .0)
             }
         }
 

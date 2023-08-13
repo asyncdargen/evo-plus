@@ -23,24 +23,24 @@ object Render {
         var x2 = x2
         var y2 = y2
         var i: Double
-        
+
         if (x1 < x2) {
             i = x1
             x1 = x2
             x2 = i
         }
-        
+
         if (y1 < y2) {
             i = y1
             y1 = y2
             y2 = i
         }
-        
+
         val a = ColorHelper.Argb.getAlpha(color).toFloat() / 255.0f
         val r = ColorHelper.Argb.getRed(color).toFloat() / 255.0f
         val g = ColorHelper.Argb.getGreen(color).toFloat() / 255.0f
         val b = ColorHelper.Argb.getBlue(color).toFloat() / 255.0f
-        
+
         val bufferBuilder = Tessellator.getInstance().buffer
         RenderSystem.enableBlend()
         RenderSystem.setShader { GameRenderer.getPositionColorProgram() }

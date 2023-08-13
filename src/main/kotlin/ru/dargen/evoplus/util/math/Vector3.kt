@@ -2,6 +2,8 @@ package ru.dargen.evoplus.util.math
 
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import kotlin.math.absoluteValue
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 fun v3(x: Double = .0, y: Double = .0, z: Double = .0) = Vector3(x, y, z)
@@ -127,6 +129,17 @@ class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
     fun distance(v: Vector3) = distance(v.x, v.y, v.z)
 
     fun clone() = Vector3(x, y, z)
+
+    fun fixIn(minX: Double, maxX: Double, minY: Double, maxY: Double, minZ: Double, maxZ: Double) =
+        set(x.fix(minX, maxX), y.fix(minY, maxY), z.fix(minZ, maxZ))
+
+    fun fixIn(min: Double, max: Double) = fixIn(min, max, min, max, min, max)
+
+    fun fixIn(min: Vector3, max: Vector3) = fixIn(
+        min(min.x, max.x), max(min.x, max.x),
+        min(min.y, max.y), max(min.y, max.y),
+        min(min.z, max.z), max(min.z, max.z),
+    )
 
     fun isBetween(start: Vector3, end: Vector3) =
         start.x <= x && x <= end.x && start.y <= y && y <= end.y && start.z <= z && z <= end.z

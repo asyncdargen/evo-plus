@@ -5,7 +5,7 @@ import net.minecraft.client.util.math.MatrixStack
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.property.proxied
-import ru.dargen.evoplus.api.render.context.OverlayContext
+import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.util.Window
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.cast
@@ -175,8 +175,8 @@ abstract class Node {
         renderElement(matrices, tickDelta)
 
         if (isScissor) {
-            val position = (wholePosition + scissorIndent * wholeScale) * OverlayContext.ScaleFactor
-            val size = (wholeSize - scissorIndent * 2.0 * wholeScale) * OverlayContext.ScaleFactor
+            val position = (wholePosition + scissorIndent * wholeScale) * Overlay.ScaleFactor
+            val size = (wholeSize - scissorIndent * 2.0 * wholeScale) * Overlay.ScaleFactor
 
             RenderSystem.enableScissor(
                 position.x.toInt(), (Window.framebufferHeight - position.y - size.y.toInt()).toInt(),
@@ -233,11 +233,11 @@ abstract class Node {
 //hover
 infix fun <N : Node> N.hover(handler: HoverHandler<N>) = apply { hoverHandlers.add(handler.cast()) }
 
-infix fun <N : Node> N.hoverIn(handler: HoverHandler<N>) =
-    hover { mouse, state -> if (state) handler(mouse, state) }
+infix fun <N : Node> N.hoverIn(handler: N.(mouse: Vector3) -> Unit) =
+    hover { mouse, state -> if (state) handler(mouse) }
 
-infix fun <N : Node> N.hoverOut(handler: HoverHandler<N>) =
-    hover { mouse, state -> if (!state) handler(mouse, state) }
+infix fun <N : Node> N.hoverOut(handler: N.(mouse: Vector3) -> Unit) =
+    hover { mouse, state -> if (!state) handler(mouse) }
 
 //wheel
 

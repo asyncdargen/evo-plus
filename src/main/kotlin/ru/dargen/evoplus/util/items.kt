@@ -19,26 +19,24 @@ fun ItemStack.editNBT(block: NbtCompound.() -> Unit) = apply {
     nbt = orCreateNbt.apply(block)
 }
 
-val ItemStack.displayName: String?
+var ItemStack.displayName: String?
     get() = name?.string
+    set(value) {
+        setCustomName(value?.toText ?: Text.empty())
+    }
 
-val ItemStack.lore: MutableList<Text>
+var ItemStack.lore: MutableList<Text>
     get() = getSubNbt("display")
         ?.getList("Lore", 8)
         ?.map(NbtElement::asString)
         ?.mapNotNull(Text.Serializer::fromJson)
         ?.toMutableList() ?: mutableListOf()
-
-fun ItemStack.setLore(newLore: List<Text>) {
-    getOrCreateSubNbt("display")
-        .put(
-            "Lore", ListTagConstructor.newInstance(
-                newLore.map(Text.Serializer::toJson)
-                    .map(NbtString::of),
-                8.toByte()
-            )
+    set(value) {
+        getOrCreateSubNbt("display").put(
+            "Lore",
+            ListTagConstructor.newInstance(value.map(Text.Serializer::toJson).map(NbtString::of), 8.toByte())
         )
-}
+    }
 
 @Suppress("unchecked_cast")
 private val ListTagConstructor
