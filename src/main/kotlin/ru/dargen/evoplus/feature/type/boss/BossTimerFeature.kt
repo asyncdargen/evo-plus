@@ -22,51 +22,20 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
     private val BossesText = text()
     val Widget by widgets.add("bosses", "Таймер боссов") { +BossesText }
-    val Enabled by settings.boolean(
-        "enabled",
-        "Отображение таймера боссов",
-        true
-    ) on { Widget.enabled = it }
-    val MinLevel by settings.selector(
-        "min-level",
-        "Мин. уровень босса",
-        enumSelector<BossType>()
-    ) { "${it?.level}" }
-    val MaxLevel by settings.selector(
-        "max-level",
-        "Макс. уровень босса",
-        enumSelector<BossType>(-1)
-    ) { "${it?.level}" }
-    val BossesCount by settings.selector(
-        "render-count",
-        "Кол-во отображаемых боссов",
-        (0..<BossType.entries.size).toList().toSelector(-1)
-    )
-    val AlertDelay by settings.selector(
-        "alert-time",
-        "За сколько предупреждать о боссе",
-        (0..120 step 5).toList().toSelector()
-    ) { "$it сек." }
-    val InlineMenuTime by settings.boolean(
-        "menu-time",
-        "Отображать время до спавна в меню",
-        true
-    )
-    val Message by settings.boolean(
-        "message",
-        "Сообщение о спавне",
-        true
-    )
-    val ClanMessage by settings.boolean(
-        "clan-messages",
-        "Сообщения в клановый чат",
-        false
-    )
-    val Notify by settings.boolean(
-        "notify",
-        "Уведомления",
-        true
-    )
+
+    val Enabled by settings.boolean("enabled", "Отображение таймера боссов", true) on { Widget.enabled = it }
+    val MinLevel by settings.selector("min-level", "Мин. уровень босса", enumSelector<BossType>()) { "${it?.level}" }
+    val MaxLevel by settings.selector("max-level", "Макс. уровень босса", enumSelector<BossType>(-1)) { "${it?.level}" }
+    val BossesCount by settings.selector("render-count", "Кол-во отображаемых боссов", (0..<BossType.entries.size).toSelector(-1))
+
+    val AlertDelay by settings.selector("alert-time", "За сколько предупреждать о боссе", (0..120 step 5).toSelector()) { "$it сек." }
+    val InlineMenuTime by settings.boolean("menu-time", "Отображать время до спавна в меню", true)
+
+    val Message by settings.boolean("message", "Сообщение о спавне",true)
+    val ClanMessage by settings.boolean("clan-messages", "Сообщения в клановый чат", false)
+
+    val SpawnNotify by settings.boolean("spawn-notify", "Уведомление о спавне", true)
+    val UpdateNotify by settings.boolean("update-notify", "Уведомление о обновлении времени", true)
 
     private val Long.fixSeconds get() = (this / 1000) * 1000
     private val BossType.inLevelBounds get() = level in MinLevel.level..MaxLevel.level
@@ -109,7 +78,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
     }
 
     private fun updateBosses() {
-        val currentTime = System.currentTimeMillis()
+        val currentTime = System.currentTimeMillis().fixSeconds
         Bosses.forEach { (type, timestamp) ->
             val displayName = type.displayName
             val remainTime = timestamp - currentTime
@@ -118,7 +87,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                 val timeText = remainTime.asTextTime
                 if (Message) printAlertMessage("§aБосс §6$displayName §aвозродится через §6$timeText", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс §6$displayName §aвозродится через §6$timeText")
-                if (Notify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
+                if (SpawnNotify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
 
                 Alerted.add(type)
             }
@@ -130,7 +99,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                 if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
                 if (Message) printAlertMessage("§aБосс §6$displayName §aвозродился.", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс $displayName §aвозродился.")
-                if (Notify) notify(type, "Босс §6$displayName §fвозродился")
+                if (SpawnNotify) notify(type, "Босс §6$displayName §fвозродился")
             }
         }
 
@@ -139,7 +108,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
             .entries
             .sortedBy { it.value }
             .take(BossesCount)
-            .map { (type, timestamp) -> "${type.displayName}§8: §f${(timestamp - currentTime).fixSeconds.asTextTime}" }
+            .map { (type, timestamp) -> "${type.displayName}§8: §f${(timestamp - currentTime).asTextTime}" }
     }
 
     private fun fillBossData() {
@@ -150,8 +119,11 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
         if ((spawnTime - currentSpawnTime).absoluteValue < 13000) return
 
-        Notifies.showText("Босс §6${bossType.displayName} §fобновлен", "Возрождение через §6${additionTime.asTextTime}")
-        Bosses[bossType] = spawnTime
+        if (UpdateNotify) Notifies.showText(
+            "Босс §6${bossType.displayName} §fобновлен",
+            "Возрождение через §6${additionTime.asTextTime}"
+        )
+        Bosses[bossType] = spawnTime.fixSeconds
     }
 
     private fun fetchWorldBossData() = Client?.world?.entities
@@ -165,7 +137,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
             }
         }
         ?.run {
-            (BossType[getOrNull(0) ?: return@run null] ?: return@run null) to (getOrNull(1)?.fromTextTime?.takeIf { it > 6000 }
+            (BossType[getOrNull(0) ?: return@run null]
+                ?: return@run null) to (getOrNull(1)?.fromTextTime?.takeIf { it > 6000 }
                 ?: return@run null)
         }
 

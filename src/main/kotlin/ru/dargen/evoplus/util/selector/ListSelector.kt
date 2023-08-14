@@ -44,6 +44,8 @@ class ListSelector<T>(elements: List<T> = emptyList(), index: Int = 0) : Selecto
 
 }
 
+fun <E> Iterable<E>.toSelector(index: Int = 0 ) = toList().toSelector()
+
 fun <E> Collection<E>.toSelector(index: Int = 0) = ListSelector(toList(), if (index == -1) size - 1 else index)
 
 fun <E> selector(elements: Collection<E>, index: Int = 0) = elements.toSelector(index)

@@ -12,11 +12,13 @@ archivesBaseName = project.archives_base_name
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
+repositories {
+    maven { url = 'https://jitpack.io' }
+}
+
 dependencies {
     //Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.24'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly(annotationProcessor('org.projectlombok:lombok:1.18.24'))
 
     // Fabric
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -25,6 +27,9 @@ dependencies {
 
     //Kotlin
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+
+    //Mixin extras
+    include(implementation(annotationProcessor("com.github.LlamaLad7:MixinExtras:${project.mixin_extra_version}")))
 }
 
 processResources {

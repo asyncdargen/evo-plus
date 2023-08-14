@@ -20,7 +20,7 @@ class SettingsGroup(id: String, name: String) : Setting<MutableList<Setting<*>>>
     override val settingSection: Node
         get() = vScrollView {
             box.color = Colors.TransparentBlack
-            addElements(settings.map(Setting<*>::settingSection))
+            addElements(settings.map(Setting<*>::settingSection).filter { it !== DummyNode })
         }
     override val settingElement: Node
         get() = DummyNode
