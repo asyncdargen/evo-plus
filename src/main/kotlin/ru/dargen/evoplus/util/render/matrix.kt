@@ -71,7 +71,7 @@ fun MatrixStack.fill(x1: Double, y1: Double, x2: Double, y2: Double, color: Int)
 
 fun MatrixStack.drawText(text: String, position: Vector3 = ZeroPosition, shadow: Boolean, color: Int) {
     if (shadow) drawTextWithShadow(text, position, color)
-    else drawTextWithShadow(text, position, color)
+    else drawText(text, position, color)
 }
 
 fun MatrixStack.drawText(text: String, position: Vector3 = ZeroPosition, color: Int) {
