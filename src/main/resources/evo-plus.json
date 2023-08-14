@@ -13,6 +13,7 @@
 
     "world.LightmapTextureManagerMixin",
     "world.ParticleManagerMixin",
+    "world.ParticleManagerAccessor",
 
     "render.WindowMixin",
     "render.WorldRendererMixin",

@@ -15,7 +15,7 @@ import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 import kotlin.math.absoluteValue
 
-object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Items.CLOCK) {
+object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CLOCK) {
 
     val Bosses: MutableMap<BossType, Long> by config("bosses", mutableMapOf())
     private val Alerted = mutableSetOf<BossType>()
