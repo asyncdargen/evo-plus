@@ -8,10 +8,10 @@ import ru.dargen.evoplus.api.event.window.WindowRescaleEvent
 import ru.dargen.evoplus.api.event.window.WindowResizeEvent
 import ru.dargen.evoplus.api.render.node.resize
 import ru.dargen.evoplus.api.render.node.tick
-import ru.dargen.evoplus.util.Client
-import ru.dargen.evoplus.util.MousePosition
-import ru.dargen.evoplus.util.Window
-import ru.dargen.evoplus.util.WindowInitialized
+import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.MousePosition
+import ru.dargen.evoplus.util.minecraft.Window
+import ru.dargen.evoplus.util.minecraft.WindowInitialized
 import ru.dargen.evoplus.util.math.Vector3
 
 data object Overlay : RenderContext() {

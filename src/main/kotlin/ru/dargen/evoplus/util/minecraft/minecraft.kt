@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.util
+package ru.dargen.evoplus.util.minecraft
 
 import net.minecraft.client.MinecraftClient
 import net.minecraft.network.packet.Packet
@@ -7,7 +7,6 @@ import net.minecraft.sound.SoundEvent
 import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
-import net.minecraft.util.Identifier
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.util.math.Vector3
 
@@ -29,11 +28,11 @@ val MousePosition
 fun playSound(event: SoundEvent) = Player?.playSound(event, 1f, 1f)
 fun playSound(event: RegistryEntry.Reference<SoundEvent>) = playSound(event.value())
 
-fun printMessage(message: String?) = Player?.sendMessage("$ModLabel§8: §a$message".toText, false)
+fun printMessage(message: String?) = Player?.sendMessage("$ModLabel§8: §a$message".asText, false)
 
 fun printHoveredCommandMessage(message: String, hover: String, command: String) =
     Text.literal("$ModLabel§8: §a$message").run {
-        style = style.withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, hover.toText))
+        style = style.withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, hover.asText))
             .withClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
 
         Player?.sendMessage(this, false)

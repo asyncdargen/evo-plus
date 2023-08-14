@@ -8,7 +8,7 @@ import net.minecraft.client.render.VertexFormat.DrawMode
 import net.minecraft.client.render.VertexFormats
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.ColorHelper
-import ru.dargen.evoplus.util.Client
+import ru.dargen.evoplus.util.minecraft.Client
 
 object Render {
 

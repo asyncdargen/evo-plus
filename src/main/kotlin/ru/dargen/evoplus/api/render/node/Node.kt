@@ -6,7 +6,7 @@ import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.context.Overlay
-import ru.dargen.evoplus.util.Window
+import ru.dargen.evoplus.util.minecraft.Window
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.Vector3

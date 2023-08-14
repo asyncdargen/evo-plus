@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.util
+package ru.dargen.evoplus.util.minecraft
 
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -22,7 +22,7 @@ fun ItemStack.editNBT(block: NbtCompound.() -> Unit) = apply {
 var ItemStack.displayName: String?
     get() = name?.string
     set(value) {
-        setCustomName(value?.toText ?: Text.empty())
+        setCustomName(value?.asText ?: Text.empty())
     }
 
 var ItemStack.lore: MutableList<Text>

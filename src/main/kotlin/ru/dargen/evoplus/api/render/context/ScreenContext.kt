@@ -2,13 +2,12 @@ package ru.dargen.evoplus.api.render.context
 
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
-import ru.dargen.evoplus.api.render.node.key
 import ru.dargen.evoplus.api.render.node.resize
-import ru.dargen.evoplus.util.Client
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.toText
+import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.asText
 
 @KotlinOpens
 class ScreenContext(id: String, title: String) : RenderContext() {
@@ -16,7 +15,11 @@ class ScreenContext(id: String, title: String) : RenderContext() {
     val id = id
     val screen = Screen(title)
     var transparent = false
-    var unpressAllKeybindings = true
+    var isPassEvents = false
+        set(value) {
+            screen.passEvents = value
+            field = value
+        }
     var displayHandler: ScreenContext.() -> Unit = {}
     var closeHandler: ScreenContext.() -> Unit = {}
 
@@ -37,7 +40,7 @@ class ScreenContext(id: String, title: String) : RenderContext() {
 
     }
 
-    inner class Screen(title: String) : net.minecraft.client.gui.screen.Screen(title.toText) {
+    inner class Screen(title: String) : net.minecraft.client.gui.screen.Screen(title.asText) {
 
         val context = this@ScreenContext
 
@@ -73,17 +76,17 @@ class ScreenContext(id: String, title: String) : RenderContext() {
 
         override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
             changeKey(keyCode, true)
-            return super.keyPressed(keyCode, scanCode, modifiers)
+            return super.keyPressed(keyCode, scanCode, modifiers) && !passEvents
         }
 
         override fun keyReleased(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
             changeKey(keyCode, false)
-            return super.keyReleased(keyCode, scanCode, modifiers)
+            return super.keyReleased(keyCode, scanCode, modifiers) && !passEvents
         }
 
         override fun charTyped(chr: Char, modifiers: Int): Boolean {
             typeChar(chr, 0)
-            return super.charTyped(chr, modifiers)
+            return super.charTyped(chr, modifiers) && !passEvents
         }
 
         override fun mouseScrolled(mouseX: Double, mouseY: Double, amount: Double): Boolean {
@@ -115,21 +118,8 @@ class ScreenContext(id: String, title: String) : RenderContext() {
 
     fun destroy(handler: ScreenContext.() -> Unit) = apply { closeHandler = handler }
 
-    fun allowMoving() {
-        unpressAllKeybindings = false
-        key { key, state ->
-            Client?.options?.apply {
-                when (key) {
-                    forwardKey.defaultKey.code -> forwardKey.isPressed = state
-                    backKey.defaultKey.code -> backKey.isPressed = state
-                    leftKey.defaultKey.code -> leftKey.isPressed = state
-                    rightKey.defaultKey.code -> rightKey.isPressed = state
-                    jumpKey.defaultKey.code -> jumpKey.isPressed = state
-                    sneakKey.defaultKey.code -> sneakKey.isPressed = state
-                    sprintKey.defaultKey.code -> sprintKey.isPressed = state
-                }
-            }
-        }
+    fun openIfNoScreen() {
+        Client?.currentScreen ?: open()
     }
 
     fun open() {

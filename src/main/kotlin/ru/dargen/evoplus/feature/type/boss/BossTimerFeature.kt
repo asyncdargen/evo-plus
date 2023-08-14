@@ -6,11 +6,11 @@ import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.feature.misc.Notifies
-import ru.dargen.evoplus.util.*
+import ru.dargen.evoplus.feature.type.misc.Notifies
 import ru.dargen.evoplus.util.concurrent.every
 import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.format.fromTextTime
+import ru.dargen.evoplus.util.minecraft.*
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 import kotlin.math.absoluteValue
@@ -97,7 +97,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
             val type = BossType[it.displayName ?: return@forEach] ?: return@forEach
             val timeText = ((Bosses[type] ?: return@forEach) - System.currentTimeMillis()).asTextTime
 
-            val resetText = "§fВозрождение: §e$timeText".toText
+            val resetText = "§fВозрождение: §e$timeText".asText
 
             var lore = it.lore
 
@@ -116,7 +116,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
 
             if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 == AlertDelay.toLong()) {
                 val timeText = remainTime.asTextTime
-                if (Message) printAlertMessage("Босс §6$displayName §aвозродится через §6$timeText", type)
+                if (Message) printAlertMessage("§aБосс §6$displayName §aвозродится через §6$timeText", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс §6$displayName §aвозродится через §6$timeText")
                 if (Notify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
 
@@ -128,7 +128,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
                 Alerted.remove(type)
 
                 if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
-                if (Message) printAlertMessage("Босс §6$displayName §aвозродился.", type)
+                if (Message) printAlertMessage("§aБосс §6$displayName §aвозродился.", type)
                 if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс $displayName §aвозродился.")
                 if (Notify) notify(type, "Босс §6$displayName §fвозродился")
             }

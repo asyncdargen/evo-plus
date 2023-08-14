@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.feature.misc
+package ru.dargen.evoplus.feature.type.misc
 
 import net.minecraft.item.Item
 import net.minecraft.item.Items
@@ -10,21 +10,19 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.box
-import ru.dargen.evoplus.util.Client
-import ru.dargen.evoplus.util.customItem
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.printMessage
-import ru.dargen.evoplus.util.sendCommand
+import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.customItem
+import ru.dargen.evoplus.util.minecraft.sendCommand
 
 object FastSelectorScreen {
 
     init {
         Keybinds.FastSelector.on {
-            if (!MiscFeature.FastSelector) return@on
+            if (Client.currentScreen != null || !MiscFeature.FastSelector) return@on
 
             screen {
-                allowMoving()
-                Keybinds.FastSelector.isPressed = false
+                isPassEvents = true
 
                 val itemTitle = +text {
                     translation = v3(y = 20.0)

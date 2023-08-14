@@ -9,7 +9,7 @@ import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
-import ru.dargen.evoplus.util.playSound
+import ru.dargen.evoplus.util.minecraft.playSound
 import java.awt.Color
 
 @KotlinOpens

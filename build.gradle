@@ -42,7 +42,7 @@ jar {
 }
 
 runClient {
-    args '--username=EvoPlusTest'
+    args '--username=algebroid'
 }
 
 allOpen {

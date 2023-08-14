@@ -2,8 +2,8 @@ package ru.dargen.evoplus.api.render.animation
 
 import ru.dargen.evoplus.api.render.node.DummyNode
 import ru.dargen.evoplus.api.render.node.Node
-import ru.dargen.evoplus.util.Client
-import ru.dargen.evoplus.util.WindowInitialized
+import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.WindowInitialized
 import ru.dargen.evoplus.util.log
 import ru.dargen.evoplus.util.math.fix
 import java.util.concurrent.ConcurrentHashMap

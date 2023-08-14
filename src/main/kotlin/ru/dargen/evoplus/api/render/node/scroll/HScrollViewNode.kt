@@ -6,7 +6,7 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.AbstractGridBoxNode
 import ru.dargen.evoplus.api.render.node.box.hbox
-import ru.dargen.evoplus.util.MousePosition
+import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.alpha
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.fix

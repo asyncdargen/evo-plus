@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.feature.misc
+package ru.dargen.evoplus.feature.type.misc
 
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
@@ -6,9 +6,9 @@ import ru.dargen.evoplus.api.event.evo.EvoJoinEvent
 import ru.dargen.evoplus.api.event.game.PostTickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.util.Player
-import ru.dargen.evoplus.util.sendCommand
-import ru.dargen.evoplus.util.uncolored
+import ru.dargen.evoplus.util.minecraft.Player
+import ru.dargen.evoplus.util.minecraft.sendCommand
+import ru.dargen.evoplus.util.minecraft.uncolored
 
 object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
 
@@ -17,7 +17,7 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
     val AutoSprint by settings.boolean("auto-sprint", "Авто-спринт", true) on {
         if (!it) Player?.isSprinting = false
     }
-    val AutoThanks by settings.boolean("auto-settings", "Авто /thx", false)
+    val AutoThanks by settings.boolean("auto-thanks", "Авто /thx", true)
     var FastSelector by settings.boolean("fast-selector", "Меню быстрого доступа", true)
 
     var CaseNotify by settings.boolean("case-notify", "Уведомления о кейсах", true)

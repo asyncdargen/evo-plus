@@ -1,6 +1,6 @@
 package ru.dargen.evoplus.feature.type.boss
 
-import ru.dargen.evoplus.util.uncolored
+import ru.dargen.evoplus.util.minecraft.uncolored
 
 
 enum class BossType(val entityName: String, val level: Int) {

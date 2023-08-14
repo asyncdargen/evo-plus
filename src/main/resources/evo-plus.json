@@ -9,6 +9,7 @@
 
     "input.keybind.GameOptionsMixin",
     "input.keybind.KeyBindingAccessor",
+    "input.keybind.KeyBindingMixin",
 
     "world.LightmapTextureManagerMixin",
     "world.ParticleManagerMixin",

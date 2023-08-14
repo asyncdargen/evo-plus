@@ -4,6 +4,7 @@ import net.minecraft.client.option.KeyBinding
 import ru.dargen.evoplus.api.event.input.KeyTypeEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.mixin.input.keybind.KeyBindingAccessor
+import ru.dargen.evoplus.util.kotlin.cast
 
 object KeyBindings {
 
@@ -11,7 +12,11 @@ object KeyBindings {
     val PressHandlers = mutableMapOf<KeyBinding, () -> Unit>()
 
     init {
-        on<KeyTypeEvent> { PressHandlers.forEach { (key, handler) -> if (key.isPressed) handler() } }
+        on<KeyTypeEvent> {
+            PressHandlers.forEach { (key, handler) ->
+                if (key.cast<KeyBindingAccessor>().boundKey.code == this@on.key) handler()
+            }
+        }
     }
 
     fun add(keyBinding: KeyBinding) {

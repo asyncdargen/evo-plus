@@ -10,7 +10,7 @@ import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.input.MouseClickEvent;
 import ru.dargen.evoplus.api.event.input.MouseMoveEvent;
 import ru.dargen.evoplus.api.event.input.MouseWheelEvent;
-import ru.dargen.evoplus.util.MinecraftKt;
+import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
 @Mixin(Mouse.class)
 public class MouseMixin {

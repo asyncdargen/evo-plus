@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.feature.misc
+package ru.dargen.evoplus.feature.type.misc
 
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative

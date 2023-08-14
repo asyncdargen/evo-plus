@@ -5,7 +5,7 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.node.drag
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.util.MousePosition
+import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
 
