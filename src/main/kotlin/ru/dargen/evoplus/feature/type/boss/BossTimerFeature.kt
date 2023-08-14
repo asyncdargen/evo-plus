@@ -55,7 +55,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
     val Message by settings.boolean(
         "message",
         "Сообщение о спавне",
-        false
+        true
     )
     val ClanMessage by settings.boolean(
         "clan-messages",
@@ -65,7 +65,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", Ite
     val Notify by settings.boolean(
         "notify",
         "Уведомления",
-        false
+        true
     )
 
     private val Long.fixSeconds get() = (this / 1000) * 1000

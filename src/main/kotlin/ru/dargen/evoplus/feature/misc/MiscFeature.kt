@@ -3,8 +3,10 @@ package ru.dargen.evoplus.feature.misc
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.evo.EvoJoinEvent
+import ru.dargen.evoplus.api.event.game.PostTickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.util.Player
 import ru.dargen.evoplus.util.sendCommand
 import ru.dargen.evoplus.util.uncolored
 
@@ -12,15 +14,19 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
 
     private val BoosterMessagePattern = "^[\\w\\s]+ активировал глобальный бустер".toRegex()
 
-    val AutoThanks by settings.boolean("auto-settings", "Авто /thx", true)
+    val AutoSprint by settings.boolean("auto-sprint", "Авто-спринт", true) on {
+        if (!it) Player?.isSprinting = false
+    }
+    val AutoThanks by settings.boolean("auto-settings", "Авто /thx", false)
     var FastSelector by settings.boolean("fast-selector", "Меню быстрого доступа", true)
 
     var CaseNotify by settings.boolean("case-notify", "Уведомления о кейсах", true)
     var LuckyBlockNotify by settings.boolean("lucky-block-notify", "Уведомления о лаки-блоках", true)
     var CollectionNotify by settings.boolean("collection-notify", "Уведомления о коллекционках", true)
-    var NoSpam by settings.boolean("no-spam", "Отключение спам-сообщений", true)
+    var NoSpam by settings.boolean("no-spam", "Отключение спам-сообщений", false)
 
     init {
+        on<PostTickEvent> { Player?.apply { if (forwardSpeed > 0) isSprinting = true } }
         on<EvoJoinEvent> { thx() }
         on<ChatReceiveEvent> {
             val text = text.uncolored()

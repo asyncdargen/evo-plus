@@ -10,6 +10,6 @@ object RenderFeature : Feature("render", "Визуализация", Items.REDST
     var NoBlockParticles by settings.boolean("break-particles", "Отключение эффектов блока", false)
     var NoFire by settings.boolean("no-fire", "Отключение огня", false)
     var NoStrikes by settings.boolean("no-strikes", "Отключение молний", false)
-    var NoDamageShake by settings.boolean("no-damage-shake", "Отключение покачивания камеры", false)
+    var NoDamageShake by settings.boolean("no-damage-shake", "Отключение покачивания камеры, при ударе", false)
     var NoHandShake by settings.boolean("no-damage-shake", "Отключение покачивания руки", false)
 }

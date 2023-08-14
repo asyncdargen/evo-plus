@@ -10,8 +10,10 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.box
+import ru.dargen.evoplus.util.Client
 import ru.dargen.evoplus.util.customItem
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.printMessage
 import ru.dargen.evoplus.util.sendCommand
 
 object FastSelectorScreen {
@@ -21,6 +23,9 @@ object FastSelectorScreen {
             if (!MiscFeature.FastSelector) return@on
 
             screen {
+                allowMoving()
+                Keybinds.FastSelector.isPressed = false
+
                 val itemTitle = +text {
                     translation = v3(y = 20.0)
                     scale = v3(2.5, 2.5, 2.5)
@@ -70,7 +75,7 @@ object FastSelectorScreen {
 
                     animate("stage", .15) {
                         var index = 0
-                        for (y in -1..2) {
+                        for (y in -1..1) {
                             for (x in -2..2) {
                                 items[index++].apply {
                                     translation = v3(x * 48.0, y * 48.0)
