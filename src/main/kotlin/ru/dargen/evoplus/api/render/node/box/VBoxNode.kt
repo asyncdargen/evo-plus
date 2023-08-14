@@ -1,7 +1,6 @@
 package ru.dargen.evoplus.api.render.node.box
 
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
-import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
 
 @KotlinOpens
@@ -27,12 +26,17 @@ class VBoxNode : AbstractGridBoxNode() {
             translateY += node.size.y * node.scale.y
         }
 
-        if (dependSize) {
-            size = if (children.isEmpty()) Vector3() else Vector3(maxX + indent.x * 2, translateY + indent.y)
+        if (dependSizeX) {
+            size.x = if (children.isEmpty()) .0 else maxX + indent.x * 2
+        }
+        if (dependSizeX) {
+            size.y = if (children.isEmpty()) .0 else translateY + indent.y
         }
 
         if (fixChildSize) {
-            enabledChildren.forEach { it.size.x = (if (dependSize) maxX else size.x - indent.x * 2) / it.scale.x }
+            enabledChildren.forEach {
+                it.size.x = (if (dependSizeX) maxX else size.x - indent.x * 2) / it.scale.x
+            }
         }
     }
 

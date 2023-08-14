@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.feature
 
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
@@ -12,18 +13,17 @@ import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
-import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.scroll.hScrollView
-import ru.dargen.evoplus.util.alpha
+import ru.dargen.evoplus.util.concurrent.async
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.itemStack
 import kotlin.math.sign
 
 object FeaturesScreen {
 
-    val BackgroundColor = Colors.Black.alpha(.3)
     var SelectedFeature = Features.List.first()
 
-    fun open() = screen("features") {
+    fun open() = screen("features") features@ {
         val label = +text(ModLabel) {
             scale = v3(1.7, 1.7, 1.7)
             position = v3(-5.0, 5.0)
@@ -38,7 +38,6 @@ object FeaturesScreen {
             origin = Relative.RightTop
         }
 
-
         val box = +vbox box@{
             align = Relative.CenterTop
             origin = Relative.CenterBottom
@@ -47,12 +46,16 @@ object FeaturesScreen {
 
             var settingsBox: Node = DummyNode
             val selector = +hScrollView {
-                box.color = BackgroundColor
+                box.color = Colors.TransparentBlack
+
                 Features.List.forEach {
                     addElements(hbox {
-                        color = Colors.Primary
+                        dependSizeY = false
                         +item(ItemStack(it.icon))
                         +text(it.name)
+                        preRender { _, _ ->
+                            color = if (SelectedFeature != it) Colors.Primary else Colors.Primary.darker()
+                        }
                         leftClick { _, state ->
                             if (state && isHovered && it != SelectedFeature) {
                                 val slide = (Features.List.indexOf(SelectedFeature) - Features.List.indexOf(it)).sign
@@ -80,8 +83,21 @@ object FeaturesScreen {
                         }
                     })
                 }
-                addElements(button("Виджеты") {
-                    on { screen("features-widgets") { transparent  = true }.open() }
+
+                addElements(hbox {
+                    dependSizeY = false
+                    color = Colors.Primary
+
+                    +item(itemStack(Items.COMMAND_BLOCK))
+                    +text("Виджеты")
+
+                    leftClick { _, state ->
+                        if (isHovered && state) {
+                            screen("features-widgets") {
+                                transparent = true
+                            }.open()
+                        }
+                    }
                 })
             }
 
@@ -103,14 +119,12 @@ object FeaturesScreen {
                 box.align = Relative.Center
                 box.origin = Relative.Center
 
-                color = BackgroundColor
+                color = Colors.TransparentBlack
             }
         }
 
-        destroy {
-            Features.saveSettings()
-        }
-    }.open()
+        destroy { async(Features::saveSettings) }
+    }.openIfNoScreen()
 
     fun isInWidgetEditor() = ScreenContext.current()?.id == "features-widgets"
 

@@ -1,11 +1,11 @@
 package ru.dargen.evoplus.feature.settings
 
 import com.google.gson.JsonElement
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.rectangle
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.feature.FeaturesScreen
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.v3
 import kotlin.properties.ReadWriteProperty
@@ -21,7 +21,7 @@ abstract class Setting<T>(val id: String, val name: String) : ReadWriteProperty<
 
     val settingSection: Node
         get() = rectangle {
-            color = FeaturesScreen.BackgroundColor
+            color = Colors.TransparentBlack
             size = v3(y = 30.0)
             +text(name) {
                 translation = v3(x = 5.0)

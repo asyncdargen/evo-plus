@@ -1,34 +1,38 @@
 package ru.dargen.evoplus.api.render.node.scroll
 
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.AbstractGridBoxNode
 import ru.dargen.evoplus.api.render.node.box.vbox
-import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.alpha
+import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.fix
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.MousePosition
 
+@KotlinOpens
 class VScrollViewNode : AbstractScrollViewNode() {
 
     override var box: AbstractGridBoxNode = +vbox {
         align = Relative.LeftTop
         origin = Relative.LeftTop
 
-        dependSize = false
+        dependSizeX = false
+        dependSizeY = false
         fixChildSize = true
 
         isScissor = true
-        tick { scissorIndent.set(indent) }
+        preTransform { _, _ -> scissorIndent.set(indent) }
     }
     override var scrollbar = +rectangle {
         size = v3(x = 5.0)
         align = Relative.RightTop
         origin = Relative.RightTop
 
-        color = ru.dargen.evoplus.api.render.Colors.Primary
+        color = Colors.Primary
     }
     override var size: Vector3
         get() = super.size
@@ -76,7 +80,7 @@ class VScrollViewNode : AbstractScrollViewNode() {
             it.translation.y = elementsOffset
 
             val positionY = it.wholePosition.y
-            it.enabled = positionY < maxY && positionY + it.wholeSize.y > minY
+            it.enabled = positionY <= maxY && positionY + it.wholeSize.y >= minY
         }
     }
 

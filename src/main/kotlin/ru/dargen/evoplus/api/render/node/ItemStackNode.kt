@@ -5,7 +5,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.render.Render
+import ru.dargen.evoplus.util.render.ItemRenderer
 
 @KotlinOpens
 class ItemStackNode(var item: ItemStack = ItemStack(Items.AIR)) : RectangleNode() {
@@ -16,7 +16,7 @@ class ItemStackNode(var item: ItemStack = ItemStack(Items.AIR)) : RectangleNode(
 
     override fun renderElement(matrices: MatrixStack, tickDelta: Float) {
         super.renderElement(matrices, tickDelta)
-        Render.ItemRenderer.renderGuiItemIcon(matrices, item, 0, 0)
+        ItemRenderer.renderGuiItemIcon(matrices, item, 0, 0)
     }
 
 }

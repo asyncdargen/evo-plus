@@ -4,13 +4,15 @@ import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.util.math.MatrixStack
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
+import ru.dargen.evoplus.api.render.Tips
 import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.context.Overlay
-import ru.dargen.evoplus.util.minecraft.Window
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.MousePosition
+import ru.dargen.evoplus.util.minecraft.Window
 import ru.dargen.evoplus.util.render.rotate
 import ru.dargen.evoplus.util.render.scale
 import ru.dargen.evoplus.util.render.translate
@@ -46,8 +48,8 @@ abstract class Node {
     var color by proxied<Color>(Colors.Transparent)
 
     //node properties
-    var _children = mutableSetOf<Node>()
-    val children get() = _children.toSet()
+    var _children = mutableListOf<Node>()
+    val children get() = _children.toList()
 
     val enabledChildren get() = children.asSequence().filter(Node::enabled)
     var parent: Node? = null
@@ -74,13 +76,6 @@ abstract class Node {
     val preTickHandlers = mutableSetOf<TickHandler<Node>>()
     val postTickHandlers = mutableSetOf<TickHandler<Node>>()
 
-    //wholes
-//    val wholePosition
-//        get() = (parent?._wholePosition() ?: Vector3()).plus(
-//            (parent?.size?.clone()?.times(align) ?: Vector3())
-//                .plus(translation).plus(position)
-//                .plus((!size).times(origin)).times(wholeScale)
-//        )
     val wholePosition
         get() = (parent?._wholePosition() ?: Vector3()).plus(
             (parent?.size?.clone()?.times(align) ?: Vector3())
@@ -228,6 +223,14 @@ abstract class Node {
 
     operator fun <N : Node> N.unaryMinus() = apply { this@Node.removeChildren(this) }
 
+    fun drawTip(
+        matrices: MatrixStack, vararg lines: String, space: Double = 1.0, indent: Double = 2.5,
+        color: Color = Colors.TransparentBlack,
+        textColor: Color = Colors.White, shadow: Boolean = false
+    ) = Tips.draw(
+        matrices, *lines, position = (MousePosition - wholePosition) / wholeScale,
+        space = space, indent = indent, color = color, textColor = textColor, shadow = shadow
+    )
 }
 
 //hover

@@ -6,23 +6,26 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.AbstractGridBoxNode
 import ru.dargen.evoplus.api.render.node.box.hbox
-import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.alpha
+import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.fix
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.MousePosition
 
+@KotlinOpens
 class HScrollViewNode : AbstractScrollViewNode() {
 
     override var box: AbstractGridBoxNode = +hbox {
         align = Relative.LeftTop
         origin = Relative.LeftTop
 
-        dependSize = false
+        dependSizeX = false
+        dependSizeY = false
         fixChildSize = true
 
         isScissor = true
-        tick { scissorIndent.set(indent) }
+        preTransform { _, _ -> scissorIndent.set(indent) }
     }
     override var scrollbar = +rectangle {
         size = v3(y = 5.0)
@@ -76,8 +79,8 @@ class HScrollViewNode : AbstractScrollViewNode() {
         box.children.forEach {
             it.translation.x = elementsOffset
 
-            val positionY = it.wholePosition.x
-            it.enabled = positionY < maxX && positionY + it.wholeSize.x > minX
+            val positionX = it.wholePosition.x
+            it.enabled = positionX <= maxX && positionX + it.wholeSize.x >= minX
         }
     }
 

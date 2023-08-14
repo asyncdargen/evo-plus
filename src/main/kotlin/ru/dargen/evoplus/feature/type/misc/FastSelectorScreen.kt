@@ -10,6 +10,7 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.box
+import ru.dargen.evoplus.util.alpha
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Client
 import ru.dargen.evoplus.util.minecraft.customItem
@@ -24,13 +25,6 @@ object FastSelectorScreen {
             screen {
                 isPassEvents = true
 
-                val itemTitle = +text {
-                    translation = v3(y = 20.0)
-                    scale = v3(2.5, 2.5, 2.5)
-                    align = Relative.CenterTop
-                    origin = Relative.CenterTop
-                }
-
                 fun commandItem(
                     type: Item, data: Int = 0,
                     command: String, title: String
@@ -38,11 +32,15 @@ object FastSelectorScreen {
                     align = Relative.Center
                     origin = Relative.Center
 
+                    postRender { matrices, _ ->
+                        matrices.translate(0f, 0f, 150f) //bc item render translates z to 100f
+                        if (isHovered) drawTip(matrices, title, color = Colors.Black.alpha(0))
+                    }
                     hover { _, state ->
                         animate("hover", .07) {
                             scale = if (state) v3(3.1, 3.1, 3.1) else v3(2.7, 2.7, 2.7)
                         }
-                        itemTitle.text = if (state) title else ""
+//                        itemTitle.text = if (state) title else ""
                     }
                     typeKey { key -> if (key == -1 && isHovered) sendCommand(command) }
                 }

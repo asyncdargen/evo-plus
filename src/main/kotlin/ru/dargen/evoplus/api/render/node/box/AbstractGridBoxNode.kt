@@ -7,7 +7,9 @@ import ru.dargen.evoplus.util.math.Vector3
 @KotlinOpens
 abstract class AbstractGridBoxNode : BoxNode() {
 
-    var dependSize = true
+    var dependSizeX = true
+    var dependSizeY = true
+
     var fixChildSize = false
 
     var childrenRelative by proxied(.0)

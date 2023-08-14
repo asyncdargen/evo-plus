@@ -20,7 +20,8 @@
     "render.screen.InGameHudMixin",
     "render.screen.ChatHudMixin",
 
-    "LivingEntityMixin",
+    "entity.LivingEntityMixin",
+
     "MinecraftClientMixin",
     "MessageHandlerMixin",
     "ClientPlayNetworkHandlerMixin"

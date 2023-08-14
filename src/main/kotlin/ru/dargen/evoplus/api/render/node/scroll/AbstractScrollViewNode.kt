@@ -4,7 +4,7 @@ import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.RectangleNode
 import ru.dargen.evoplus.api.render.node.box.AbstractGridBoxNode
-import ru.dargen.evoplus.api.render.node.tick
+import ru.dargen.evoplus.api.render.node.preTransform
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 
 @KotlinOpens
@@ -17,8 +17,11 @@ abstract class AbstractScrollViewNode : RectangleNode() {
     var selector by proxied(.0)
     val elements get() = box.children
 
+    protected var lastElementsCount = 0
+    val willRecompose get() = (lastElementsCount == elements.size).apply { lastElementsCount = elements.size }
+
     init {
-        tick { recompose() }
+        preTransform { _, _ -> if (willRecompose) recompose() }
     }
 
     abstract fun recompose()

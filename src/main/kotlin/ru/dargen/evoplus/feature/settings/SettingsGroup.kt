@@ -2,10 +2,10 @@ package ru.dargen.evoplus.feature.settings
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.node.DummyNode
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.scroll.vScrollView
-import ru.dargen.evoplus.feature.FeaturesScreen
 import ru.dargen.evoplus.util.isNull
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.selector.Selector
@@ -19,7 +19,7 @@ class SettingsGroup(id: String, name: String) : Setting<MutableList<Setting<*>>>
 
     override val settingSection: Node
         get() = vScrollView {
-            box.color = FeaturesScreen.BackgroundColor
+            box.color = Colors.TransparentBlack
             addElements(settings.map(Setting<*>::settingSection))
         }
     override val settingElement: Node
@@ -39,7 +39,6 @@ class SettingsGroup(id: String, name: String) : Setting<MutableList<Setting<*>>>
         id: String, name: String, selector: Selector<T>,
         nameMapper: Selector<T>.(T?) -> String = { it?.toString() ?: "null" }
     ) = setting(SwitcherSetting(id, name, selector, nameMapper))
-
 
     override fun load(element: JsonElement) {
         if (!element.isJsonObject) return

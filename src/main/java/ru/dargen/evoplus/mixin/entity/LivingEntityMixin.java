@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.mixin;
+package ru.dargen.evoplus.mixin.entity;
 
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
@@ -15,10 +15,12 @@ public abstract class LivingEntityMixin {
     @Shadow
     public boolean handSwinging;
 
-    @Inject(at = @At("HEAD"), method = "tickHandSwing")
+    @SuppressWarnings("all")
+    @Inject(method = "tickHandSwing", at = @At("HEAD"))
     private void tickHandSwing(CallbackInfo ci) {
-        if (((LivingEntity) (Object) this) instanceof ClientPlayerEntity && RenderFeature.INSTANCE.getNoHandShake())
+        if (((LivingEntity) (Object) this) instanceof ClientPlayerEntity && RenderFeature.INSTANCE.getNoHandShake()) {
             handSwinging = false;
+        }
     }
 
 }

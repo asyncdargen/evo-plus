@@ -4,7 +4,7 @@ import net.minecraft.client.util.math.MatrixStack
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
-import ru.dargen.evoplus.util.render.Render
+import ru.dargen.evoplus.util.render.TextRenderer
 import ru.dargen.evoplus.util.render.drawText
 
 @KotlinOpens
@@ -16,7 +16,7 @@ class TextNode(lines: List<String>) : Node() {
     var lines: List<String> = lines
         set(value) {
             field = value
-            prepare()
+            recompute()
         }
     var text: String
         get() = lines.joinToString("\n")
@@ -31,23 +31,19 @@ class TextNode(lines: List<String>) : Node() {
 
     init {
         color = Colors.White
-        prepare()
+        recompute()
     }
 
-    fun prepare() {
-        val renderer = Render.TextRenderer
-
-        linesWithWidths = lines.associateWith(renderer::getWidth)
+    fun recompute() {
+        linesWithWidths = lines.associateWith(TextRenderer::getWidth)
         size.set(
             (linesWithWidths.values.maxOrNull()?.toDouble() ?: .0),
-            linesCount * (renderer.fontHeight - 1.0) + (linesCount - 1) * linesSpace, .0
+            linesCount * (TextRenderer.fontHeight - 1.0) + (linesCount - 1) * linesSpace, .0
         )
     }
 
     override fun renderElement(matrices: MatrixStack, tickDelta: Float) {
-        val renderer = Render.TextRenderer
-
-        val height = (renderer.fontHeight - 1.0)
+        val height = (TextRenderer.fontHeight - 1.0)
         linesWithWidths.entries.forEachIndexed { index, (line, width) ->
             val x = if (isCentered) size.x / 2.0 - width / 2.0 else .0
             val y = index * height + index * linesSpace

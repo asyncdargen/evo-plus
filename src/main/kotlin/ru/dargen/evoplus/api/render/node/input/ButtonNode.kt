@@ -33,9 +33,7 @@ class ButtonNode(label: String = "") : RectangleNode() {
         color = buttonColor()
         size = Vector3(100.0, 20.0)
 
-        hover { _, hovered ->
-            color = buttonColor(hovered)
-        }
+        hover { _, _ -> color = buttonColor() }
         leftClick { mouse, state ->
             if (isHovered && state) {
                 clickHandler(mouse)
@@ -46,7 +44,7 @@ class ButtonNode(label: String = "") : RectangleNode() {
         }
     }
 
-    protected fun buttonColor(hovered: Boolean = isHovered) = if (hovered) buttonColor.darker() else buttonColor
+    protected fun buttonColor() = if (isHovered) buttonColor.darker() else buttonColor
 
     fun on(handler: ButtonNode.(mouse: Vector3) -> Unit = {}) = apply { clickHandler = handler }
 
