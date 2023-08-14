@@ -7,8 +7,10 @@ import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.Tips
 import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.context.Overlay
+import ru.dargen.evoplus.api.render.context.RenderContext
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.cast
+import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.MousePosition
@@ -86,7 +88,7 @@ abstract class Node {
     val wholeRotation get() = (parent?.rotation ?: Vector3()) + rotation
     val wholeSize get() = size * wholeScale
 
-    val initialParent: Node get() = parent?.initialParent ?: this
+    val context: RenderContext? get() = parent?.context ?: safeCast<RenderContext>()
 
     //dispatchers
     fun preTick() {
@@ -156,8 +158,10 @@ abstract class Node {
         preTransformHandlers.forEach { it(matrices, tickDelta) }
 
         parent?.let { matrices.translate(it.size, align) }
-        matrices.translate(translation)
-        matrices.translate(position)
+
+        val positionScale = context?.takeIf { this != it }?.translationScale ?: v3(1.0, 1.0, 1.0)
+        matrices.translate(translation, positionScale)
+        matrices.translate(position, positionScale)
 
         matrices.scale(scale)
 

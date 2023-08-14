@@ -11,8 +11,8 @@ import ru.dargen.evoplus.util.minecraft.Client
 val TextRenderer get() = Client.textRenderer
 val ItemRenderer get() = Client.itemRenderer
 
-private val DefaultScale = 1.v3
-private val ZeroPosition = 1.v3
+private val DefaultScale = v3(1.0, 1.0, 1.0)
+private val ZeroPosition = v3()
 
 fun MatrixStack.translate(translate: Vector3, scale: Vector3 = DefaultScale) {
     translate(translate.x * scale.x, translate.y * scale.y, translate.z * scale.z)

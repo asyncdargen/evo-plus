@@ -25,46 +25,53 @@ object FastSelectorScreen {
             screen {
                 isPassEvents = true
 
-                fun commandItem(
-                    type: Item, data: Int = 0,
-                    command: String, title: String
-                ) = item(customItem(type, data)) {
-                    align = Relative.Center
-                    origin = Relative.Center
-
-                    postRender { matrices, _ ->
-                        matrices.translate(0f, 0f, 150f) //bc item render translates z to 100f
-                        if (isHovered) drawTip(matrices, title, color = Colors.Black.alpha(0))
-                    }
-                    hover { _, state ->
-                        animate("hover", .07) {
-                            scale = if (state) v3(3.1, 3.1, 3.1) else v3(2.7, 2.7, 2.7)
-                        }
-//                        itemTitle.text = if (state) title else ""
-                    }
-                    typeKey { key -> if (key == -1 && isHovered) sendCommand(command) }
-                }
-
-                val items = listOf(
-                    +commandItem(Items.EMERALD, 0, "shop", "Магазин"),
-                    +commandItem(Items.ANVIL, 0, "upgrades", "Прокачки"),
-                    +commandItem(Items.COMMAND_BLOCK, 54, "runesbag", "Руны"),
-                    +commandItem(Items.BONE, 0, "collections", "Коллекции"),
-                    +commandItem(Items.SPIDER_SPAWN_EGG, 0, "pets", "Питомцы"),
-
-                    +commandItem(Items.BEACON, 0, "spawn", "Спавн"),
-                    +commandItem(Items.DIAMOND_PICKAXE, 0, "mine", "Шахты"),
-                    +commandItem(Items.NETHER_STAR, 0, "menu", "Меню"),
-                    +commandItem(Items.ZOMBIE_HEAD, 0, "bosses", "Боссы"),
-                    +commandItem(Items.CLOCK, 0, "hide", "Скрыть игроков"),
-
-                    +commandItem(Items.FISHING_ROD, 0, "warp fish", "Рыбалка"),
-                    +commandItem(Items.DIAMOND, 0, "diamondpass", "DiamondPass"),
-                    +commandItem(Items.COMMAND_BLOCK, 1, "backpack", "Рюкзак"),
-                    +commandItem(Items.EXPERIENCE_BOTTLE, 0, "achievements", "Достижения"),
-                    +commandItem(Items.COMMAND_BLOCK, 77, "warp mine", "Шахтеры"),
-                )
                 +box {
+                    val label = +!text {
+                        origin = Relative.CenterBottom
+                        align = Relative.CenterTop
+
+                        scale = v3(2.5, 2.5, 2.5)
+                    }
+                    fun commandItem(
+                        type: Item, data: Int = 0,
+                        command: String, title: String
+                    ) = item(customItem(type, data)) {
+                        origin = Relative.Center
+                        align = Relative.Center
+
+                        postRender { matrices, _ ->
+                            matrices.translate(0f, 0f, 150f) //bc item render translates z to 100f
+                            if (isHovered) drawTip(matrices, title, color = Colors.Black.alpha(0))
+                        }
+                        hover { _, state ->
+                            animate("hover", .07) {
+                                scale = if (state) v3(3.1, 3.1, 3.1) else v3(2.7, 2.7, 2.7)
+                            }
+                            label.text = if (state) title else ""
+                        }
+                        typeKey { key -> if (key == -1 && isHovered) sendCommand(command) }
+                    }
+
+                    val items = listOf(
+                        +commandItem(Items.EMERALD, 0, "shop", "Магазин"),
+                        +commandItem(Items.ANVIL, 0, "upgrades", "Прокачки"),
+                        +commandItem(Items.COMMAND_BLOCK, 54, "runesbag", "Руны"),
+                        +commandItem(Items.BONE, 0, "collections", "Коллекции"),
+                        +commandItem(Items.SPIDER_SPAWN_EGG, 0, "pets", "Питомцы"),
+
+                        +commandItem(Items.BEACON, 0, "spawn", "Спавн"),
+                        +commandItem(Items.DIAMOND_PICKAXE, 0, "mine", "Шахты"),
+                        +commandItem(Items.NETHER_STAR, 0, "menu", "Меню"),
+                        +commandItem(Items.ZOMBIE_HEAD, 0, "bosses", "Боссы"),
+                        +commandItem(Items.CLOCK, 0, "hide", "Скрыть игроков"),
+
+                        +commandItem(Items.FISHING_ROD, 0, "warp fish", "Рыбалка"),
+                        +commandItem(Items.DIAMOND, 0, "diamondpass", "DiamondPass"),
+                        +commandItem(Items.COMMAND_BLOCK, 1, "backpack", "Рюкзак"),
+                        +commandItem(Items.EXPERIENCE_BOTTLE, 0, "achievements", "Достижения"),
+                        +commandItem(Items.COMMAND_BLOCK, 77, "warp mine", "Шахтеры"),
+                    )
+
                     color = Colors.TransparentBlack
                     align = Relative.Center
                     origin = Relative.Center
@@ -80,10 +87,11 @@ object FastSelectorScreen {
                             }
                         }
                     }
+
+                    destroy { items.firstOrNull(Node::isHovered)?.changeKey(-1, true) }
                 }
 
                 releaseKey(Keybinds.FastSelector.defaultKey.code) { close() }
-                destroy { items.firstOrNull(Node::isHovered)?.changeKey(-1, true) }
             }.open()
         }
     }

@@ -15,12 +15,13 @@
     "world.ParticleManagerMixin",
 
     "render.WindowMixin",
+    "render.WorldRendererMixin",
     "render.InGameOverlayRendererMixin",
     "render.GameRendererMixin",
     "render.screen.InGameHudMixin",
     "render.screen.ChatHudMixin",
 
-    "entity.LivingEntityMixin",
+    "entity.EntityAccessor",
 
     "MinecraftClientMixin",
     "MessageHandlerMixin",

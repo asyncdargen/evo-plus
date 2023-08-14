@@ -23,7 +23,9 @@ import ru.dargen.evoplus.util.mixin.HeartType;
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
 
-    @Shadow @Final private Random random;
+    @Shadow
+    @Final
+    private Random random;
 
     @Inject(method = "render", at = @At("TAIL"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;render(Lnet/minecraft/client/util/math/MatrixStack;ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreboardObjective;)V")), cancellable = true)
     private void render(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
@@ -47,8 +49,15 @@ public abstract class InGameHudMixin {
         return RenderFeature.INSTANCE.getNoExcessHud() ? 0 : original.call(entity);
     }
 
+    @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
+    private void renderExperienceBar(MatrixStack matrices, int x, CallbackInfo ci) {
+        if (RenderFeature.INSTANCE.getNoExpHud()) {
+            ci.cancel();
+        }
+    }
+
     //tmp mb bc idk how to edit locals
-    @Inject(method = "renderHealthBar", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "renderHealthBar", at = @At("HEAD"), cancellable = true)
     private void renderHealthBar(MatrixStack matrices, PlayerEntity player, int x, int y, int lines, int regeneratingHeartIndex, float maxHealth, int lastHealth, int health, int absorption, boolean blinking, CallbackInfo ci) {
         ci.cancel();
 
@@ -57,11 +66,12 @@ public abstract class InGameHudMixin {
 
         int lineWidth = mode == RenderFeature.HealthRenderMode.LONG ? 23 : 10;
         int xOffset = mode == RenderFeature.HealthRenderMode.LONG ? -2 : 0;
+        int yOffset = RenderFeature.INSTANCE.getNoExpHud() ? 6 : 0;
 
         HeartType heartType = HeartType.fromPlayerState(player);
         int i = 9 * (player.world.getLevelProperties().isHardcore() ? 5 : 0);
-        int j = MathHelper.ceil((double)maxHealth / 2.0);
-        int k = MathHelper.ceil((double)absorption / 2.0);
+        int j = MathHelper.ceil((double) maxHealth / 2.0);
+        int k = MathHelper.ceil((double) absorption / 2.0);
         int l = j * 2;
         for (int m = j + k - 1; m >= 0; --m) {
             boolean bl3;
@@ -70,7 +80,7 @@ public abstract class InGameHudMixin {
             int n = m / lineWidth;
             int o = m % lineWidth;
             int p = x + o * 8 + xOffset;
-            int q = y - n * lines;
+            int q = y - n * lines + yOffset;
             if (lastHealth + absorption <= 4) {
                 q += random.nextInt(2);
             }

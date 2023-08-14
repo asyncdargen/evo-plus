@@ -26,7 +26,9 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
     var NoSpam by settings.boolean("no-spam", "Отключение спам-сообщений", false)
 
     init {
-        on<PostTickEvent> { Player?.apply { if (forwardSpeed > 0) isSprinting = true } }
+        on<PostTickEvent> {
+            Player?.apply { if (forwardSpeed > 0) isSprinting = true }
+        }
         on<EvoJoinEvent> { thx() }
         on<ChatReceiveEvent> {
             val text = text.uncolored()
