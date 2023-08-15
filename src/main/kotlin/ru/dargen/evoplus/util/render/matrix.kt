@@ -3,13 +3,20 @@ package ru.dargen.evoplus.util.render
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.text.Text
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ColorHelper
+import net.minecraft.util.math.Vec3d
+import org.joml.Matrix4f
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Client
 
 val TextRenderer get() = Client.textRenderer
 val ItemRenderer get() = Client.itemRenderer
+val Tesselator get() = RenderSystem.renderThreadTesselator()
+
+val Vector3.toVec3d get() = Vec3d(x, y, z)
 
 private val DefaultScale = v3(1.0, 1.0, 1.0)
 private val ZeroPosition = v3()
@@ -81,4 +88,125 @@ fun MatrixStack.drawText(text: String, position: Vector3 = ZeroPosition, color: 
 
 fun MatrixStack.drawTextWithShadow(text: String, position: Vector3 = ZeroPosition, color: Int) {
     TextRenderer.drawWithShadow(this, text, position.x.toFloat(), position.y.toFloat(), color)
+}
+
+fun MatrixStack.drawWorldText(
+    position: Vec3d,
+    camera: Camera,
+    vertexConsumers: VertexConsumerProvider.Immediate,
+    texts: List<Text>,
+    verticalAlign: VerticalAlign = VerticalAlign.CENTER
+) {
+    push()
+    translate(position.x, position.y, position.z)
+    multiply(camera.rotation)
+    for ((index, text) in texts.withIndex()) {
+        push()
+        val width = TextRenderer.getWidth(text)
+        translate(-width / 2F, verticalAlign.align(index, texts.size), 0F)
+        val vertexConsumer: VertexConsumer = vertexConsumers.getBuffer(RenderLayer.getTextBackgroundSeeThrough())
+        val matrix4f = peek().positionMatrix
+        vertexConsumer.vertex(matrix4f, -1.0f, -1.0f, 0.0f).color(0x70808080)
+            .light(LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE).next()
+        vertexConsumer.vertex(matrix4f, -1.0f, TextRenderer.fontHeight.toFloat(), 0.0f).color(0x70808080)
+            .light(LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE).next()
+        vertexConsumer.vertex(matrix4f, width.toFloat(), TextRenderer.fontHeight.toFloat(), 0.0f)
+            .color(0x70808080)
+            .light(LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE).next()
+        vertexConsumer.vertex(matrix4f, width.toFloat(), -1.0f, 0.0f).color(0x70808080)
+            .light(LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE).next()
+        translate(0F, 0F, 0.01F)
+
+        TextRenderer.draw(
+            text,
+            0F,
+            0F,
+            -1,
+            false,
+            peek().positionMatrix,
+            vertexConsumers,
+            net.minecraft.client.font.TextRenderer.TextLayerType.SEE_THROUGH,
+            0,
+            LightmapTextureManager.MAX_LIGHT_COORDINATE
+        )
+        pop()
+    }
+    pop()
+    vertexConsumers.drawCurrentLayer()
+}
+
+fun MatrixStack.drawWorldBlock(blockPos: BlockPos, color: Int) {
+    push()
+    translate(blockPos.x.toFloat(), blockPos.y.toFloat(), blockPos.z.toFloat())
+    peek().positionMatrix.buildCube(Tesselator.buffer, color)
+    Tesselator.draw()
+    pop()
+}
+
+fun MatrixStack.drawWorldSizedBlock(vec3d: Vec3d, size: Float, color: Int) {
+    push()
+    RenderSystem.setShader(GameRenderer::getPositionColorProgram)
+    translate(vec3d.x, vec3d.y, vec3d.z)
+    scale(size, size, size)
+    translate(-.5, -.5, -.5)
+    peek().positionMatrix.buildCube(Tesselator.buffer, color)
+    Tesselator.draw()
+    pop()
+}
+
+private fun Matrix4f.buildCube(buf: BufferBuilder, color: Int) {
+    val a = ColorHelper.Argb.getAlpha(color).toFloat() / 255.0f
+    val r = ColorHelper.Argb.getRed(color).toFloat() / 255.0f
+    val g = ColorHelper.Argb.getGreen(color).toFloat() / 255.0f
+    val b = ColorHelper.Argb.getBlue(color).toFloat() / 255.0f
+
+    buf.begin(VertexFormat.DrawMode.TRIANGLES, VertexFormats.POSITION_COLOR)
+    buf.fixedColor(255, 255, 255, 255)
+    buf.vertex(this, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 0.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 0.0F, 1.0F, 1.0F).color(r, g, b, a).next()
+    buf.vertex(this, 1.0F, 0.0F, 1.0F).color(r, g, b, a).next()
+    buf.unfixColor()
+}
+
+enum class VerticalAlign {
+    TOP, BOTTOM, CENTER;
+
+    fun align(index: Int, count: Int) = when (this) {
+        CENTER -> (index - count / 2F) * (1 + TextRenderer.fontHeight.toFloat())
+        BOTTOM -> (index - count) * (1 + TextRenderer.fontHeight.toFloat())
+        TOP -> (index) * (1 + TextRenderer.fontHeight.toFloat())
+    }
 }
