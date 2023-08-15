@@ -12,10 +12,6 @@ archivesBaseName = project.archives_base_name
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
-repositories {
-    maven { url = 'https://jitpack.io' }
-}
-
 dependencies {
     //Lombok
     compileOnly(annotationProcessor('org.projectlombok:lombok:1.18.24'))
@@ -44,7 +40,7 @@ jar {
 }
 
 runClient {
-    args '--username=EvoPlusTest'
+    args "--username=${System.getenv("TEST_NAME")}"
 }
 
 allOpen {
