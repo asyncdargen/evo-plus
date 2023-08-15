@@ -26,12 +26,6 @@ object FastSelectorScreen {
                 isPassEvents = true
 
                 +box {
-                    val label = +!text {
-                        origin = Relative.CenterBottom
-                        align = Relative.CenterTop
-
-                        scale = v3(2.5, 2.5, 2.5)
-                    }
                     fun commandItem(
                         type: Item, data: Int = 0,
                         command: String, title: String
@@ -41,13 +35,12 @@ object FastSelectorScreen {
 
                         postRender { matrices, _ ->
                             matrices.translate(0f, 0f, 150f) //bc item render translates z to 100f
-                            if (isHovered) drawTip(matrices, title, color = Colors.Black.alpha(0))
+                            if (isHovered) drawTip(matrices, title, color = Colors.Black.alpha(0), shadow = true)
                         }
                         hover { _, state ->
                             animate("hover", .07) {
                                 scale = if (state) v3(3.1, 3.1, 3.1) else v3(2.7, 2.7, 2.7)
                             }
-                            label.text = if (state) title else ""
                         }
                         typeKey { key -> if (key == -1 && isHovered) sendCommand(command) }
                     }
@@ -72,7 +65,6 @@ object FastSelectorScreen {
                         +commandItem(Items.COMMAND_BLOCK, 77, "warp mine", "Шахтеры"),
                     )
 
-                    color = Colors.TransparentBlack
                     align = Relative.Center
                     origin = Relative.Center
 

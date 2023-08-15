@@ -8,11 +8,11 @@ import ru.dargen.evoplus.feature.type.boss.BossFeature
 import ru.dargen.evoplus.feature.type.boss.BossType
 import ru.dargen.evoplus.util.minecraft.uncolored
 
-object ClanFeature : Feature("Клан", "clan", Items.SHIELD) {
+object ClanFeature : Feature("clan", "Клан", Items.SHIELD) {
 
     val BossCapturePattern = "\\[Клан] Клан (\\S+) начал захват вашего босса ([\\s\\S]+)\\. Защитите его\\.".toRegex()
 
-    val BossCaptureNotify by settings.boolean("boss-capture-notify", "Уведомление о захвате вашего босса.", true)
+    val BossCaptureNotify by settings.boolean("boss-capture-notify", "Уведомление о захвате вашего босса", true)
 
     init {
         on<ChatReceiveEvent> {

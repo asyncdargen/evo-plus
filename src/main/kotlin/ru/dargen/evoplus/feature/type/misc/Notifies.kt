@@ -15,9 +15,6 @@ import java.util.concurrent.TimeUnit
 
 object Notifies {
 
-    private val DefaultBackgroundColor = Color(0, 0, 0, 75)
-    private val BackgroundColor = Color(177, 177, 177, 50)
-
     private val Box = Overlay + vbox {
         align = Relative.RightTop
         origin = Relative.RightTop
