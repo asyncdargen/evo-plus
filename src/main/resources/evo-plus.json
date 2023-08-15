@@ -23,6 +23,7 @@
     "render.screen.ChatHudMixin",
 
     "entity.EntityAccessor",
+    "entity.LivingEntityMixin",
 
     "MinecraftClientMixin",
     "MessageHandlerMixin",
