@@ -26,7 +26,7 @@ class TextNode(lines: List<String>) : Node() {
     var linesWithWidths: Map<String, Int> = emptyMap()
 
     var linesSpace = 1.0
-    var isShadowed = true
+    var isShadowed = false
     var isCentered = false
 
     init {

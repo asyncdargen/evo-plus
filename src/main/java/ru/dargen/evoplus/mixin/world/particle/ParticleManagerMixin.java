@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.mixin.world;
+package ru.dargen.evoplus.mixin.world.particle;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.particle.ParticleManager;

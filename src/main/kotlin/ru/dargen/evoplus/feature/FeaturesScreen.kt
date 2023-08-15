@@ -91,6 +91,12 @@ object FeaturesScreen {
                     +item(itemStack(Items.COMMAND_BLOCK))
                     +text("Виджеты")
 
+                    postRender { matrices , _ ->
+                        if (isHovered) {
+                            drawTip(matrices, "В этом разделе мы можете редактировать", "позиции и размеры виджетов.")
+                        }
+                    }
+
                     leftClick { _, state ->
                         if (isHovered && state) {
                             screen("features-widgets") {

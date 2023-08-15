@@ -27,9 +27,6 @@ dependencies {
 
     //Kotlin
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-
-    //Mixin extras
-    include(implementation(annotationProcessor("com.github.LlamaLad7:MixinExtras:${project.mixin_extra_version}")))
 }
 
 processResources {
@@ -47,7 +44,7 @@ jar {
 }
 
 runClient {
-    args '--username=EvoPlusTest'
+    args '--username=algebroid'
 }
 
 allOpen {

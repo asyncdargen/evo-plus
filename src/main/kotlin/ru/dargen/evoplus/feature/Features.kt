@@ -37,12 +37,13 @@ data object Features {
         on<MinecraftLoadedEvent> {
             load()
             loadSettings()
+
+            Runtime.getRuntime().addShutdownHook(thread(false) {
+                saveSettings()
+                Configs.forEach { it.save() }
+            })
+            every(1, TimeUnit.MINUTES) { Configs.forEach { it.save() } }
         }
-        Runtime.getRuntime().addShutdownHook(thread(false) {
-            saveSettings()
-            Configs.forEach { it.save() }
-        })
-        every(1, TimeUnit.MINUTES) { Configs.forEach { it.save() } }
 
         MenuKey.on { FeaturesScreen.open() }
     }

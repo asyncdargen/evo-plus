@@ -58,6 +58,7 @@ fun MatrixStack.fill(x1: Double, y1: Double, x2: Double, y2: Double, color: Int)
     val b = ColorHelper.Argb.getBlue(color).toFloat() / 255.0f
 
     val bufferBuilder = Tessellator.getInstance().buffer
+    RenderSystem.disableDepthTest()
     RenderSystem.enableBlend()
     RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
     bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR)

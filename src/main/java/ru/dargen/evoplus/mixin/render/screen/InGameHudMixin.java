@@ -1,7 +1,6 @@
 package ru.dargen.evoplus.mixin.render.screen;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -13,6 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.dargen.evoplus.api.event.EventBus;
@@ -27,6 +27,8 @@ public abstract class InGameHudMixin {
     @Final
     private Random random;
 
+    @Shadow protected abstract int getHeartCount(LivingEntity entity);
+
     @Inject(method = "render", at = @At("TAIL"), slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/PlayerListHud;render(Lnet/minecraft/client/util/math/MatrixStack;ILnet/minecraft/scoreboard/Scoreboard;Lnet/minecraft/scoreboard/ScoreboardObjective;)V")), cancellable = true)
     private void render(MatrixStack matrices, float tickDelta, CallbackInfo ci) {
         matrices.push();
@@ -34,19 +36,24 @@ public abstract class InGameHudMixin {
         matrices.pop();
     }
 
-    @WrapOperation(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;getHeartCount(Lnet/minecraft/entity/LivingEntity;)I"))
-    private int renderStatusBars_getHeartCount(InGameHud instance, LivingEntity entity, Operation<Integer> original) {
-        return RenderFeature.INSTANCE.getNoExcessHud() ? -1 : original.call(instance, entity);
+    @Redirect(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;getHeartCount(Lnet/minecraft/entity/LivingEntity;)I"))
+    private int renderStatusBars_getHeartCount(InGameHud instance, LivingEntity entity) {
+        return RenderFeature.INSTANCE.getNoExcessHud() ? -1 : getHeartCount(entity);
     }
 
-    @WrapOperation(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getArmor()I"))
-    private int renderStatusBars_getArmor(PlayerEntity entity, Operation<Integer> original) {
-        return RenderFeature.INSTANCE.getNoExcessHud() ? 0 : original.call(entity);
+    @Redirect(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getArmor()I"))
+    private int renderStatusBars_getArmor(PlayerEntity instance) {
+        return RenderFeature.INSTANCE.getNoExcessHud() ? 0 : instance.getArmor();
     }
 
-    @WrapOperation(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getAir()I"))
-    private int renderStatusBars_getAir(PlayerEntity entity, Operation<Integer> original) {
-        return RenderFeature.INSTANCE.getNoExcessHud() ? 0 : original.call(entity);
+    @Redirect(method = "renderStatusBars", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getAir()I"))
+    private int renderStatusBars_getAir(PlayerEntity instance) {
+        return RenderFeature.INSTANCE.getNoExcessHud() ? 0 : instance.getAir();
+    }
+
+    @Redirect(method = "renderScoreboardSidebar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/font/TextRenderer;draw(Lnet/minecraft/client/util/math/MatrixStack;Ljava/lang/String;FFI)I"))
+    private int renderScoreboardSidebar(TextRenderer instance, MatrixStack matrices, String text, float x, float y, int color) {
+        return RenderFeature.INSTANCE.getNoExcessHud() ? 0 : instance.draw(matrices, text, x, y, color);
     }
 
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)

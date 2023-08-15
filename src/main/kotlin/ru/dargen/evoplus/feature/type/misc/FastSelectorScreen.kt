@@ -4,13 +4,11 @@ import net.minecraft.item.Item
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.keybind.Keybinds
 import ru.dargen.evoplus.api.keybind.on
-import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.screen
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.box
-import ru.dargen.evoplus.util.alpha
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Client
 import ru.dargen.evoplus.util.minecraft.customItem
@@ -33,10 +31,13 @@ object FastSelectorScreen {
                         origin = Relative.Center
                         align = Relative.Center
 
-                        postRender { matrices, _ ->
-                            matrices.translate(0f, 0f, 150f) //bc item render translates z to 100f
-                            if (isHovered) drawTip(matrices, title, color = Colors.Black.alpha(0), shadow = true)
+                        +text(title) {
+                            translation = v3(y = 3.0, z = 200.0)
+                            scale = v3(.4, .4, .4)
+                            align = Relative.CenterBottom
+                            origin = Relative.Center
                         }
+
                         hover { _, state ->
                             animate("hover", .07) {
                                 scale = if (state) v3(3.1, 3.1, 3.1) else v3(2.7, 2.7, 2.7)
@@ -73,7 +74,7 @@ object FastSelectorScreen {
                         for (y in -1..1) {
                             for (x in -2..2) {
                                 items[index++].apply {
-                                    translation = v3(x * 48.0, y * 48.0)
+                                    translation = v3(x * 48.0, y * 56.0)
                                     scale = v3(2.7, 2.7, 2.7)
                                 }
                             }

@@ -16,6 +16,13 @@ import ru.dargen.evoplus.util.minecraft.MousePosition
 @KotlinOpens
 class VScrollViewNode : AbstractScrollViewNode() {
 
+    override var scrollbar = +rectangle {
+        size = v3(x = 5.0)
+        align = Relative.RightTop
+        origin = Relative.RightTop
+
+        color = Colors.Primary
+    }
     override var box: AbstractGridBoxNode = +vbox {
         align = Relative.LeftTop
         origin = Relative.LeftTop
@@ -26,13 +33,6 @@ class VScrollViewNode : AbstractScrollViewNode() {
 
         isScissor = true
         preTransform { _, _ -> scissorIndent.set(indent) }
-    }
-    override var scrollbar = +rectangle {
-        size = v3(x = 5.0)
-        align = Relative.RightTop
-        origin = Relative.RightTop
-
-        color = Colors.Primary
     }
     override var size: Vector3
         get() = super.size

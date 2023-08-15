@@ -15,6 +15,7 @@ object RenderFeature : Feature("render", "Визуализация", Items.REDST
     var NoHandShake by settings.boolean("no-damage-shake", "Отключение покачивания руки", false)
     var NoExcessHud by settings.boolean("no-excess-hud", "Отключение ненужных элементов HUD", true)
     var NoExpHud by settings.boolean("no-exp-hud", "Отключение отрисовки опыта и его уровня", true)
+    var NoScoreboardNumbers by settings.boolean("no-scoreaboard-numbers", "Отключение нумерации скорборда", true)
     var HealthRender by settings.switcher("health-render", "Режим отображения здоровья", enumSelector<HealthRenderMode>())
 
     enum class HealthRenderMode(val displayName: String, val isDefaultHearts: Boolean = true) {

@@ -1,5 +1,6 @@
 package ru.dargen.evoplus.api.render
 
+import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.util.math.MatrixStack
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.minecraft.MousePosition
@@ -21,7 +22,9 @@ object Tips {
         val height = lines.size * TextRenderer.fontHeight + (lines.size - 1) * space + indent * 2
 
         matrices.push()
+        RenderSystem.disableScissor()
         matrices.translate(position)
+        matrices.translate(0f, 0f, 1000f)
 //        matrices.scale(Overlay.Scale)
 
         matrices.fill(.0, .0, width, height, color.rgb)

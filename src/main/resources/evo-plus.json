@@ -12,8 +12,9 @@
     "input.keybind.KeyBindingMixin",
 
     "world.LightmapTextureManagerMixin",
-    "world.ParticleManagerMixin",
-    "world.ParticleManagerAccessor",
+    "world.particle.ParticleManagerMixin",
+    "world.particle.ParticleManagerAccessor",
+    "world.particle.ParticleAccessor",
 
     "render.WindowMixin",
     "render.WorldRendererMixin",

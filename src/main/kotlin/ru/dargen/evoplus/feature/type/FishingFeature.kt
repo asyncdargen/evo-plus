@@ -26,7 +26,6 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
                     Client?.interactionManager?.interactItem(Player!!, Hand.MAIN_HAND)
                 }
             } else fishHookTicks = 0
-         }
+        }
     }
-
 }
