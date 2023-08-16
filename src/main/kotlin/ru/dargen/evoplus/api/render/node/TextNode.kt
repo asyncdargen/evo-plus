@@ -1,11 +1,15 @@
 package ru.dargen.evoplus.api.render.node
 
+import net.minecraft.client.font.TextRenderer.TextLayerType
+import net.minecraft.client.render.LightmapTextureManager
 import net.minecraft.client.util.math.MatrixStack
 import ru.dargen.evoplus.api.render.Colors
+import ru.dargen.evoplus.api.render.context.World
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.render.TextRenderer
 import ru.dargen.evoplus.util.render.drawText
+import ru.dargen.evoplus.util.render.positionMatrix
 
 @KotlinOpens
 class TextNode(lines: List<String>) : Node() {
@@ -48,7 +52,15 @@ class TextNode(lines: List<String>) : Node() {
             val x = if (isCentered) size.x / 2.0 - width / 2.0 else .0
             val y = index * height + index * linesSpace
 
-            matrices.drawText(line, Vector3(x, y), isShadowed, color.rgb)
+            if (isWorldElement) {
+                TextRenderer.draw(
+                    text, x.toFloat(), y.toFloat(), color.rgb, isShadowed,
+                    matrices.positionMatrix, World.VertexConsumers,
+                    if (isSeeThrough) TextLayerType.SEE_THROUGH else TextLayerType.NORMAL,
+                    0, LightmapTextureManager.MAX_LIGHT_COORDINATE
+                )
+                World.VertexConsumers.drawCurrentLayer()
+            } else matrices.drawText(line, Vector3(x, y), isShadowed, color.rgb)
         }
     }
 

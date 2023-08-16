@@ -1,17 +1,14 @@
 package ru.dargen.evoplus.api.render.node
 
 import com.mojang.blaze3d.systems.RenderSystem
-import net.minecraft.client.gl.VertexBuffer
-import net.minecraft.client.render.Camera
-import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
-import org.joml.Matrix4f
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.Tips
 import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.context.RenderContext
+import ru.dargen.evoplus.api.render.context.World
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.kotlin.safeCast
@@ -61,6 +58,7 @@ abstract class Node {
     var parent: Node? = null
 
     var scissorIndent by proxied(Vector3())
+    var isSeeThrough = false
     var isScissor = false
     var enabled = true
     var isHovered = false
@@ -92,6 +90,7 @@ abstract class Node {
     val wholeRotation get() = (parent?.rotation ?: Vector3()) + rotation
     val wholeSize get() = size * wholeScale
 
+    val isWorldElement get() = context is World
     val context: RenderContext? get() = parent?.context ?: safeCast<RenderContext>()
 
     //dispatchers
@@ -159,6 +158,7 @@ abstract class Node {
     fun render(matrices: MatrixStack, tickDelta: Float) {
         if (!enabled) return
         matrices.push()
+
         preTransformHandlers.forEach { it(matrices, tickDelta) }
 
         parent?.let { matrices.translate(it.size, align) }
@@ -199,48 +199,7 @@ abstract class Node {
         matrices.pop()
     }
 
-    fun renderInWorld(
-        matrices: MatrixStack,
-        tickDelta: Float,
-        camera: Camera,
-        positionMatrix: Matrix4f,
-        vertexConsumers: VertexConsumerProvider.Immediate
-    ) {
-        if (!enabled) return
-
-        RenderSystem.disableDepthTest()
-        RenderSystem.enableBlend()
-        RenderSystem.defaultBlendFunc()
-        RenderSystem.disableCull()
-
-        matrices.push()
-        matrices.translate(-camera.pos.x, -camera.pos.y, -camera.pos.z)
-
-        matrices.scale(scale)
-
-        renderWorldElement(matrices, tickDelta, camera, positionMatrix, vertexConsumers)
-
-        children.forEach { it.renderInWorld(matrices, tickDelta, camera, positionMatrix, vertexConsumers) }
-
-        matrices.pop()
-
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F)
-        VertexBuffer.unbind()
-        RenderSystem.enableDepthTest()
-        RenderSystem.enableCull()
-        RenderSystem.disableBlend()
-    }
-
     fun renderElement(matrices: MatrixStack, tickDelta: Float) {}
-
-    fun renderWorldElement(
-        matrices: MatrixStack,
-        tickDelta: Float,
-        camera: Camera,
-        positionMatrix: Matrix4f,
-        vertexConsumers: VertexConsumerProvider.Immediate
-    ) {
-    }
 
     //children
     fun addChildren(children: Collection<Node>) {
