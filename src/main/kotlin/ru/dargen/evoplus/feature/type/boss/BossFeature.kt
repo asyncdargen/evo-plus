@@ -31,11 +31,15 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     val AlertDelay by settings.selector("alert-time", "За сколько предупреждать о боссе", (0..120 step 5).toSelector()) { "$it сек." }
     val InlineMenuTime by settings.boolean("menu-time", "Отображать время до спавна в меню", true)
 
-    val Message by settings.boolean("message", "Сообщение о спавне",true)
-    val ClanMessage by settings.boolean("clan-messages", "Сообщения в клановый чат", false)
+    val SpawnMessage by settings.boolean("message", "Сообщение о спавне",true)
+    val AlertMessage by settings.boolean("alert-message", "Сообщение до спавна",true)
 
+    val AlertClanMessage by settings.boolean("alert-clan-message", "Сообщение до спавна в клановый чат", false)
+    val SpawnClanMessage by settings.boolean("spawn-clan-message", "Сообщение о спавне в клановый чат", false)
+
+    val AlertNotify by settings.boolean("alert-notify", "Уведомление до спавна", true)
     val SpawnNotify by settings.boolean("spawn-notify", "Уведомление о спавне", true)
-    val UpdateNotify by settings.boolean("update-notify", "Уведомление о обновлении времени", true)
+    val UpdateNotify by settings.boolean("update-notify", "Уведомление об обновлении времени", true)
 
     private val Long.fixSeconds get() = (this / 1000) * 1000
     private val BossType.inLevelBounds get() = level in MinLevel.level..MaxLevel.level
@@ -85,9 +89,9 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
 
             if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 == AlertDelay.toLong()) {
                 val timeText = remainTime.asTextTime
-                if (Message) printAlertMessage("§aБосс §6$displayName §aвозродится через §6$timeText", type)
-                if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс §6$displayName §aвозродится через §6$timeText")
-                if (SpawnNotify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
+                if (AlertMessage) printAlertMessage("§aБосс §6$displayName §aвозродится через §6$timeText", type)
+                if (AlertClanMessage) sendClanMessage("${ModLabel}§8: §aБосс §6$displayName §aвозродится через §6$timeText")
+                if (AlertNotify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
 
                 Alerted.add(type)
             }
@@ -97,8 +101,8 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
                 Alerted.remove(type)
 
                 if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
-                if (Message) printAlertMessage("§aБосс §6$displayName §aвозродился.", type)
-                if (ClanMessage) sendClanMessage("${ModLabel}§8: §aБосс $displayName §aвозродился.")
+                if (SpawnMessage) printAlertMessage("§aБосс §6$displayName §aвозродился.", type)
+                if (SpawnClanMessage) sendClanMessage("${ModLabel}§8: §aБосс $displayName §aвозродился.")
                 if (SpawnNotify) notify(type, "Босс §6$displayName §fвозродился")
             }
         }

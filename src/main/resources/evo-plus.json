@@ -20,6 +20,7 @@
     "render.WorldRendererMixin",
     "render.InGameOverlayRendererMixin",
     "render.GameRendererMixin",
+    "render.screen.PlayerListHudMixin",
     "render.screen.InGameHudMixin",
     "render.screen.ChatHudMixin",
 

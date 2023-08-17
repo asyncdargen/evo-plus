@@ -14,7 +14,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
 
     var AutoFish by settings.boolean("auto-fish", "Автоматическая удочка", true)
     var HookDelay by settings.selector("auto-fish-delay", "Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
-    var HighlightSources by settings.boolean("ightlight-sources", "Подсветка источников")
+    var HighlightSources by settings.boolean("hightlight-sources", "Подсветка источников")
 
     init {
         var fishHookTicks = 0
