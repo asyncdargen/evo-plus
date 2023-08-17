@@ -38,7 +38,6 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
         on<PostTickEvent> {
             Player?.apply { if (forwardSpeed > 0) isSprinting = true }
         }
-        on<EvoJoinEvent> { after(20000) { thx() } }
         on<ChatReceiveEvent> {
             val text = text.uncolored()
 
