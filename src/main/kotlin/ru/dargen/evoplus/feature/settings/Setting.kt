@@ -7,6 +7,7 @@ import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.rectangle
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
+import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.v3
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -17,6 +18,7 @@ typealias SettingHandler<T> = (T) -> Unit
 abstract class Setting<T>(val id: String, val name: String) : ReadWriteProperty<Any, T> {
 
     abstract var value: T
+    var description = emptyArray<String>()
     var handler: SettingHandler<T> = {}
 
     val settingSection: Node
@@ -38,6 +40,8 @@ abstract class Setting<T>(val id: String, val name: String) : ReadWriteProperty<
     abstract val settingElement: Node
 
     infix fun on(handler: SettingHandler<T>) = apply { this.handler = handler }
+
+    fun description(vararg description: String) = apply { this.description = description.cast() }
 
     override fun getValue(thisRef: Any, property: KProperty<*>) = value
 

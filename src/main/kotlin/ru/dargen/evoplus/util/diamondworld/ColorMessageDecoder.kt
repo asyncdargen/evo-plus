@@ -6,9 +6,8 @@ import net.minecraft.text.TextColor
 
 object ColorMessageDecoder {
 
-    private val EncodedColorAlternatives: List<Int> = listOf(
-        0, 170, 43520, 43690, 11141120, 11141290, 16755200, 11184810, 5592405, 5592575, 16733695
-    )
+    private val EncodedColorAlternatives =
+        listOf(0, 170, 43520, 43690, 11141120, 11141290, 16755200, 11184810, 5592405, 5592575, 16733695)
 
     private fun color(color: TextColor?) = color?.rgb?.let(EncodedColorAlternatives::indexOf)
 

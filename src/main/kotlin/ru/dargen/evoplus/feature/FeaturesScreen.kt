@@ -1,6 +1,5 @@
 package ru.dargen.evoplus.feature
 
-import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.api.render.Colors
@@ -51,8 +50,13 @@ object FeaturesScreen {
                 Features.List.forEach {
                     addElements(hbox {
                         dependSizeY = false
-                        +item(ItemStack(it.icon))
+                        +item(it.icon)
                         +text(it.name)
+                        postRender { matrices , _ ->
+                            if (isHovered && it.description.isNotEmpty()) {
+                                drawTip(matrices, *it.description)
+                            }
+                        }
                         preRender { _, _ ->
                             color = if (SelectedFeature != it) Colors.Primary else Colors.Primary.darker()
                         }
