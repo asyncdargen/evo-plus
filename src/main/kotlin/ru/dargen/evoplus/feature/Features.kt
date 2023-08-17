@@ -11,6 +11,7 @@ import ru.dargen.evoplus.feature.type.ClanFeature
 import ru.dargen.evoplus.feature.type.FishingFeature
 import ru.dargen.evoplus.feature.type.RenderFeature
 import ru.dargen.evoplus.feature.type.boss.BossFeature
+import ru.dargen.evoplus.feature.type.chat.ChatFeature
 import ru.dargen.evoplus.feature.type.misc.MiscFeature
 import ru.dargen.evoplus.util.Gson
 import ru.dargen.evoplus.util.concurrent.every
@@ -50,6 +51,7 @@ data object Features {
 
     fun load() {
         BossFeature
+        ChatFeature
         ClanFeature
         FishingFeature
         RenderFeature

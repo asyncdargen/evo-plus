@@ -1,25 +1,26 @@
 package ru.dargen.evoplus.feature.type.misc
 
 import net.minecraft.item.Items
-import net.minecraft.text.Text
 import ru.dargen.evoplus.api.event.EventBus
-import ru.dargen.evoplus.api.event.PlayerChangeServerEvent
+import ru.dargen.evoplus.api.event.ChangeServerEvent
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.evo.EvoJoinEvent
 import ru.dargen.evoplus.api.event.evo.EvoQuitEvent
 import ru.dargen.evoplus.api.event.game.PostTickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.util.concurrent.after
+import ru.dargen.evoplus.util.diamondworld.ColorMessageDecoder
+import ru.dargen.evoplus.util.log
 import ru.dargen.evoplus.util.minecraft.Player
 import ru.dargen.evoplus.util.minecraft.sendCommand
 import ru.dargen.evoplus.util.minecraft.uncolored
-import java.util.stream.Collectors
 
 
 object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
 
     var CurrentServer = "?????-???"
+
+    private val ModInfoServerPattern = "\\[MODINFO-SERVER] ([\\w\\s]+-[\\w\\s]+)".toRegex()
     private val BoosterMessagePattern = "^[\\w\\s]+ активировал глобальный бустер".toRegex()
 
     var AutoSprint by settings.boolean("auto-sprint", "Авто-спринт", true) on {
@@ -27,16 +28,15 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
     }
     val AutoThanks by settings.boolean("auto-thanks", "Авто /thx", true)
     var FastSelector by settings.boolean("fast-selector", "Меню быстрого доступа", true)
-    var ShowServerInTab by settings.boolean("no-spam", "Показывать айди сервера в табе", true)
+    var ShowServerInTab by settings.boolean("show-server-in-tab", "Показывать текущий сервер в табе", true)
 
     var CaseNotify by settings.boolean("case-notify", "Уведомления о кейсах", true)
     var LuckyBlockNotify by settings.boolean("lucky-block-notify", "Уведомления о лаки-блоках", true)
     var CollectionNotify by settings.boolean("collection-notify", "Уведомления о коллекционках", true)
-    var NoSpam by settings.boolean("no-spam", "Отключение спам-сообщений", false)
 
     init {
         on<PostTickEvent> {
-            Player?.apply { if (forwardSpeed > 0) isSprinting = true }
+            Player?.apply { if (AutoSprint && forwardSpeed > 0) isSprinting = true }
         }
         on<ChatReceiveEvent> {
             val text = text.uncolored()
@@ -44,7 +44,6 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
             if (text == "В данный момент нет активных бустеров, либо вы уже поблагодарили игроков за них") cancel()
 
             if (BoosterMessagePattern.containsMatchIn(text)) thx()
-            if (NoSpam && text.startsWith("Игроку")) cancel()
             if (text.startsWith("Вы нашли")) {
                 if (CaseNotify && text.contains("кейс")) Notifies.showText("§6$text")
                 if (CollectionNotify && text.contains("коллекционный предмет")) Notifies.showText("§a$text")
@@ -52,22 +51,22 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
             }
         }
 
-        on<PlayerChangeServerEvent> {
+        on<ChangeServerEvent> {
             sendCommand("modinfo server")
         }
         on<ChatReceiveEvent> {
-            try {
-                val modInfoServer = encodeColoredText(message) ?: return@on
-                if (!modInfoServer.startsWith("[MODINFO-SERVER]")) return@on
-                cancel()
+            runCatching {
+                val modInfoServer = ColorMessageDecoder.decode(message)
+                ModInfoServerPattern.find(modInfoServer)?.apply {
+                    val pastServer = CurrentServer
+                    CurrentServer = groupValues[1]
 
-                val pastServer = CurrentServer
-                CurrentServer = modInfoServer.split("\\s".toRegex())[1]
+                    if ("PRISONEVO" in CurrentServer) EventBus.fire(EvoJoinEvent)
+                    else if ("PRISONEVO" in pastServer) EventBus.fire(EvoQuitEvent)
 
-                if ("PRISONEVO" in CurrentServer) EventBus.fire(EvoJoinEvent)
-                else if ("PRISONEVO" in pastServer) EventBus.fire(EvoQuitEvent)
-            } catch (ignored: Throwable) {
-            }
+                    cancel()
+                }
+            }.exceptionOrNull()?.log("Error while fetching server")
         }
 
         FastSelectorScreen
@@ -79,37 +78,3 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
         }
     }
 }
-
-private val ENCODED_COLOR_ALTERNATIVES: List<Int> = listOf(
-    0, 170, 43520, 43690, 11141120, 11141290, 16755200, 11184810, 5592405, 5592575, 16733695
-)
-
-private fun encodeColoredText(text: Text): String? {
-    var color = text.style?.color
-    var buffer: MutableList<String> =
-        mutableListOf(if (color == null) "" else java.lang.String.valueOf(ENCODED_COLOR_ALTERNATIVES.indexOf(color.rgb)))
-    for (sibling in text.siblings) {
-        color = sibling.style.color
-        if (color == null || !ENCODED_COLOR_ALTERNATIVES.contains(color.rgb)) continue
-        buffer.add(
-            if (ENCODED_COLOR_ALTERNATIVES.indexOf(color.rgb) > 9) " " else ENCODED_COLOR_ALTERNATIVES.indexOf(
-                color.rgb
-            ).toString()
-        )
-    }
-    buffer = if (java.lang.String.join("", buffer).isEmpty()) mutableListOf(
-        text.string.replace("[ §]", "").replace("d", " ")
-    ) else mutableListOf(
-        *java.lang.String.join("", buffer).replace("-1".toRegex(), "").split(" ".toRegex())
-            .dropLastWhile { it.isEmpty() }
-            .toTypedArray())
-    return buffer.stream()
-        .filter { num: String -> num.isNotEmpty() }
-        .map { number: String ->
-            number.toInt()
-                .toChar().toString()
-        }
-        .collect(Collectors.joining())
-}
-
-

@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.dargen.evoplus.api.event.EventBus;
-import ru.dargen.evoplus.api.event.PlayerChangeServerEvent;
+import ru.dargen.evoplus.api.event.ChangeServerEvent;
 import ru.dargen.evoplus.api.event.chat.ChatSendEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryOpenEvent;
@@ -147,6 +147,7 @@ public class ClientPlayNetworkHandlerMixin {
     @Inject(at = @At("HEAD"), method = "onCustomPayload")
     public void onCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
         if (packet.getChannel().toString().equals("minecraft:brand"))
-            EventBus.INSTANCE.fire(PlayerChangeServerEvent.INSTANCE);
+            EventBus.INSTANCE.fire(ChangeServerEvent.INSTANCE);
     }
+
 }
