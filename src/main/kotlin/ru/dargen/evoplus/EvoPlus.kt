@@ -26,7 +26,6 @@ object EvoPlus : ModInitializer {
     }
 
     fun smtgdsfsf(){
-
     }
 
 }
