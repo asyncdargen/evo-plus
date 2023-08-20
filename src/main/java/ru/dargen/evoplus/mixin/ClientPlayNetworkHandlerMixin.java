@@ -11,8 +11,14 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetworkThreadUtils;
+import net.minecraft.network.encryption.NetworkEncryptionUtils;
 import net.minecraft.network.listener.PacketListener;
+import net.minecraft.network.message.LastSeenMessagesCollector;
+import net.minecraft.network.message.MessageBody;
+import net.minecraft.network.message.MessageChain;
+import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.s2c.play.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,30 +26,44 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.ChangeServerEvent;
+import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.chat.ChatSendEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryOpenEvent;
 import ru.dargen.evoplus.api.event.inventory.InventorySlotUpdateEvent;
 import ru.dargen.evoplus.feature.type.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.Inventories;
+import ru.dargen.evoplus.util.minecraft.TextKt;
 
+import java.time.Instant;
 import java.util.concurrent.TimeUnit;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public class ClientPlayNetworkHandlerMixin {
+public abstract class ClientPlayNetworkHandlerMixin {
 
     @Shadow @Final private MinecraftClient client;
+    @Shadow private LastSeenMessagesCollector lastSeenMessagesCollector;
+    @Shadow private MessageChain.Packer messagePacker;
+
+    @Shadow public abstract void sendPacket(Packet<?> packet);
+
     private static final Cache<Integer, InventoryOpenEvent> EVENTS = CacheBuilder.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .build();
 
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
     private void sendChatMessage(String content, CallbackInfo ci) {
-        if (!EventBus.INSTANCE.fireResult(new ChatSendEvent(content))) {
-            ci.cancel();
-        }
+        ci.cancel();
+        if (!EventBus.INSTANCE.fireResult(new ChatSendEvent(content))) return;
+
+        content = TextKt.composeHex(content);
+
+        Instant instant = Instant.now();
+        long l = NetworkEncryptionUtils.SecureRandomUtil.nextLong();
+        LastSeenMessagesCollector.LastSeenMessages lastSeenMessages = lastSeenMessagesCollector.collect();
+        MessageSignatureData messageSignatureData = messagePacker.pack(new MessageBody(content, instant, l, lastSeenMessages.lastSeen()));
+        sendPacket(new ChatMessageC2SPacket(content, instant, l, messageSignatureData, lastSeenMessages.update()));
     }
 
     @Inject(method = "onEntitySpawn", at = @At("HEAD"), cancellable = true)

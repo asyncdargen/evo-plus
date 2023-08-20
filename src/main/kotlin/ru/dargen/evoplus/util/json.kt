@@ -3,6 +3,7 @@ package ru.dargen.evoplus.util
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
+import com.google.gson.reflect.TypeToken
 
 val Gson = GsonBuilder().setPrettyPrinting().create()
 
@@ -18,3 +19,5 @@ fun JsonElement.asDouble(default: Double = .0) =
 fun JsonElement.asObject() = if (isJsonObject) asJsonObject else null
 
 val JsonElement?.isNull get() = this?.isJsonNull != false
+
+inline fun <reified T> fromJson(json: String) = Gson.fromJson(json, object : TypeToken<T>() {})

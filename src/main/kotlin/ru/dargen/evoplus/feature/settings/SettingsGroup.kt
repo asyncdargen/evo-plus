@@ -43,7 +43,8 @@ class SettingsGroup(id: String, name: String) : Setting<MutableList<Setting<*>>>
     override fun load(element: JsonElement) {
         if (!element.isJsonObject) return
 
-        value.associateWith { element.asJsonObject[it.id] }
+        value.filter(Setting<*>::isStorable)
+            .associateWith { element.asJsonObject[it.id] }
             .filterValues { !it.isNull }
             .forEach { (setting, settingElement) -> setting.load(settingElement) }
     }
@@ -51,7 +52,8 @@ class SettingsGroup(id: String, name: String) : Setting<MutableList<Setting<*>>>
     override fun store(): JsonElement {
         val group = JsonObject()
 
-        settings.forEach { group.add(it.id, it.store()) }
+        settings.filter(Setting<*>::isStorable)
+            .forEach { group.add(it.id, it.store()) }
 
         return group
     }

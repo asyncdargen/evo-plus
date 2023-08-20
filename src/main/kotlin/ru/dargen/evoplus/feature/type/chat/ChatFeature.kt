@@ -10,9 +10,6 @@ object ChatFeature : Feature("chat", "Чат", Items.PAPER) {
 
     private val RemindPattern = "^-{12}[\\s\\S]+-{12}\$".toRegex()
 
-    var ChatSections by settings.setting(
-        ChatSectionsSetting("sections", "Секции чата", mutableMapOf(ChatType.ALL to true))
-    )
     var NoSpam by settings.boolean("no-spam", "Отключение спам-сообщений", false)
     var NoRemind by settings.boolean("no-remind", "Отключение напоминаний", false)
 
@@ -21,7 +18,7 @@ object ChatFeature : Feature("chat", "Чат", Items.PAPER) {
             val text = text.uncolored()
 
             if (NoSpam && text.startsWith("Игроку")) cancel()
-            if (NoRemind && RemindPattern.matches(text)) cancel()
+            if (NoRemind && RemindPattern.containsMatchIn(text)) cancel()
         }
     }
 

@@ -7,6 +7,6 @@ class InventorySlotUpdateEvent(
     var syncId: Int,
     var slot: Int,
     var stack: ItemStack,
-    var event: InventoryOpenEvent?,
+    var openEvent: InventoryOpenEvent?,
     var isHidden: Boolean
 ) : CancellableEvent()

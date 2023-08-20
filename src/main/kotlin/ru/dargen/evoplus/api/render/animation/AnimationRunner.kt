@@ -2,10 +2,10 @@ package ru.dargen.evoplus.api.render.animation
 
 import ru.dargen.evoplus.api.render.node.DummyNode
 import ru.dargen.evoplus.api.render.node.Node
-import ru.dargen.evoplus.util.minecraft.Client
-import ru.dargen.evoplus.util.minecraft.WindowInitialized
 import ru.dargen.evoplus.util.log
 import ru.dargen.evoplus.util.math.fix
+import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.WindowInitialized
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.concurrent.thread
 import kotlin.time.Duration
@@ -31,8 +31,10 @@ object AnimationRunner {
         val node = context.safeNode
 
         Animations[node]?.get(context.id)?.run {
-            cancel()
-            finalizeAnimation()
+            if (isRunning) {
+                cancel()
+                finalizeAnimation()
+            }
         }
 
         context.builder()

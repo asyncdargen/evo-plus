@@ -2,14 +2,17 @@ package ru.dargen.evoplus.feature.type.boss
 
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
-import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.feature.FeaturesScreen
 import ru.dargen.evoplus.feature.type.misc.Notifies
+import ru.dargen.evoplus.feature.type.share.ShareFeature
+import ru.dargen.evoplus.util.Gson
 import ru.dargen.evoplus.util.concurrent.every
 import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.format.fromTextTime
+import ru.dargen.evoplus.util.fromJson
 import ru.dargen.evoplus.util.minecraft.*
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
@@ -23,16 +26,24 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     private val BossesText = text()
     val Widget by widgets.add("bosses", "Таймер боссов") { +BossesText }
 
-    val Enabled by settings.boolean("enabled", "Отображение таймера боссов", true) on { Widget.enabled = it }
+    val EnabledTimer by settings.boolean("enabled-timer", "Отображение таймера боссов", true) on { Widget.enabled = it }
     val MinLevel by settings.selector("min-level", "Мин. уровень босса", enumSelector<BossType>()) { "${it?.level}" }
     val MaxLevel by settings.selector("max-level", "Макс. уровень босса", enumSelector<BossType>(-1)) { "${it?.level}" }
-    val BossesCount by settings.selector("render-count", "Кол-во отображаемых боссов", (0..<BossType.entries.size).toSelector(-1))
+    val BossesCount by settings.selector(
+        "render-count",
+        "Кол-во отображаемых боссов",
+        (0..<BossType.entries.size).toSelector(-1)
+    )
 
-    val AlertDelay by settings.selector("alert-time", "За сколько предупреждать о боссе", (0..120 step 5).toSelector()) { "$it сек." }
+    val AlertDelay by settings.selector(
+        "alert-time",
+        "За сколько предупреждать о боссе",
+        (0..120 step 5).toSelector()
+    ) { "$it сек." }
     val InlineMenuTime by settings.boolean("menu-time", "Отображать время до спавна в меню", true)
 
-    val SpawnMessage by settings.boolean("message", "Сообщение о спавне",true)
-    val AlertMessage by settings.boolean("alert-message", "Сообщение до спавна",true)
+    val SpawnMessage by settings.boolean("message", "Сообщение о спавне", true)
+    val AlertMessage by settings.boolean("alert-message", "Сообщение до спавна", true)
 
     val AlertClanMessage by settings.boolean("alert-clan-message", "Сообщение до спавна в клановый чат", false)
     val SpawnClanMessage by settings.boolean("spawn-clan-message", "Сообщение о спавне в клановый чат", false)
@@ -45,6 +56,14 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     private val BossType.inLevelBounds get() = level in MinLevel.level..MaxLevel.level
 
     init {
+        ShareFeature.create("bosses", "Таймеры боссов", { Gson.toJson(Bosses) }) { nick, data ->
+            val shared = fromJson<MutableMap<BossType, Long>>(data)
+
+            Notifies.showText("§6$nick §fотправил вам боссов §7(${shared.size}).", "Нажмите, чтобы принять.") {
+                leftClick { _, state -> if (isHovered && state) Bosses.putAll(shared) }
+            }
+        }
+
         every(100) {
             updateBosses()
             fillInventory()
@@ -90,7 +109,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
             if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 == AlertDelay.toLong()) {
                 val timeText = remainTime.asTextTime
                 if (AlertMessage) printAlertMessage("§aБосс §6$displayName §aвозродится через §6$timeText", type)
-                if (AlertClanMessage) sendClanMessage("${ModLabel}§8: §aБосс §6$displayName §aвозродится через §6$timeText")
+                if (AlertClanMessage) sendClanMessage("§aБосс §6$displayName §aвозродится через §6$timeText")
                 if (AlertNotify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
 
                 Alerted.add(type)
@@ -102,17 +121,19 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
 
                 if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
                 if (SpawnMessage) printAlertMessage("§aБосс §6$displayName §aвозродился.", type)
-                if (SpawnClanMessage) sendClanMessage("${ModLabel}§8: §aБосс $displayName §aвозродился.")
+                if (SpawnClanMessage) sendClanMessage("§aБосс $displayName §aвозродился.")
                 if (SpawnNotify) notify(type, "Босс §6$displayName §fвозродился")
             }
         }
 
-        BossesText.lines = Bosses
-            .filterKeys { it.inLevelBounds }
-            .entries
-            .sortedBy { it.value }
-            .take(BossesCount)
-            .map { (type, timestamp) -> "${type.displayName}§8: §f${(timestamp - currentTime).asTextTime}" }
+        BossesText.lines =
+            (if (FeaturesScreen.isInWidgetEditor() && Bosses.isEmpty())
+                BossType.entries.take(3).associateWith { currentTime + 13245L } else Bosses)
+                .filterKeys { it.inLevelBounds }
+                .entries
+                .sortedBy { it.value }
+                .take(BossesCount)
+                .map { (type, timestamp) -> "${type.displayName}§8: §f${(timestamp - currentTime).asTextTime}" }
     }
 
     private fun fillBossData() {
@@ -141,9 +162,13 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
             }
         }
         ?.run {
-            (BossType[getOrNull(0) ?: return@run null]
-                ?: return@run null) to (getOrNull(1)?.fromTextTime?.takeIf { it > 6000 }
-                ?: return@run null)
+            val type = BossType[getOrNull(0) ?: return@run null] ?: return@run null
+            val delay = getOrNull(1)?.fromTextTime
+                ?.let { if ('۞' in get(1)) (it / 1.5).toLong() else it }
+                ?.takeIf { it > 6000 }
+                ?: return@run null
+
+            type to delay
         }
 
 }

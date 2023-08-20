@@ -8,12 +8,12 @@ object RenderFeature : Feature("render", "Визуализация", Items.REDST
 
     var FullBright by settings.boolean("full-bright", "Полная яркость", true)
 
-    var NoBlockParticles by settings.boolean("break-particles", "Отключение эффектов блока", false)
-    var NoFire by settings.boolean("no-fire", "Отключение огня", false)
-    var NoStrikes by settings.boolean("no-strikes", "Отключение молний", false)
-    var NoFalling by settings.boolean("no-falling", "Отключение падающих блоков", false)
-    var NoDamageShake by settings.boolean("no-damage-shake", "Отключение покачивания камеры, при ударе", false)
-    var NoHandShake by settings.boolean("no-damage-shake", "Отключение покачивания руки", false)
+    var NoBlockParticles by settings.boolean("break-particles", "Отключение эффектов блока")
+    var NoFire by settings.boolean("no-fire", "Отключение огня")
+    var NoStrikes by settings.boolean("no-strikes", "Отключение молний")
+    var NoFalling by settings.boolean("no-falling", "Отключение падающих блоков")
+    var NoDamageShake by settings.boolean("no-damage-shake", "Отключение покачивания камеры, при ударе")
+    var NoHandShake by settings.boolean("no-hand-shake", "Отключение покачивания руки")
     var NoExcessHud by settings.boolean("no-excess-hud", "Отключение ненужных элементов HUD", true)
     var NoExpHud by settings.boolean("no-exp-hud", "Отключение отрисовки опыта и его уровня", true)
     var NoScoreboardNumbers by settings.boolean("no-scoreaboard-numbers", "Отключение нумерации скорборда", true)

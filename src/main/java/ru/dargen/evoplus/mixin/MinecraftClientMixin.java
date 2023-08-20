@@ -2,13 +2,10 @@ package ru.dargen.evoplus.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.util.Hand;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -23,13 +20,6 @@ import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin {
-
-    @Shadow
-    protected int attackCooldown;
-
-    @Shadow
-    @Nullable
-    public ClientPlayerInteractionManager interactionManager;
 
     @Inject(method = "onResolutionChanged", at = @At("RETURN"))
     private void onResolutionChanged(CallbackInfo ci) {

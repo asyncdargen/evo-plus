@@ -7,14 +7,21 @@ import net.minecraft.sound.SoundEvent
 import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
+import net.minecraft.util.hit.BlockHitResult
+import net.minecraft.util.hit.EntityHitResult
 import ru.dargen.evoplus.ModLabel
+import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3
 
 val Client get() = MinecraftClient.getInstance()
+val Player get() = Client?.player
+val InteractionManager get() = Client?.interactionManager
 
-val Player get() = Client.player
-val PlayerPosition get() = Player?.pos?.run { Vector3(x, y, z) } ?: Vector3()
-val PlayerEyePosition get() = Player?.eyePos?.run { Vector3(x, y, z) } ?: Vector3()
+val TargetEntity get() = Client?.crosshairTarget?.safeCast<EntityHitResult>()?.entity
+val TargetBlock get() = Client?.crosshairTarget?.safeCast<BlockHitResult>()?.blockPos
+
+val CurrentScreenHandler get() = Player?.currentScreenHandler
+val CurrentScreen get() = Client?.currentScreen
 
 val WindowInitialized get() = Client.window != null
 val Window get() = Client.window

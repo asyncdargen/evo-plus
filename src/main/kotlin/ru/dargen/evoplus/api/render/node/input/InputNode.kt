@@ -43,7 +43,7 @@ class InputNode : RectangleNode() {
         get() = if (content.isEmpty()) "" else content.substring(0, cursor)
 
     val length get() = content.length
-    var maxLenth = Int.MAX_VALUE
+    var maxLength = Int.MAX_VALUE
 
     var cursor = 0
         get() {
@@ -95,7 +95,7 @@ class InputNode : RectangleNode() {
     }
 
     fun put(text: String) {
-        val allowed = (maxLenth - length).coerceAtLeast(0)
+        val allowed = (maxLength - length).coerceAtLeast(0)
         val text = text.filter { filters.all { filter -> filter(it) } }.safeSlice(0, allowed)
 
         content = content.substring(0, cursor) + text + content.substring(cursor)
@@ -124,6 +124,10 @@ class InputNode : RectangleNode() {
     fun filter(filter: InputFilter) = apply { filters.add(filter) }
 
     fun strictSymbols() = filter { SharedConstants.isValidChar(it) }
+
+    fun clear() {
+        content = ""
+    }
 
 }
 

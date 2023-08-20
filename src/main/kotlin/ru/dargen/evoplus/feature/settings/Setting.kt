@@ -18,6 +18,7 @@ typealias SettingHandler<T> = (T) -> Unit
 abstract class Setting<T>(val id: String, val name: String) : ReadWriteProperty<Any, T> {
 
     abstract var value: T
+    var isStorable = true
     var description = emptyArray<String>()
     var handler: SettingHandler<T> = {}
 

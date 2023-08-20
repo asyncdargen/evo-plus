@@ -13,6 +13,8 @@ import ru.dargen.evoplus.feature.type.RenderFeature
 import ru.dargen.evoplus.feature.type.boss.BossFeature
 import ru.dargen.evoplus.feature.type.chat.ChatFeature
 import ru.dargen.evoplus.feature.type.misc.MiscFeature
+import ru.dargen.evoplus.feature.type.rune.RuneFeature
+import ru.dargen.evoplus.feature.type.share.ShareFeature
 import ru.dargen.evoplus.util.Gson
 import ru.dargen.evoplus.util.concurrent.every
 import ru.dargen.evoplus.util.isNull
@@ -52,10 +54,12 @@ data object Features {
     fun load() {
         BossFeature
         ChatFeature
+        RuneFeature
         ClanFeature
         FishingFeature
         RenderFeature
         MiscFeature
+        ShareFeature
     }
 
     inline fun <reified T> config(name: String, value: T) = JsonConfig(name, object : TypeToken<T>() {}, value).apply {

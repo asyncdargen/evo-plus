@@ -97,7 +97,7 @@ object FeaturesScreen {
 
                     postRender { matrices , _ ->
                         if (isHovered) {
-                            drawTip(matrices, "В этом разделе мы можете редактировать", "позиции и размеры виджетов.")
+                            drawTip(matrices, "В этом разделе мы можете редактировать", "позиции и размеры ВКЛЮЧЕННЫХ виджетов.")
                         }
                     }
 

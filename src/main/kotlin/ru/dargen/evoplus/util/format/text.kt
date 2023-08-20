@@ -10,3 +10,4 @@ fun String.safeSlice(start: Int, endInclusive: Int): String {
 fun String.safeSlice(endInclusive: Int) = safeSlice(0, endInclusive)
 
 fun String.safeSlice(range: IntRange) = safeSlice(range.first, range.last + 1)
+

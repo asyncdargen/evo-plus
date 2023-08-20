@@ -11,7 +11,7 @@ object Inventories {
 
     fun close(syncId: Int) = sendPacket(CloseHandledScreenC2SPacket(syncId))
 
-    fun click(syncId: Int, slot: Int, revision: Int = 0) = sendPacket(
+    fun click(syncId: Int = CurrentScreenHandler!!.syncId, slot: Int, revision: Int = 0) = sendPacket(
         ClickSlotC2SPacket(
             syncId, 0, slot, revision,
             SlotActionType.PICKUP, ItemStack.EMPTY,

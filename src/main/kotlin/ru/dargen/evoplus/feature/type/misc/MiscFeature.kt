@@ -1,8 +1,8 @@
 package ru.dargen.evoplus.feature.type.misc
 
 import net.minecraft.item.Items
-import ru.dargen.evoplus.api.event.EventBus
 import ru.dargen.evoplus.api.event.ChangeServerEvent
+import ru.dargen.evoplus.api.event.EventBus
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.evo.EvoJoinEvent
 import ru.dargen.evoplus.api.event.evo.EvoQuitEvent
@@ -27,7 +27,8 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
         if (!it) Player?.isSprinting = false
     }
     val AutoThanks by settings.boolean("auto-thanks", "Авто /thx", true)
-    var FastSelector by settings.boolean("fast-selector", "Меню быстрого доступа", true)
+    var FastSelector by settings.boolean("fast-selector", "Fast селектор (R)", true)
+    var FastInteraction by settings.boolean("fast-interaction", "Действия с игроком в fast селекторе", true)
     var ShowServerInTab by settings.boolean("show-server-in-tab", "Показывать текущий сервер в табе", true)
 
     var CaseNotify by settings.boolean("case-notify", "Уведомления о кейсах", true)
