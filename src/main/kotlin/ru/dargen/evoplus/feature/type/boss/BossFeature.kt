@@ -56,8 +56,12 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     private val BossType.inLevelBounds get() = level in MinLevel.level..MaxLevel.level
 
     init {
-        ShareFeature.create("bosses", "Таймеры боссов", { Gson.toJson(Bosses) }) { nick, data ->
-            val shared = fromJson<MutableMap<BossType, Long>>(data)
+        ShareFeature.create(
+            "bosses", "Таймеры боссов",
+            { Gson.toJson(Bosses.mapValues { it.value - System.currentTimeMillis() }) }
+        ) { nick, data ->
+            val shared = fromJson<Map<BossType, Long>>(data)
+                .mapValues { it.value + System.currentTimeMillis() }
 
             Notifies.showText("§6$nick §fотправил вам боссов §7(${shared.size}).", "Нажмите, чтобы принять.") {
                 leftClick { _, state -> if (isHovered && state) Bosses.putAll(shared) }
