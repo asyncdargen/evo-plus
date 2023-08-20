@@ -11,14 +11,14 @@ object ChatFeature : Feature("chat", "Чат", Items.PAPER) {
     private val RemindPattern = "^-{12}[\\s\\S]+-{12}\$".toRegex()
 
     var NoSpam by settings.boolean("no-spam", "Отключение спам-сообщений", false)
-    var NoRemind by settings.boolean("no-remind", "Отключение напоминаний", false)
+//    var NoRemind by settings.boolean("no-remind", "Отключение напоминаний", false)
 
     init {
         on<ChatReceiveEvent> {
             val text = text.uncolored()
 
             if (NoSpam && text.startsWith("Игроку")) cancel()
-            if (NoRemind && RemindPattern.containsMatchIn(text)) cancel()
+//            if (NoRemind && RemindPattern.containsMatchIn(text)) cancel()
         }
     }
 
