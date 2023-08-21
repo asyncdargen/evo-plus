@@ -15,7 +15,7 @@ import kotlin.reflect.KProperty
 typealias SettingHandler<T> = (T) -> Unit
 
 @KotlinOpens
-abstract class Setting<T>(val id: String, val name: String) : ReadWriteProperty<Any, T> {
+abstract class Setting<T>(var id: String, val name: String) : ReadWriteProperty<Any, T> {
 
     abstract var value: T
     var isStorable = true
@@ -48,6 +48,14 @@ abstract class Setting<T>(val id: String, val name: String) : ReadWriteProperty<
 
     override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
         this.value = value
+    }
+
+    operator fun provideDelegate(thisRef: Any, property: KProperty<*>) = apply {
+        id = id.ifBlank {
+            property.name.foldIndexed("") { index, acc, char ->
+                "$acc${(if (char.isUpperCase() && index > 0) "-" else "")}${char.lowercase()}"
+            }
+        }
     }
 
     abstract fun load(element: JsonElement)

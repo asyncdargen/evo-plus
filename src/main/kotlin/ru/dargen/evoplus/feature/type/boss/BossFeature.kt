@@ -2,6 +2,8 @@ package ru.dargen.evoplus.feature.type.boss
 
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
+import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
+import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.Feature
@@ -24,33 +26,28 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     private val Alerted = mutableSetOf<BossType>()
 
     private val BossesText = text()
-    val Widget by widgets.add("bosses", "Таймер боссов") { +BossesText }
+    val Widget by widgets.add("timer", "Таймер боссов") { +BossesText }
 
-    val EnabledTimer by settings.boolean("enabled-timer", "Отображение таймера боссов", true) on { Widget.enabled = it }
-    val MinLevel by settings.selector("min-level", "Мин. уровень босса", enumSelector<BossType>()) { "${it?.level}" }
-    val MaxLevel by settings.selector("max-level", "Макс. уровень босса", enumSelector<BossType>(-1)) { "${it?.level}" }
-    val BossesCount by settings.selector(
-        "render-count",
-        "Кол-во отображаемых боссов",
-        (0..<BossType.entries.size).toSelector(-1)
-    )
+    val EnabledTimer by settings.boolean("Отображение таймера боссов", true) on { Widget.enabled = it }
+    val MinLevel by settings.selector("Мин. уровень босса", enumSelector<BossType>()) { "${it?.level}" }
+    val MaxLevel by settings.selector("Макс. уровень босса", enumSelector<BossType>(-1)) { "${it?.level}" }
+    val BossesCount by settings.selector("Кол-во отображаемых боссов", (0..<BossType.entries.size).toSelector(-1))
 
-    val AlertDelay by settings.selector(
-        "alert-time",
-        "За сколько предупреждать о боссе",
-        (0..120 step 5).toSelector()
-    ) { "$it сек." }
-    val InlineMenuTime by settings.boolean("menu-time", "Отображать время до спавна в меню", true)
+    val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..120 step 5).toSelector()) { "$it сек." }
+    val InlineMenuTime by settings.boolean("Отображать время до спавна в меню", true)
 
-    val SpawnMessage by settings.boolean("message", "Сообщение о спавне", true)
-    val AlertMessage by settings.boolean("alert-message", "Сообщение до спавна", true)
+    val SpawnMessage by settings.boolean("Сообщение о спавне", true)
+    val PreSpawnMessage by settings.boolean("Сообщение до спавна", true)
 
-    val AlertClanMessage by settings.boolean("alert-clan-message", "Сообщение до спавна в клановый чат", false)
-    val SpawnClanMessage by settings.boolean("spawn-clan-message", "Сообщение о спавне в клановый чат", false)
+    val SpawnClanMessage by settings.boolean("Сообщение о спавне в клановый чат", false)
+    val PreSpawnClanMessage by settings.boolean("Сообщение до спавна в клановый чат", false)
 
-    val AlertNotify by settings.boolean("alert-notify", "Уведомление до спавна", true)
-    val SpawnNotify by settings.boolean("spawn-notify", "Уведомление о спавне", true)
-    val UpdateNotify by settings.boolean("update-notify", "Уведомление об обновлении времени", true)
+    val PreSpawnNotify by settings.boolean("Уведомление до спавна", true)
+    val SpawnNotify by settings.boolean("Уведомление о спавне", true)
+    val UpdateNotify by settings.boolean("Уведомление об обновлении времени", true)
+
+    val AutoReset by settings.boolean("Автоматический сброс таймеров при рестарте", true)
+    val Reset by settings.action("Сбросить таймеры") { Bosses.clear() }
 
     private val Long.fixSeconds get() = (this / 1000) * 1000
     private val BossType.inLevelBounds get() = level in MinLevel.level..MaxLevel.level
@@ -68,6 +65,10 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
             }
         }
 
+        on<ChatReceiveEvent> {
+            if (AutoReset && text.equals("Перезагрузка сервера")) Bosses.clear()
+        }
+
         every(100) {
             updateBosses()
             fillInventory()
@@ -79,7 +80,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
         leftClick { _, state -> if (isHovered && state) sendCommand("boss ${type.level}") }
     }
 
-    fun printAlertMessage(text: String, type: BossType) =
+    private fun printMessage(text: String, type: BossType) =
         printHoveredCommandMessage(text, "§aНажмите, чтобы начать телепортацию", "/boss ${type.level}")
 
     private fun fillInventory() {
@@ -110,15 +111,15 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
             val displayName = type.displayName
             val remainTime = timestamp - currentTime
 
-            if (type.inLevelBounds && AlertDelay > 0 && type !in Alerted && remainTime / 1000 == AlertDelay.toLong()) {
+            if (type.inLevelBounds && PreSpawnAlertTime > 0 && type !in Alerted && remainTime / 1000 == PreSpawnAlertTime.toLong()) {
                 val timeText = remainTime.asTextTime
 
                 Alerted.add(type)
-                
+
                 if (type.inLevelBounds) {
-                    if (AlertMessage) printAlertMessage("§aБосс §6$displayName §aвозродится через §6$timeText", type)
-                    if (AlertClanMessage) sendClanMessage("§aБосс §6$displayName §aвозродится через §6$timeText")
-                    if (AlertNotify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
+                    if (PreSpawnMessage) printMessage("§aБосс §6$displayName §aвозродится через §6$timeText", type)
+                    if (PreSpawnClanMessage) sendClanMessage("§aБосс §6$displayName §aвозродится через §6$timeText")
+                    if (PreSpawnNotify) notify(type, "Босс §6$displayName", "§fчерез §6$timeText")
                 }
             }
 
@@ -127,7 +128,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
                 Alerted.remove(type)
 
                 if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
-                if (SpawnMessage) printAlertMessage("§aБосс §6$displayName §aвозродился.", type)
+                if (SpawnMessage) printMessage("§aБосс §6$displayName §aвозродился.", type)
                 if (SpawnClanMessage) sendClanMessage("§aБосс $displayName §aвозродился.")
                 if (SpawnNotify) notify(type, "Босс §6$displayName §fвозродился")
             }

@@ -6,18 +6,18 @@ import ru.dargen.evoplus.util.selector.enumSelector
 
 object RenderFeature : Feature("render", "Визуализация", Items.REDSTONE) {
 
-    var FullBright by settings.boolean("full-bright", "Полная яркость", true)
+    var FullBright by settings.boolean("Полная яркость", true)
 
-    var NoBlockParticles by settings.boolean("break-particles", "Отключение эффектов блока")
-    var NoFire by settings.boolean("no-fire", "Отключение огня")
-    var NoStrikes by settings.boolean("no-strikes", "Отключение молний")
-    var NoFalling by settings.boolean("no-falling", "Отключение падающих блоков")
-    var NoDamageShake by settings.boolean("no-damage-shake", "Отключение покачивания камеры, при ударе")
-    var NoHandShake by settings.boolean("no-hand-shake", "Отключение покачивания руки")
-    var NoExcessHud by settings.boolean("no-excess-hud", "Отключение ненужных элементов HUD", true)
-    var NoExpHud by settings.boolean("no-exp-hud", "Отключение отрисовки опыта и его уровня", true)
-    var NoScoreboardNumbers by settings.boolean("no-scoreaboard-numbers", "Отключение нумерации скорборда", true)
-    var HealthRender by settings.switcher("health-render", "Режим отображения здоровья", enumSelector<HealthRenderMode>())
+    var NoBlockParticles by settings.boolean("Отключение эффектов блока")
+    var NoFire by settings.boolean("Отключение огня")
+    var NoStrikes by settings.boolean("Отключение молний")
+    var NoFalling by settings.boolean("Отключение падающих блоков")
+    var NoDamageShake by settings.boolean("Отключение покачивания камеры, при ударе")
+    var NoHandShake by settings.boolean("Отключение покачивания руки")
+    var NoExcessHud by settings.boolean("Отключение ненужных элементов HUD", true)
+    var NoExpHud by settings.boolean("Отключение отрисовки опыта и его уровня", true)
+    var NoScoreboardNumbers by settings.boolean("Отключение нумерации скорборда", true)
+    var HealthRender by settings.switcher("Режим отображения здоровья", enumSelector<HealthRenderMode>())
 
     enum class HealthRenderMode(val displayName: String, val isDefaultHearts: Boolean = true) {
 

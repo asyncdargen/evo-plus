@@ -27,16 +27,20 @@ class SettingsGroup(id: String, name: String) : Setting<MutableList<Setting<*>>>
 
     fun <S : Setting<*>> setting(setting: S) = setting.apply(settings::add)
 
-    fun boolean(id: String, name: String, value: Boolean = false) =
+    fun action(name: String, action: () -> Unit) = setting(ActionSetting(name) on { action() })
+
+    fun boolean(name: String, value: Boolean = false, id: String = "") =
         setting(BooleanSetting(id, name, value))
 
     fun <T> selector(
-        id: String, name: String, selector: Selector<T>,
+        name: String, selector: Selector<T>,
+        id: String = "",
         nameMapper: Selector<T>.(T?) -> String = { it?.toString() ?: "null" }
     ) = setting(SelectorSetting(id, name, selector, nameMapper))
 
     fun <T> switcher(
-        id: String, name: String, selector: Selector<T>,
+        name: String, selector: Selector<T>,
+        id: String = "",
         nameMapper: Selector<T>.(T?) -> String = { it?.toString() ?: "null" }
     ) = setting(SwitcherSetting(id, name, selector, nameMapper))
 

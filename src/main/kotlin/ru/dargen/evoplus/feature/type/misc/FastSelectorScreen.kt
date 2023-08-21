@@ -4,6 +4,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.keybind.Keybinds
+import ru.dargen.evoplus.api.keybind.boundKey
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.animate
@@ -106,7 +107,7 @@ object FastSelectorScreen {
                     destroy { items.firstOrNull(Node::isHovered)?.changeKey(-1, true) }
                 }
 
-                releaseKey(Keybinds.FastSelector.defaultKey.code) { close() }
+                releaseKey(Keybinds.FastSelector.boundKey.code) { close() }
             }.open()
         }
     }

@@ -10,7 +10,7 @@ object ChatFeature : Feature("chat", "Чат", Items.PAPER) {
 
     private val RemindPattern = "^-{12}[\\s\\S]+-{12}\$".toRegex()
 
-    var NoSpam by settings.boolean("no-spam", "Отключение спам-сообщений", false)
+    var NoSpam by settings.boolean("Отключение спам-сообщений", false)
 //    var NoRemind by settings.boolean("no-remind", "Отключение напоминаний", false)
 
     init {

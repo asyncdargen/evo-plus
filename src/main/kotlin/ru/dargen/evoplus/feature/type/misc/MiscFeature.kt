@@ -9,11 +9,13 @@ import ru.dargen.evoplus.api.event.evo.EvoQuitEvent
 import ru.dargen.evoplus.api.event.game.PostTickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.util.concurrent.after
 import ru.dargen.evoplus.util.diamondworld.ColorMessageDecoder
 import ru.dargen.evoplus.util.log
 import ru.dargen.evoplus.util.minecraft.Player
 import ru.dargen.evoplus.util.minecraft.sendCommand
 import ru.dargen.evoplus.util.minecraft.uncolored
+import java.util.concurrent.TimeUnit
 
 
 object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
@@ -23,17 +25,17 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
     private val ModInfoServerPattern = "\\[MODINFO-SERVER] ([\\w\\s]+-[\\w\\s]+)".toRegex()
     private val BoosterMessagePattern = "^[\\w\\s]+ активировал глобальный бустер".toRegex()
 
-    var AutoSprint by settings.boolean("auto-sprint", "Авто-спринт", true) on {
+    var AutoSprint by settings.boolean("Авто-спринт", true) on {
         if (!it) Player?.isSprinting = false
     }
-    val AutoThanks by settings.boolean("auto-thanks", "Авто /thx", true)
-    var FastSelector by settings.boolean("fast-selector", "Fast селектор (R)", true)
-    var FastInteraction by settings.boolean("fast-interaction", "Действия с игроком в fast селекторе", true)
-    var ShowServerInTab by settings.boolean("show-server-in-tab", "Показывать текущий сервер в табе", true)
+    val AutoThanks by settings.boolean("Авто /thx", true)
+    var FastSelector by settings.boolean("Fast селектор (R)", true)
+    var FastInteraction by settings.boolean("Действия с игроком в fast селекторе", true)
+    var ShowServerInTab by settings.boolean("Показывать текущий сервер в табе", true)
 
-    var CaseNotify by settings.boolean("case-notify", "Уведомления о кейсах", true)
-    var LuckyBlockNotify by settings.boolean("lucky-block-notify", "Уведомления о лаки-блоках", true)
-    var CollectionNotify by settings.boolean("collection-notify", "Уведомления о коллекционках", true)
+    var CaseNotify by settings.boolean("Уведомления о кейсах", true)
+    var LuckyBlockNotify by settings.boolean("Уведомления о лаки-блоках", true)
+    var CollectionNotify by settings.boolean("Уведомления о коллекционках", true)
 
     init {
         on<PostTickEvent> {
@@ -55,6 +57,7 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
         on<ChangeServerEvent> {
             sendCommand("modinfo server")
         }
+        on<EvoJoinEvent> { after(5, TimeUnit.SECONDS) { thx() } }
         on<ChatReceiveEvent> {
             runCatching {
                 val modInfoServer = ColorMessageDecoder.decode(message)

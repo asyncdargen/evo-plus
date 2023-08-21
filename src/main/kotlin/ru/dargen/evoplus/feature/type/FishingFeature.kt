@@ -17,9 +17,9 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
 
     val HigherBitingPattern = "^На локации \"([\\S\\s]+)\" повышенный клев\\.\$".toRegex()
 
-    var AutoFish by settings.boolean("auto-fish", "Автоматическая удочка", true)
-    var HookDelay by settings.selector("auto-fish-delay", "Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
-    var HigherBitingNotify by settings.boolean("higher-biting-notify", "Уведомления о повышенном клеве", true)
+    var AutoFish by settings.boolean("Автоматическая удочка", true)
+    var HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
+    var HigherBitingNotify by settings.boolean("Уведомления о повышенном клеве", true)
 //    var HighlightSources by settings.boolean("hightlight-sources", "Подсветка источников")
 
     init {
