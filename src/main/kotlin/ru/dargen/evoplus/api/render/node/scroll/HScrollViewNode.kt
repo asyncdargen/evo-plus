@@ -80,7 +80,7 @@ class HScrollViewNode : AbstractScrollViewNode() {
             it.translation.x = elementsOffset
 
             val positionX = it.wholePosition.x
-//            it.enabled = positionX <= maxX && positionX + it.wholeSize.x >= minX
+            it.enabled = positionX <= maxX && positionX + it.wholeSize.x >= minX
         }
     }
 

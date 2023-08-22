@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.mixin;
+package ru.dargen.evoplus.mixin.network;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -19,14 +19,16 @@ import net.minecraft.network.message.MessageChain;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
-import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
+import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
+import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.dargen.evoplus.api.event.ChangeServerEvent;
 import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.chat.ChatSendEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent;
@@ -48,7 +50,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
 
     @Shadow public abstract void sendPacket(Packet<?> packet);
 
-    private static final Cache<Integer, InventoryOpenEvent> EVENTS = CacheBuilder.newBuilder()
+    private static final Cache<Integer, InventoryOpenEvent> INVENTORY_OPEN_EVENTS = CacheBuilder.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .build();
 
@@ -84,7 +86,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         val event = EventBus.INSTANCE.fire(
                 new InventoryOpenEvent(packet.getSyncId(), packet.getScreenHandlerType(), packet.getName(), false)
         );
-        EVENTS.put(packet.getSyncId(), event);
+        INVENTORY_OPEN_EVENTS.put(packet.getSyncId(), event);
         if (!event.isCancelled()) {
             if (!event.isHidden()) {
                 NetworkThreadUtils.forceMainThread(((Packet) packet), (PacketListener) this, client);
@@ -99,7 +101,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         ci.cancel();
         val event = EventBus.INSTANCE.fire(
                 new InventoryFillEvent(
-                        packet.getSyncId(), packet.getContents(), EVENTS.getIfPresent(packet.getSyncId()),
+                        packet.getSyncId(), packet.getContents(), INVENTORY_OPEN_EVENTS.getIfPresent(packet.getSyncId()),
                         client.player.currentScreenHandler
                 )
         );
@@ -123,7 +125,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
 
         val event = EventBus.INSTANCE.fire(
                 new InventorySlotUpdateEvent(packet.getSyncId(), packet.getSlot(), packet.getItemStack(),
-                        EVENTS.getIfPresent(packet.getSyncId()), false)
+                        INVENTORY_OPEN_EVENTS.getIfPresent(packet.getSyncId()), false)
         );
 
         if (!event.isCancelled()) {
@@ -164,10 +166,5 @@ public abstract class ClientPlayNetworkHandlerMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "onCustomPayload")
-    public void onCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
-        if (packet.getChannel().toString().equals("minecraft:brand"))
-            EventBus.INSTANCE.fire(ChangeServerEvent.INSTANCE);
-    }
 
 }

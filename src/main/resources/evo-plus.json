@@ -25,10 +25,12 @@
     "render.screen.ChatHudMixin",
 
     "entity.EntityAccessor",
+    "entity.player.PlayerInventoryAccessor",
+
+    "network.ClientPlayNetworkHandlerMixin",
 
     "MinecraftClientMixin",
-    "MessageHandlerMixin",
-    "ClientPlayNetworkHandlerMixin"
+    "MessageHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
