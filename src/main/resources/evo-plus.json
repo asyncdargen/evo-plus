@@ -22,7 +22,6 @@
     "render.GameRendererMixin",
     "render.screen.PlayerListHudMixin",
     "render.screen.InGameHudMixin",
-    "render.screen.ChatHudMixin",
 
     "entity.EntityAccessor",
     "entity.player.PlayerInventoryAccessor",
