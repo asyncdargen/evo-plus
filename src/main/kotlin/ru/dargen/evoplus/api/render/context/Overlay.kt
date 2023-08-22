@@ -29,8 +29,8 @@ data object Overlay : RenderContext() {
 
     init {
         resize {
-            scale = Vector3(BaseScaleFactor / ScaleFactor)
-            size = WindowSize * (ScaleFactor / BaseScaleFactor)
+//            scale = Vector3(BaseScaleFactor / ScaleFactor)
+            size = WindowSize // * (ScaleFactor / BaseScaleFactor)
         }
         tick { mouseMove(MousePosition) }
         resize()
