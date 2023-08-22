@@ -48,7 +48,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     val SpawnNotify by settings.boolean("Уведомление о спавне", true)
     val UpdateNotify by settings.boolean("Уведомление об обновлении времени", true)
 
-    val CaptureTime by settings.boolean("Установка таймера при захвате босса", true)
+    val NotifyCapture by settings.boolean("Установка таймера при захвате босса", true)
     val AutoReset by settings.boolean("Автоматический сброс таймеров при рестарте", true)
     val Reset by settings.action("Сбросить таймеры") { Bosses.clear() }
 
@@ -74,11 +74,13 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
 
         on<ChatReceiveEvent> {
             if (AutoReset && text == "Перезагрузка сервера") Bosses.clear()
-            if (CaptureTime) BossCapturePattern.find(text)?.run {
+            BossCapturePattern.find(text)?.run {
                 val type = BossType[groupValues[1]] ?: return@run
                 val clan = groupValues[2]
 
-                Notifies.showText("Босс ${type.displayName}§f захвачен", "кланом $clan.")
+                if (NotifyCapture) {
+                    Notifies.showText("Босс ${type.displayName}§f захвачен", "кланом $clan.")
+                }
 
                 if (type in Bosses) {
                     Bosses[type] = Bosses[type]!! + 600_000

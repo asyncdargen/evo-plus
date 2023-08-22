@@ -18,7 +18,7 @@ import ru.dargen.evoplus.util.selector.toSelector
 object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) {
 
     val PetExpPattern = "^Опыта дает питомцу: (\\d+)\$".toRegex()
-    val HigherBitingPattern = "^На локации \"([\\S\\s]+)\" повышенный клев!\$".toRegex()
+    val HigherBitingPattern = "^На локации \"([\\S\\s]+)\" повышенный клёв!\$".toRegex()
 
     var AutoFish by settings.boolean("Автоматическая удочка", true)
     var HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
