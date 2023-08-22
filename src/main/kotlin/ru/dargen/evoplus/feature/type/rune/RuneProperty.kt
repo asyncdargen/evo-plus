@@ -24,8 +24,8 @@ data class RuneProperty(val name: String, val type: Type, var value: Double = .0
             { "${if (value >= 0) "+" else ""}$value%" }),
         MULTIPLY(
             "^x([.\\d]+)$".toRegex(),
-            { value += it.groupValues[1].toDouble() },
-            { "${if (value >= 0) "+" else ""}$value%" }),
+            { value += it.groupValues[1].toDouble() - 1 },
+            { "x${value + 1}" }),
         MINER(
             "^1 к (\\d+)$".toRegex(),
             { value += 1.0 / it.groupValues[1].toDouble() },

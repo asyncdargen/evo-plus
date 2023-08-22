@@ -77,8 +77,12 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
             if (CaptureTime) BossCapturePattern.find(text)?.run {
                 val type = BossType[groupValues[1]] ?: return@run
                 val clan = groupValues[2]
-                Notifies.showText("Босс ${type.displayName} захвачен", "кланом $clan.")
-                Bosses[type] = System.currentTimeMillis().fixSeconds + 600_000
+
+                Notifies.showText("Босс ${type.displayName}§f захвачен", "кланом $clan.")
+
+                if (type in Bosses) {
+                    Bosses[type] = Bosses[type]!! + 600_000
+                }
             }
         }
 
