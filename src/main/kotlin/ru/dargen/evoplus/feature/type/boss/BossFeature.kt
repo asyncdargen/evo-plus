@@ -22,6 +22,8 @@ import kotlin.math.absoluteValue
 
 object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CLOCK) {
 
+    private val BossCapturePattern = "^Босс (.*) захвачен кланом (.*)!\$".toRegex()
+
     val Bosses: MutableMap<BossType, Long> by config("bosses", mutableMapOf())
     private val Alerted = mutableSetOf<BossType>()
 
@@ -46,6 +48,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     val SpawnNotify by settings.boolean("Уведомление о спавне", true)
     val UpdateNotify by settings.boolean("Уведомление об обновлении времени", true)
 
+    val CaptureTime by settings.boolean("Установка таймера при захвате босса", true)
     val AutoReset by settings.boolean("Автоматический сброс таймеров при рестарте", true)
     val Reset by settings.action("Сбросить таймеры") { Bosses.clear() }
 
@@ -60,13 +63,23 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
             val shared = fromJson<Map<BossType, Long>>(data)
                 .mapValues { it.value + System.currentTimeMillis() }
 
-            Notifies.showText("§6$nick §fотправил вам боссов §7(${shared.size}).", "Нажмите, чтобы принять.") {
-                leftClick { _, state -> if (isHovered && state) Bosses.putAll(shared) }
+            Notifies.showText(
+                "§6$nick §fотправил вам боссов §7(${shared.size}).",
+                "Нажмите, чтобы принять.",
+                delay = 10.0
+            ) {
+                leftClick { _, state -> if (isHovered && state) BossReceiveScreen.open(shared) }
             }
         }
 
         on<ChatReceiveEvent> {
-            if (AutoReset && text.equals("Перезагрузка сервера")) Bosses.clear()
+            if (AutoReset && text == "Перезагрузка сервера") Bosses.clear()
+            if (CaptureTime) BossCapturePattern.find(text)?.run {
+                val type = BossType[groupValues[1]] ?: return@run
+                val clan = groupValues[2]
+                Notifies.showText("Босс ${type.displayName} захвачен", "кланом $clan.")
+                Bosses[type] = System.currentTimeMillis().fixSeconds + 600_000
+            }
         }
 
         every(100) {

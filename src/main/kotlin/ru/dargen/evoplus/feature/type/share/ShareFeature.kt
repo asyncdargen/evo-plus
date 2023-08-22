@@ -5,6 +5,7 @@ import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.util.PasteApi
+import ru.dargen.evoplus.util.minecraft.Player
 import ru.dargen.evoplus.util.minecraft.uncolored
 import java.util.concurrent.CompletableFuture
 
@@ -13,15 +14,18 @@ object ShareFeature : Feature("share", "Поделиться", Items.SCULK_SENSO
     val OutgoingSharePattern = "^ЛС \\| Я »(?:| .) \\w+: evoplus:\\w+:\\w+\$".toRegex()
     val IncomingSharePattern = "^ЛС \\|(?:| .) (\\w+) » Я: evoplus:(\\w+):(\\w+)\$".toRegex()
 
+    val ClanSharePattern = "^\\[Клан] (\\w+) \\[.*]: evoplus:(\\w+):(\\w+)\$".toRegex()
+
     init {
         on<ChatReceiveEvent> {
             val text = text.uncolored()
 
             if (OutgoingSharePattern.containsMatchIn(text)) cancel()
-            else IncomingSharePattern.find(text)?.run {
-                val nick = groupValues[1]
-                val id = groupValues[2]
-                val key = groupValues[3]
+            else (IncomingSharePattern.find(text) ?: ClanSharePattern.find(text))?.run {
+                cancel()
+
+                val (nick, id, key) = destructured
+                if (nick == Player?.gameProfile?.name) return@run
 
                 settings.value
                     .filterIsInstance<ShareSetting>()
@@ -29,7 +33,6 @@ object ShareFeature : Feature("share", "Поделиться", Items.SCULK_SENSO
                     ?.run {
                         CompletableFuture.supplyAsync { PasteApi.copy(key)!! }.thenAccept { decoder(nick, it) }
                     }
-                cancel()
             }
         }
     }

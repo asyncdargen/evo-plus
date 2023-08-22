@@ -41,7 +41,6 @@ object ClanFeature : Feature("clan", "Клан", Items.SHIELD) {
         on<InventorySlotUpdateEvent> {
             if (MenuSorting && slot == 22 && openEvent?.title?.string == "Информация о клане") {
                 stack.transformMembersListItem()
-                printMessage("2edit")
             }
         }
 
@@ -67,8 +66,6 @@ object ClanFeature : Feature("clan", "Клан", Items.SHIELD) {
     private fun ItemStack.transformMembersListItem() {
         if ("Сортировка" in displayName!!.string) return
         val members = lore.map(Text::getString).mapNotNull(ClanMember::fromLine)
-
-        printMessage("$members")
 
         val onlinePoints = (MenuPointsPattern.find(lore[lore.size - 2].string)?.groupValues?.get(1) ?: 0)
         val points = (MenuPointsPattern.find(lore[lore.size - 3].string)?.groupValues?.get(1) ?: 0)

@@ -19,16 +19,14 @@ import net.minecraft.network.message.MessageChain;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
-import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
-import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import ru.dargen.evoplus.api.event.ChangeServerEvent;
 import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.chat.ChatSendEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent;
@@ -166,5 +164,10 @@ public abstract class ClientPlayNetworkHandlerMixin {
         }
     }
 
+    @Inject(at = @At("HEAD"), method = "onCustomPayload")
+    public void onCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
+        if (packet.getChannel().toString().equals("minecraft:brand"))
+            EventBus.INSTANCE.fire(ChangeServerEvent.INSTANCE);
+    }
 
 }

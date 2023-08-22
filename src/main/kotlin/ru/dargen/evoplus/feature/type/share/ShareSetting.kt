@@ -12,6 +12,7 @@ import ru.dargen.evoplus.feature.settings.BooleanSetting
 import ru.dargen.evoplus.util.PasteApi
 import ru.dargen.evoplus.util.concurrent.async
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.sendChatMessage
 import ru.dargen.evoplus.util.minecraft.sendCommand
 
 class ShareSetting(
@@ -25,7 +26,7 @@ class ShareSetting(
             color = Colors.TransparentBlack
             size = v3(y = 55.0)
             +text(name) {
-                translation = v3(5.0, 15.0)
+                translation = v3(6.6, 15.0)
                 origin = Relative.LeftCenter
             }
             +settingElement.apply {
@@ -43,8 +44,16 @@ class ShareSetting(
                 align = Relative.LeftBottom
                 origin = Relative.LeftCenter
             }
-            +button("Поделиться") {
+            +button("В клан") {
                 translation = v3(-5.0, -15.0)
+                align = Relative.RightBottom
+                origin = Relative.RightCenter
+                on {
+                    async { sendChatMessage("@${generate("clan")}") }
+                }
+            }
+            +button("Игроку") {
+                translation = v3(-110.0, -15.0)
                 align = Relative.RightBottom
                 origin = Relative.RightCenter
                 on {
@@ -59,8 +68,7 @@ class ShareSetting(
                         val nick = input.content
 
                         async {
-                            val key = PasteApi.paste(encoder(nick))
-                            sendCommand("m $nick evoplus:$id:$key")
+                            sendCommand("m $nick ${generate(nick)}")
 
                             input.clear()
                             input.animate("warn", .2) {
@@ -75,5 +83,6 @@ class ShareSetting(
             }
         }
 
+    fun generate(nick: String) = "evoplus:$id:${PasteApi.paste(encoder(nick))}"
 
 }
