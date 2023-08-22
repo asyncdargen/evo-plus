@@ -5,7 +5,7 @@ import net.minecraft.text.Text
 private val ColorPattern = "(?i)§[\\dA-FK-ORX]".toRegex()
 private val HexColorPattern = "&#([a-fA-F0-9]{6})".toRegex()
 
-val String.asText: Text get() = Text.of(this)
+fun String.asText(): Text = Text.of(this)
 
 fun String.uncolored() = ColorPattern.replace(this, "")
 

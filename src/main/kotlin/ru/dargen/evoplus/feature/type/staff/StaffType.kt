@@ -21,7 +21,7 @@ enum class StaffType(val displayName: String, val id: Int, val item: ItemStack =
             name?.let { entries.firstOrNull { it.displayName.equals(name, true) } }
 
         operator fun get(itemStack: ItemStack) = if (itemStack.item != Items.WOODEN_HOE) null
-        else get(itemStack.displayName)
+        else get(itemStack.displayName?.string)
 
     }
 }

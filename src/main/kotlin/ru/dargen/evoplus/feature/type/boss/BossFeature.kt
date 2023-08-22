@@ -91,12 +91,12 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
         if (screen !is GenericContainerScreen) return
 
         screen.screenHandler.stacks.forEach {
-            val type = BossType[it.displayName ?: return@forEach] ?: return@forEach
+            val type = BossType[it.displayName?.string ?: return@forEach] ?: return@forEach
             val timeText = ((Bosses[type] ?: return@forEach) - System.currentTimeMillis()).asTextTime
 
-            val resetText = "§fВозрождение: §e$timeText".asText
+            val resetText = "§fВозрождение: §e$timeText".asText()
 
-            var lore = it.lore
+            var lore = it.lore.toMutableList()
 
             if (lore.getOrNull(1)?.string?.contains("Возрождение") == true) lore[1] = resetText
             else lore = (listOf(lore.first(), resetText) + lore.drop(1)).toMutableList()

@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.util.minecraft
 
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.network.packet.Packet
 import net.minecraft.registry.entry.RegistryEntry
 import net.minecraft.sound.SoundEvent
@@ -22,6 +23,7 @@ val TargetBlock get() = Client?.crosshairTarget?.safeCast<BlockHitResult>()?.blo
 
 val CurrentScreenHandler get() = Player?.currentScreenHandler
 val CurrentScreen get() = Client?.currentScreen
+val CurrentContainer get() = CurrentScreen?.safeCast<GenericContainerScreen>()
 
 val WindowInitialized get() = Client.window != null
 val Window get() = Client.window
@@ -35,11 +37,11 @@ val MousePosition
 fun playSound(event: SoundEvent) = Player?.playSound(event, 1f, 1f)
 fun playSound(event: RegistryEntry.Reference<SoundEvent>) = playSound(event.value())
 
-fun printMessage(message: String?) = Player?.sendMessage("$ModLabel§8: §f$message".asText, false)
+fun printMessage(message: String?) = Player?.sendMessage("$ModLabel§8: §f$message".asText(), false)
 
 fun printHoveredCommandMessage(message: String, hover: String, command: String) =
     Text.literal("$ModLabel§8: §a$message").run {
-        style = style.withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, hover.asText))
+        style = style.withHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, hover.asText()))
             .withClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
 
         Player?.sendMessage(this, false)

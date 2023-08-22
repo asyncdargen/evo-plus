@@ -7,7 +7,7 @@ import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.keybind.Keybinds.MenuKey
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.feature.config.JsonConfig
-import ru.dargen.evoplus.feature.type.ClanFeature
+import ru.dargen.evoplus.feature.type.clan.ClanFeature
 import ru.dargen.evoplus.feature.type.FishingFeature
 import ru.dargen.evoplus.feature.type.RenderFeature
 import ru.dargen.evoplus.feature.type.boss.BossFeature

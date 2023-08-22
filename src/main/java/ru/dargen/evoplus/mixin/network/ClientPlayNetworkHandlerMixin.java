@@ -90,7 +90,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         if (!event.isCancelled()) {
             if (!event.isHidden()) {
                 NetworkThreadUtils.forceMainThread(((Packet) packet), (PacketListener) this, client);
-                HandledScreens.open(event.getScreenHandlerType(), client, event.getSyncId(), event.getName());
+                HandledScreens.open(event.getScreenHandlerType(), client, event.getSyncId(), event.getTitle());
             }
         } else Inventories.INSTANCE.close(packet.getSyncId());
     }
@@ -102,7 +102,7 @@ public abstract class ClientPlayNetworkHandlerMixin {
         val event = EventBus.INSTANCE.fire(
                 new InventoryFillEvent(
                         packet.getSyncId(), packet.getContents(), INVENTORY_OPEN_EVENTS.getIfPresent(packet.getSyncId()),
-                        client.player.currentScreenHandler
+                        client.player.currentScreenHandler, false
                 )
         );
         if (!event.getOpenEvent().isCancelled() || !event.isCancelled()) {

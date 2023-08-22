@@ -19,13 +19,13 @@ fun ItemStack.editNBT(block: NbtCompound.() -> Unit) = apply {
     nbt = orCreateNbt.apply(block)
 }
 
-var ItemStack.displayName: String?
-    get() = name?.string
+var ItemStack.displayName: Text?
+    get() = name
     set(value) {
-        setCustomName(value?.asText ?: Text.empty())
+        setCustomName(value ?: Text.empty())
     }
 
-var ItemStack.lore: MutableList<Text>
+var ItemStack.lore: List<Text>
     get() = getSubNbt("display")
         ?.getList("Lore", 8)
         ?.map(NbtElement::asString)

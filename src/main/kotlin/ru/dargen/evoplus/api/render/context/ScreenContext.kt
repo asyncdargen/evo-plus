@@ -40,7 +40,7 @@ class ScreenContext(id: String, title: String) : RenderContext() {
 
     }
 
-    inner class Screen(title: String) : net.minecraft.client.gui.screen.Screen(title.asText) {
+    inner class Screen(title: String) : net.minecraft.client.gui.screen.Screen(title.asText()) {
 
         val context = this@ScreenContext
 

@@ -2,21 +2,19 @@ package ru.dargen.evoplus.api.event.inventory
 
 import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.text.Text
-import ru.dargen.evoplus.api.event.CancellableEvent
 import ru.dargen.evoplus.util.minecraft.asText
 
 class InventoryOpenEvent(
-    var syncId: Int,
+    syncId: Int,
     var screenHandlerType: ScreenHandlerType<*>,
-    var name: Text,
+    var title: Text,
     var isHidden: Boolean = false
-) : CancellableEvent() {
+) : InventoryEvent(syncId) {
 
-    val nameString: String
-        get() = name.string
-
-    fun setName(name: String) {
-        this.name = name.asText
-    }
+    var nameString: String
+        get() = title.string
+        set(value) {
+            title = value.asText()
+        }
 
 }

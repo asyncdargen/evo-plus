@@ -26,6 +26,7 @@
     "entity.EntityAccessor",
     "entity.player.PlayerInventoryAccessor",
 
+    "network.ClientPlayerInteractionManagerMixin",
     "network.ClientPlayNetworkHandlerMixin",
 
     "MinecraftClientMixin",

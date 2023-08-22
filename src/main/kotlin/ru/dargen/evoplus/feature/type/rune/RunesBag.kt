@@ -53,7 +53,7 @@ object RunesBag {
             }
         }
         on<InventoryFillEvent> {
-            if (openEvent?.name?.string?.contains(MENU_NAME) == true) {
+            if (openEvent?.title?.string?.contains(MENU_NAME) == true) {
                 after(100) {
                     if (RuneFeature.RunesBagSet) updateRuneSet()
                     if (RuneFeature.RunesBagProperties) updateRunesProperties()
@@ -61,7 +61,7 @@ object RunesBag {
             }
         }
         on<InventorySlotUpdateEvent> {
-            if (openEvent?.name?.string?.contains(MENU_NAME) == true) {
+            if (openEvent?.title?.string?.contains(MENU_NAME) == true) {
                 after(100) {
                     if (RuneFeature.RunesBagSet) updateRuneSet()
                     if (RuneFeature.RunesBagProperties) updateRunesProperties()
