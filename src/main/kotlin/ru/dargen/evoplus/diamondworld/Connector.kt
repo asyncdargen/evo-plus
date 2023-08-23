@@ -56,6 +56,8 @@ object Connector {
             val channel = channel.drop(3)
 
             Handlers[channel]?.invoke(payload)
+
+            cancel()
         }
 
         on<ServerInfo> { Server = it }

@@ -78,6 +78,7 @@ public class DefaultPayloadConnector implements PayloadConnector, Listener {
                     val handler = handlers.get(channel);
                     if (handler != null) {
                         handler.accept(player, buf);
+                        event.setCancelled(true);
                     }
                 } catch (Throwable t) {
                     logger.log(Level.SEVERE, "Error while reading packet", t);

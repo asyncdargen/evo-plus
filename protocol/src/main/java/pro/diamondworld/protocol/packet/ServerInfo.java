@@ -33,7 +33,7 @@ public class ServerInfo implements ProtocolSerializable {
 
     @Override
     public String toString() {
-        return "%s-%s".formatted(serverId, serverId);
+        return "%s-%s".formatted(serverName, serverId);
     }
 
 }
