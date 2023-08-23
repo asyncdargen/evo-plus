@@ -134,5 +134,5 @@ class ScreenContext(id: String, title: String) : RenderContext() {
 
 }
 
-fun screen(id: String = "", title: String = "", block: ScreenContext.() -> Unit) =
+inline fun screen(id: String = "", title: String = "", block: ScreenContext.() -> Unit) =
     ScreenContext(id, title).apply(block)

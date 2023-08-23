@@ -48,7 +48,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     val SpawnNotify by settings.boolean("Уведомление о спавне", true)
     val UpdateNotify by settings.boolean("Уведомление об обновлении времени", true)
 
-    val NotifyCapture by settings.boolean("Установка таймера при захвате босса", true)
+    val NotifyCapture by settings.boolean("Уведомление о захватах боссов", true)
     val AutoReset by settings.boolean("Автоматический сброс таймеров при рестарте", true)
     val Reset by settings.action("Сбросить таймеры") { Bosses.clear() }
 

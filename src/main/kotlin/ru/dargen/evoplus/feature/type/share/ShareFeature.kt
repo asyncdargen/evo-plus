@@ -5,7 +5,6 @@ import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.util.PasteApi
-import ru.dargen.evoplus.util.minecraft.Player
 import ru.dargen.evoplus.util.minecraft.uncolored
 import java.util.concurrent.CompletableFuture
 
@@ -25,7 +24,7 @@ object ShareFeature : Feature("share", "Поделиться", Items.SCULK_SENSO
                 cancel()
 
                 val (nick, id, key) = destructured
-                if (nick == Player?.gameProfile?.name) return@run
+//                if (nick == Player?.gameProfile?.name) return@run
 
                 settings.value
                     .filterIsInstance<ShareSetting>()

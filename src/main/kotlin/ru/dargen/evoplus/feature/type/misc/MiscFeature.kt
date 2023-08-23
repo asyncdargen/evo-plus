@@ -28,7 +28,7 @@ object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
     var AutoSprint by settings.boolean("Авто-спринт", true) on {
         if (!it) Player?.isSprinting = false
     }
-    val AutoThanks by settings.boolean("Авто /thx", true)
+    var AutoThanks by settings.boolean("Авто /thx", true)
     var FastSelector by settings.boolean("Fast селектор (R)", true)
     var FastInteraction by settings.boolean("Действия с игроком в fast селекторе", true)
     var ShowServerInTab by settings.boolean("Показывать текущий сервер в табе", true)

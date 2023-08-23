@@ -29,6 +29,7 @@
     "network.ClientPlayerInteractionManagerMixin",
     "network.ClientPlayNetworkHandlerMixin",
 
+    "MinecraftClientAccesor",
     "MinecraftClientMixin",
     "MessageHandlerMixin"
   ],

@@ -77,10 +77,9 @@ public abstract class ClientPlayNetworkHandlerMixin {
 
     @Inject(method = "onOpenScreen", at = @At("HEAD"), cancellable = true)
     private void onOpenScreen(OpenScreenS2CPacket packet, CallbackInfo ci) {
-        ci.cancel();
-
         if (packet.getSyncId() == 0) return;
         ci.cancel();
+
         val event = EventBus.INSTANCE.fire(
                 new InventoryOpenEvent(packet.getSyncId(), packet.getScreenHandlerType(), packet.getName(), false)
         );

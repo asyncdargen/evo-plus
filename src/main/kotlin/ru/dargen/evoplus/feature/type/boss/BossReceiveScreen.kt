@@ -60,7 +60,7 @@ object BossReceiveScreen {
                         toggles.forEach { it.value.toggled = true }
                     }
                 }
-                +button("Отсутсвующие") {
+                +button("Отсутствующие") {
                     on {
                         toggles.forEach { it.value.toggled = it.key !in BossFeature.Bosses }
                     }

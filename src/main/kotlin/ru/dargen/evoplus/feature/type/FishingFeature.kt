@@ -22,7 +22,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
 
     var AutoFish by settings.boolean("Автоматическая удочка", true)
     var HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
-    var HigherBitingNotify by settings.boolean("Уведомления о повышенном клеве", true)
+    var HigherBitingNotify by settings.boolean("Уведомления о повышенном клёве", true)
     var ShowFishExpInInventory by settings.boolean("Отображение опыта рыбы в интвентаре", true)
 
     init {
@@ -39,7 +39,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
 
         on<ChatReceiveEvent> {
             if (HigherBitingNotify) HigherBitingPattern.find(text.uncolored())?.run {
-                Notifies.showText("Локация §6${groupValues[1]}", "повышенный клев.")
+                Notifies.showText("На локации §6${groupValues[1]}", "повышенный клёв.")
             }
         }
 
@@ -49,7 +49,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
                     item.lore.getOrNull(2)
                         ?.string
                         ?.let { PetExpPattern.find(it.trim())?.groupValues?.getOrNull(1)?.toIntOrNull()?.times(item.count) }
-                }.sum()
+                }.sum().takeIf { it > 0 } ?: return@on
 
                 val scale = .9f
                 val x = screen.width / 2.0 + 89.0
@@ -60,7 +60,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
                 matrices.translate(x, y, .0)
                 matrices.scale(scale, scale, scale)
 
-                matrices.drawText("Опыт питомцев: ${exp.spacing()}", v3(), -1)
+                matrices.drawText("Опыт питомцам: ${exp.spacing()}", v3(), -1)
 
                 matrices.pop()
             }
