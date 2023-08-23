@@ -2,11 +2,13 @@ package ru.dargen.evoplus.mixin.network;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.mojang.brigadier.ParseResults;
 import lombok.val;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.command.CommandSource;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -26,9 +28,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.dargen.evoplus.api.event.ChangeServerEvent;
+import ru.dargen.evoplus.api.event.game.ChangeServerEvent;
 import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.chat.ChatSendEvent;
+import ru.dargen.evoplus.api.event.game.CustomPayloadEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryOpenEvent;
 import ru.dargen.evoplus.api.event.inventory.InventorySlotUpdateEvent;
@@ -47,6 +50,8 @@ public abstract class ClientPlayNetworkHandlerMixin {
     @Shadow private MessageChain.Packer messagePacker;
 
     @Shadow public abstract void sendPacket(Packet<?> packet);
+
+    @Shadow protected abstract ParseResults<CommandSource> parse(String command);
 
     private static final Cache<Integer, InventoryOpenEvent> INVENTORY_OPEN_EVENTS = CacheBuilder.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
@@ -165,8 +170,11 @@ public abstract class ClientPlayNetworkHandlerMixin {
 
     @Inject(at = @At("HEAD"), method = "onCustomPayload")
     public void onCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
-        if (packet.getChannel().toString().equals("minecraft:brand"))
+        if (packet.getChannel().toString().equals("minecraft:brand")) {
             EventBus.INSTANCE.fire(ChangeServerEvent.INSTANCE);
+        }
+
+        EventBus.INSTANCE.fire(new CustomPayloadEvent(packet.getChannel().toString(), packet.getData()));
     }
 
 }

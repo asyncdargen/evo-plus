@@ -1,7 +1,7 @@
 package ru.dargen.evoplus.feature.type.misc
 
 import net.minecraft.item.Items
-import ru.dargen.evoplus.api.event.ChangeServerEvent
+import ru.dargen.evoplus.api.event.game.ChangeServerEvent
 import ru.dargen.evoplus.api.event.EventBus
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.evo.EvoJoinEvent
