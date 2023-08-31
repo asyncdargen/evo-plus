@@ -1,6 +1,5 @@
 package ru.dargen.evoplus.api.render.context
 
-import net.minecraft.client.gui.screen.ChatScreen
 import ru.dargen.evoplus.api.event.input.MouseMoveEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.OverlayRenderEvent
@@ -9,7 +8,6 @@ import ru.dargen.evoplus.api.event.window.WindowResizeEvent
 import ru.dargen.evoplus.api.render.node.resize
 import ru.dargen.evoplus.api.render.node.tick
 import ru.dargen.evoplus.util.math.Vector3
-import ru.dargen.evoplus.util.minecraft.Client
 import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.minecraft.Window
 import ru.dargen.evoplus.util.minecraft.WindowInitialized
@@ -47,8 +45,6 @@ data object Overlay : RenderContext() {
         on<MouseMoveEvent> { if (allowInput()) mouseMove(mouse) }
     }
 
-    override fun allowInput() = Client?.currentScreen == null
-            || Client.currentScreen is ChatScreen
-            || ScreenContext.current()?.transparent == true
+    override fun allowInput() = ScreenContext.current()?.transparent != false
 
 }
