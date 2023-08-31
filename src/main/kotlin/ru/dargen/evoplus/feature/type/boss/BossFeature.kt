@@ -81,10 +81,6 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
                 if (NotifyCapture) {
                     Notifies.showText("Босс ${type.displayName}§f захвачен", "кланом $clan.")
                 }
-
-                if (type in Bosses) {
-                    Bosses[type] = Bosses[type]!! + 600_000
-                }
             }
         }
 
