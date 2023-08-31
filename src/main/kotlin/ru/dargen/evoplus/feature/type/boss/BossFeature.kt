@@ -179,7 +179,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
     }
 
     private fun fetchWorldBossData() = Client?.world?.entities
-        ?.map { it.displayName.string.uncolored().replace("۞", "") }
+        ?.map { it.displayName.string.uncolored() }
         ?.sortedByDescending { it.startsWith("Босс") }
         ?.mapNotNull {
             when {
@@ -190,7 +190,7 @@ object BossFeature : Feature("boss-timer", "Таймер боссов", Items.CL
         }
         ?.run {
             val type = BossType[getOrNull(0) ?: return@run null] ?: return@run null
-            val delay = getOrNull(1)?.fromTextTime
+            val delay = getOrNull(1)?.replace("۞", "")?.fromTextTime
                 ?.let { if ('۞' in get(1)) (it / 1.5).toLong() else it }
                 ?.takeIf { it > 6000 }
                 ?: return@run null
