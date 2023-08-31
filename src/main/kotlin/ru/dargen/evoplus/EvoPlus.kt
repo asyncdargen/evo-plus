@@ -6,7 +6,6 @@ import ru.dargen.evoplus.api.keybind.KeyBindings
 import ru.dargen.evoplus.api.render.animation.AnimationRunner
 import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.context.World
-import ru.dargen.evoplus.diamondworld.Connector
 import ru.dargen.evoplus.feature.Features
 
 val ModLabel = "§f§lEvo§6§lPlus"
@@ -22,8 +21,6 @@ object EvoPlus : ModInitializer {
         World
         Overlay
         AnimationRunner
-
-        Connector
 
         Features
     }
