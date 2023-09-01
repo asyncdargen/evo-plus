@@ -60,7 +60,6 @@ data object Features {
         FishingFeature
         RenderFeature
         MiscFeature
-        AutoClickerFeature
         ShareFeature
     }
 
