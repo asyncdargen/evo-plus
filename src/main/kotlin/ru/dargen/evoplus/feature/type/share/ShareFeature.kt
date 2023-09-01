@@ -24,7 +24,6 @@ object ShareFeature : Feature("share", "Поделиться", Items.SCULK_SENSO
                 cancel()
 
                 val (nick, id, key) = destructured
-//                if (nick == Player?.gameProfile?.name) return@run
 
                 settings.value
                     .filterIsInstance<ShareSetting>()
