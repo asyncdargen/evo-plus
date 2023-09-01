@@ -60,9 +60,10 @@ public abstract class ClientPlayNetworkHandlerMixin {
     @Inject(method = "sendChatMessage", at = @At("HEAD"), cancellable = true)
     private void sendChatMessage(String content, CallbackInfo ci) {
         ci.cancel();
-        if (!EventBus.INSTANCE.fireResult(new ChatSendEvent(content))) return;
+        ChatSendEvent event = new ChatSendEvent(content);
+        if (!EventBus.INSTANCE.fireResult(event)) return;
 
-        content = TextKt.composeHex(content);
+        content = TextKt.composeHex(event.getText());
 
         Instant instant = Instant.now();
         long l = NetworkEncryptionUtils.SecureRandomUtil.nextLong();

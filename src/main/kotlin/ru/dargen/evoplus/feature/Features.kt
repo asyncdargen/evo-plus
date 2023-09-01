@@ -12,6 +12,7 @@ import ru.dargen.evoplus.feature.type.FishingFeature
 import ru.dargen.evoplus.feature.type.RenderFeature
 import ru.dargen.evoplus.feature.type.boss.BossFeature
 import ru.dargen.evoplus.feature.type.chat.ChatFeature
+import ru.dargen.evoplus.feature.type.clicker.AutoClickerFeature
 import ru.dargen.evoplus.feature.type.misc.MiscFeature
 import ru.dargen.evoplus.feature.type.rune.RuneFeature
 import ru.dargen.evoplus.feature.type.share.ShareFeature
@@ -59,6 +60,7 @@ data object Features {
         FishingFeature
         RenderFeature
         MiscFeature
+        AutoClickerFeature
         ShareFeature
     }
 
