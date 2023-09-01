@@ -35,11 +35,9 @@ object ChatFeature : Feature("chat", "Чат", Items.PAPER) {
 
             val prefix = if (hasSelector) message.take(1) else ""
 
-            message.replaceFirst(prefix,"")
-
             val colors = buildColorSetting(Colors.mirroring.value)
 
-            val formattedMessage = message.buildMessage(prefix, colors)
+            val formattedMessage = message.replaceFirst(prefix,"").buildMessage(prefix, colors)
 
             text = formattedMessage
         }
