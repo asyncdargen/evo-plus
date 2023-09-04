@@ -1,10 +1,10 @@
 package ru.dargen.evoplus.util.render
 
 import com.mojang.blaze3d.systems.RenderSystem
-import net.minecraft.client.texture.AbstractTexture
 import net.minecraft.client.texture.NativeImage
 import net.minecraft.client.texture.NativeImageBackedTexture
 import net.minecraft.util.Identifier
+import org.lwjgl.system.MemoryStack
 import ru.dargen.evoplus.util.minecraft.Client
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
@@ -24,12 +24,17 @@ fun BufferedImage.uploadTexture(id: String): Identifier {
     return identifier
 }
 
-fun BufferedImage.uploadTexture(identifier: Identifier): AbstractTexture {
-    val texture = NativeImageBackedTexture(NativeImage.read(toByteArray()))
+fun BufferedImage.uploadTexture(identifier: Identifier) {
+    val bytes = toByteArray()
+
+    val byteBuffer = MemoryStack.create(bytes.size).malloc(bytes.size)
+    byteBuffer.put(bytes)
+    byteBuffer.rewind()
+    val image = NativeImage.read(byteBuffer)
+
+    val texture = NativeImageBackedTexture(image)
 
     Client.textureManager.registerTexture(identifier, texture)
-
-    return texture
 }
 
 fun BufferedImage.toByteArray() =
