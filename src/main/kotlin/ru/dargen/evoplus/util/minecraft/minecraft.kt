@@ -11,12 +11,14 @@ import net.minecraft.text.Text
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.EntityHitResult
 import ru.dargen.evoplus.ModLabel
-import ru.dargen.evoplus.mixin.MinecraftClientAccesor
+import ru.dargen.evoplus.mixin.MinecraftClientAccessor
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3
 
 val Client get() = MinecraftClient.getInstance()
+val ClientExtension get() = Client.cast<MinecraftClientAccessor>()
+
 val Player get() = Client?.player
 val InteractionManager get() = Client?.interactionManager
 
@@ -36,7 +38,7 @@ val MousePosition
         Client.mouse.y * Window.scaledHeight / Window.height,
     ).fixNaN()
 
-fun postToMainThread(runnable: () -> Unit) = Client.cast<MinecraftClientAccesor>().renderTaskQueue.add(runnable)
+fun postToMainThread(runnable: () -> Unit) = Client.cast<MinecraftClientAccessor>().renderTaskQueue.add(runnable)
 
 fun playSound(event: SoundEvent) = Player?.playSound(event, 1f, 1f)
 fun playSound(event: RegistryEntry.Reference<SoundEvent>) = playSound(event.value())

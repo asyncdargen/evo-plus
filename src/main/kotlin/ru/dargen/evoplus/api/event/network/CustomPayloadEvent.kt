@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.api.event.game
+package ru.dargen.evoplus.api.event.network
 
 import io.netty.buffer.ByteBuf
 import ru.dargen.evoplus.api.event.CancellableEvent

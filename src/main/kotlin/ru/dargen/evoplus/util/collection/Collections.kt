@@ -35,3 +35,11 @@ fun <E> MutableCollection<E>.observe(addHandler: (E) -> Unit, removeHandler: (E)
 
 fun <K, V> MutableMap<K, V>.observe(addHandler: (K, V) -> Unit, removeHandler: (K, V?) -> Unit): MutableMap<K, V> =
     ObservableMap(this, addHandler, removeHandler)
+
+operator fun <V, C : MutableList<V>> C.set(range: IntRange, value: V) = apply { range.forEach { set(it, value) } }
+
+fun <V, C : MutableCollection<V>> C.fill(value: V) = apply {
+    val size = size
+    clear()
+    repeat(size) { add(value) }
+}

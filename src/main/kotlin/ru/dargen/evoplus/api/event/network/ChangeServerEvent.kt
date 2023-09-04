@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.api.event.game
+package ru.dargen.evoplus.api.event.network
 
 import ru.dargen.evoplus.api.event.Event
 

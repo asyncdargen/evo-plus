@@ -10,15 +10,14 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.dargen.evoplus.IMinecraftClient;
+import ru.dargen.evoplus.MinecraftClientExtension;
 import ru.dargen.evoplus.api.event.EventBus;
-import ru.dargen.evoplus.api.event.game.InteractEvent;
+import ru.dargen.evoplus.api.event.interact.InteractEvent;
 import ru.dargen.evoplus.api.event.game.MinecraftLoadedEvent;
 import ru.dargen.evoplus.api.event.game.PostTickEvent;
 import ru.dargen.evoplus.api.event.game.PreTickEvent;
@@ -27,7 +26,7 @@ import ru.dargen.evoplus.feature.type.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
 @Mixin(MinecraftClient.class)
-public abstract class MinecraftClientMixin implements IMinecraftClient {
+public abstract class MinecraftClientMixin implements MinecraftClientExtension {
 
     @Unique private boolean doItemUseCalled;
     @Unique private boolean doAttackCalled;
@@ -55,6 +54,7 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
 
         if (rightClick && !doItemUseCalled && interactionManager != null) doItemUse();
         if (leftClick && !doAttackCalled && interactionManager != null) doAttack();
+
         rightClick = false;
         leftClick = false;
     }
@@ -77,13 +77,13 @@ public abstract class MinecraftClientMixin implements IMinecraftClient {
     }
 
     @Inject(method = "doItemUse", at = @At("HEAD"))
-    private void onDoItemUse(CallbackInfo info) {
+    private void doItemUse(CallbackInfo info) {
         EventBus.INSTANCE.fire(new InteractEvent(true));
         doItemUseCalled = true;
     }
 
     @Inject(method = "doAttack", at = @At("HEAD"))
-    private void onDoAttack(CallbackInfoReturnable<Boolean> cir) {
+    private void doAttack(CallbackInfoReturnable<Boolean> cir) {
         EventBus.INSTANCE.fire(new InteractEvent(false));
         doAttackCalled = true;
     }

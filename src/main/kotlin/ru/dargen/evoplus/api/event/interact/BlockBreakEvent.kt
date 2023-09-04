@@ -1,6 +1,5 @@
-package ru.dargen.evoplus.api.event.game
+package ru.dargen.evoplus.api.event.interact
 
-import net.minecraft.block.Material
 import net.minecraft.util.math.BlockPos
 import ru.dargen.evoplus.api.event.Event
 
