@@ -17,8 +17,8 @@ EvoPlus - модификация сделанная под Fabric 1.19.4 для 
 
 # Feedback
 * [Группа ВК](https://vk.com/evo_pluss): новые релизы.
-* [ВК](https://vk.com/smole17)\\[Телеграм](https://chmol17.t.me/): писать при наличии предложений/идей для улучшений. 
-* [ВК](https://vk.com/evo_pluss)\\[Телеграм](https://asyncdargen.t.me/): писать для обсуждения вопросов о сотрудничестве.
+* [ВК](https://vk.com/smole17)\\[Телеграм](https://chmol17.t.me/) (Smole17): писать при наличии предложений/идей для улучшений. 
+* [ВК](https://vk.com/evo_pluss)\\[Телеграм](https://asyncdargen.t.me/) (asyncdargen): писать для обсуждения вопросов о сотрудничестве.
 
 ---
 
