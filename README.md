@@ -12,7 +12,7 @@ EvoPlus - utility модификация, сделанная под Fabric 1.19.
    * [EvoPlus 2.0.2 Beta](https://github.com/asyncdargen/evo-plus/releases/tag/2.0.2-beta)
    * [Fabric Language Kotlin 1.10.10 (kotlin 1.9.10)](https://modrinth.com/mod/fabric-language-kotlin/version/1.10.10+kotlin.1.9.10)
    * [Fabric API 0.87.0+ для 1.19.4](https://modrinth.com/mod/fabric-api/version/0.87.0+1.19.4)
-3. Запустить майнкрафт. Меню мода по умолчанию открывается на **правый шифт**.
+3. Запустить майнкрафт. Меню мода, по умолчанию, открывается на **правый шифт**.
 ---
 
 # Feedback
