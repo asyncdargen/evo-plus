@@ -2,7 +2,7 @@
 
 ---
 
-EvoPlus - модификация сделанная под Fabric 1.19.4 для режима PrisonEvo проекта DiamondWorld.
+EvoPlus - utility модификация, сделанная под Fabric 1.19.4 для режима PrisonEvo проекта DiamondWorld.
 
 ---
 
