@@ -17,7 +17,7 @@ class TypeRegistry<K, V, E : TypeRegistry.TypeRegistryEntry<K>, P : ProtocolSeri
     init {
         listen(packetType) {
             val received = extractor(it).mapValues { (key, value) -> converter(value) }
-            Logger.info("Received ${toString()}: ${received.size}")
+            Logger.info("Received ${javaClass.simpleName}: ${received.size}")
             putAll(received)
             update(received)
         }

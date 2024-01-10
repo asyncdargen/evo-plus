@@ -22,6 +22,7 @@
     "render.InGameOverlayRendererMixin",
     "render.GameRendererMixin",
     "render.screen.PlayerListHudMixin",
+    "render.screen.TitleScreenMixin",
     "render.screen.InGameHudMixin",
 
     "entity.EntityAccessor",

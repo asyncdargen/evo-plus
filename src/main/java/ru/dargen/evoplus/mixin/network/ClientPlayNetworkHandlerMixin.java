@@ -186,13 +186,15 @@ public abstract class ClientPlayNetworkHandlerMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "onCustomPayload")
+    @Inject(at = @At("HEAD"), method = "onCustomPayload", cancellable = true)
     public void onCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
         if (packet.getChannel().toString().equals("minecraft:brand")) {
             EventBus.INSTANCE.fire(ChangeServerEvent.INSTANCE);
         }
 
-        EventBus.INSTANCE.fire(new CustomPayloadEvent(packet.getChannel().toString(), packet.getData()));
+        if (!EventBus.INSTANCE.fireResult(new CustomPayloadEvent(packet.getChannel().toString(), packet.getData()))) {
+            ci.cancel();
+        }
     }
 
 }

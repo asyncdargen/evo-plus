@@ -46,6 +46,8 @@ dependencies {
 
     //Protocol
     include(implementation("pro.diamondworld.evoplusprotocol:evoplusprotocol:1.1"))
+
+    include(implementation('com.github.asyncdargen.crowbar:crowbar-core:48361c8411'))
 }
 
 processResources {
@@ -63,7 +65,8 @@ jar {
 }
 
 runClient {
-    args "--username=algebroid"//${System.getenv("TEST_NAME")}"
+    jvmArgs "-Devo-plus.dev=true"
+    args "--username=${System.getenv("TEST_NAME")}"
 }
 
 allOpen {
