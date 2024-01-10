@@ -2,7 +2,7 @@ package ru.dargen.evoplus.api.render.animation
 
 import ru.dargen.evoplus.api.render.node.DummyNode
 import ru.dargen.evoplus.api.render.node.Node
-import ru.dargen.evoplus.util.log
+import ru.dargen.evoplus.util.catch
 import ru.dargen.evoplus.util.math.fix
 import ru.dargen.evoplus.util.minecraft.Client
 import ru.dargen.evoplus.util.minecraft.WindowInitialized
@@ -17,12 +17,12 @@ object AnimationRunner {
 
     init {
         thread(isDaemon = true, name = "Animation-Thread") {
-            while (true) runCatching {
+            while (true) catch("Error while running animations") {
                 run()
 
                 val delay = if (WindowInitialized) Client.currentFps.fix(10, 200).rateDelay else 50
                 Thread.sleep(delay)
-            }.exceptionOrNull()?.log("Error while running animations")
+            }
         }
     }
 
@@ -51,12 +51,10 @@ object AnimationRunner {
             .asSequence()
             .flatMap { it.values }
             .forEach { animation ->
-                animation.runCatching(Animation<*>::run)
-                    .exceptionOrNull()
-                    ?.log("Error while animation run for ${animation.node}:${animation.id}")
+                catch("Error while animation run for ${animation.node}:${animation.id}") { animation.run() }
 
                 if (!animation.isRunning) {
-                    if (Animations[animation.context.safeNode]?.apply {remove(animation.id)}?.isEmpty() == true) {
+                    if (Animations[animation.context.safeNode]?.apply { remove(animation.id) }?.isEmpty() == true) {
                         Animations.remove(animation.context.safeNode)
                     }
 

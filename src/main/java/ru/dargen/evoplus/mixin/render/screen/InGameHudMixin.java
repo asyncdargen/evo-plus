@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.render.OverlayRenderEvent;
-import ru.dargen.evoplus.feature.type.RenderFeature;
+import ru.dargen.evoplus.features.game.RenderFeature;
 import ru.dargen.evoplus.util.mixin.HeartType;
 
 @Mixin(InGameHud.class)

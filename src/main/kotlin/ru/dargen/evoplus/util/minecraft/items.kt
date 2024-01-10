@@ -6,9 +6,14 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtElement
 import net.minecraft.nbt.NbtList
 import net.minecraft.nbt.NbtString
+import net.minecraft.registry.Registries
 import net.minecraft.text.Text
+import net.minecraft.util.Identifier
 import java.lang.reflect.Constructor
 
+val Item.identifier get() = Registries.ITEM.getId(this).path
+
+fun itemOf(path: String) = Registries.ITEM.get(Identifier.of("minecraft", path.lowercase()))
 
 fun itemStack(type: Item, block: ItemStack.() -> Unit = {}) = ItemStack(type).apply(block)
 

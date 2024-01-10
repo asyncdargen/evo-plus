@@ -9,5 +9,7 @@ fun String.asText(): Text = Text.of(this)
 
 fun String.uncolored() = ColorPattern.replace(this, "")
 
+fun String.colored() = composeHex().replace('&', '§')
+
 fun String.composeHex() =
     HexColorPattern.replace(this) { it.groupValues[1].fold("&x") { result, char -> "$result&$char" } }

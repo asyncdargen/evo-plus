@@ -17,12 +17,20 @@ allprojects {
 
     repositories {
         mavenCentral()
+        maven { url 'https://gitlab.diamondworld.pro/api/v4/projects/104/packages/maven' }
+        maven { url 'https://jitpack.io' }
         dependencies {
             compileOnly(annotationProcessor('org.projectlombok:lombok:1.18.24'))
         }
     }
 
     tasks.withType(JavaCompile)*.options*.encoding = 'UTF-8'
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -37,7 +45,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
     //Protocol
-    include(implementation(project(':protocol')))
+    include(implementation("pro.diamondworld.evoplusprotocol:evoplusprotocol:1.1"))
 }
 
 processResources {
@@ -55,7 +63,7 @@ jar {
 }
 
 runClient {
-    args "--username=${System.getenv("TEST_NAME")}"
+    args "--username=algebroid"//${System.getenv("TEST_NAME")}"
 }
 
 allOpen {

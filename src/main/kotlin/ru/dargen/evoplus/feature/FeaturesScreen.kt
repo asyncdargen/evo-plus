@@ -4,6 +4,7 @@ import net.minecraft.item.Items
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
+import ru.dargen.evoplus.api.render.Tips
 import ru.dargen.evoplus.api.render.animation.Easings
 import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.Overlay.ScaledResolution
@@ -13,7 +14,7 @@ import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.api.render.node.scroll.hScrollView
-import ru.dargen.evoplus.util.concurrent.async
+import ru.dargen.evoplus.api.schduler.async
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.itemStack
 import kotlin.math.sign
@@ -52,11 +53,11 @@ object FeaturesScreen {
                         dependSizeY = false
                         +item(it.icon)
                         +text(it.name)
-                        postRender { matrices , _ ->
-                            if (isHovered && it.description.isNotEmpty()) {
-                                drawTip(matrices, *it.description)
-                            }
-                        }
+//                        postRender { matrices , _ ->
+//                            if (isHovered && it.description.isNotEmpty()) {
+//                                drawTip(matrices, *it.description)
+//                            }
+//                        }
                         preRender { _, _ ->
                             color = if (SelectedFeature != it) Colors.Primary else Colors.Primary.darker()
                         }
@@ -65,7 +66,7 @@ object FeaturesScreen {
                                 val slide = (Features.List.indexOf(SelectedFeature) - Features.List.indexOf(it)).sign
                                 SelectedFeature = it
 
-                                val newSettings = SelectedFeature.settingsSection
+                                val newSettings = SelectedFeature.screenSection
                                 newSettings.translation = v3(x = ScaledResolution.x * -slide)
                                 settingsBox + newSettings
 
@@ -97,7 +98,7 @@ object FeaturesScreen {
 
                     postRender { matrices , _ ->
                         if (isHovered) {
-                            drawTip(matrices, "В этом разделе мы можете редактировать", "позиции и размеры ВКЛЮЧЕННЫХ виджетов.")
+                            Tips.draw(matrices, "В этом разделе мы можете редактировать", "позиции и размеры виджетов.")
                         }
                     }
 
@@ -112,7 +113,7 @@ object FeaturesScreen {
             }
 
             settingsBox = +delegate {
-                +SelectedFeature.settingsSection
+                +SelectedFeature.screenSection
             }
 
             resize {
@@ -136,6 +137,6 @@ object FeaturesScreen {
         destroy { async(Features::saveSettings) }
     }.openIfNoScreen()
 
-    fun isInWidgetEditor() = ScreenContext.current()?.id == "features-widgets"
-
 }
+
+val isWidgetEditor get() = ScreenContext.current()?.id == "features-widgets"

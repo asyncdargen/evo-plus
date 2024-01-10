@@ -16,4 +16,8 @@ public interface MinecraftClientAccessor {
     @Accessor("renderTaskQueue")
     Queue<Runnable> getRenderTaskQueue();
 
+
+    @Invoker("handleBlockBreaking")
+    void breakBlock(boolean breaking);
+
 }

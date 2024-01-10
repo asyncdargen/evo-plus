@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.render.ScreenRenderEvent;
-import ru.dargen.evoplus.feature.type.RenderFeature;
+import ru.dargen.evoplus.features.game.RenderFeature;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {

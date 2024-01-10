@@ -7,4 +7,9 @@ fun Throwable.log(message: String) = Logger.log(Level.SEVERE, message, this)
 
 typealias Runnable = () -> Unit
 
-fun Runnable.catching(message: String): Runnable = { runCatching { this() }.exceptionOrNull()?.log(message) }
+fun Runnable.catching(message: String): Runnable = { catch(message, this) }
+
+fun catch(message: String = "", block: Runnable) = runCatching(block).exceptionOrNull()?.log(message)
+
+val currentMillis get() = System.currentTimeMillis()
+val currentNanos get() = System.nanoTime()

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.util.math.MatrixStack
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
-import ru.dargen.evoplus.api.render.Tips
 import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.context.RenderContext
@@ -14,7 +13,6 @@ import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.minecraft.Window
 import ru.dargen.evoplus.util.render.rotate
 import ru.dargen.evoplus.util.render.scale
@@ -163,15 +161,15 @@ abstract class Node {
 
         parent?.let { matrices.translate(it.size, align) }
 
-        val positionScale = context?.takeIf { this != it }?.translationScale ?: v3(1.0, 1.0, 1.0)
-        matrices.translate(translation, positionScale)
-        matrices.translate(position, positionScale)
+        //val positionScale = context?.takeIf { this != it }?.translationScale ?: v3(1.0, 1.0, 1.0)
+        matrices.translate(translation)//, positionScale)
+        matrices.translate(position)//, positionScale)
 
         matrices.scale(scale)
 
         matrices.rotate(rotation)
 
-        matrices.translate(size, !origin)
+        matrices.translate(size, origin, -1.0)
 
         preRenderHandlers.forEach { it(matrices, tickDelta) }
 
@@ -231,14 +229,6 @@ abstract class Node {
 
     operator fun <N : Node> N.unaryMinus() = apply { this@Node.removeChildren(this) }
 
-    fun drawTip(
-        matrices: MatrixStack, vararg lines: String, space: Double = 1.0, indent: Double = 2.5,
-        color: Color = Colors.TransparentBlack,
-        textColor: Color = Colors.White, shadow: Boolean = false
-    ) = Tips.draw(
-        matrices, *lines, position = (MousePosition - wholePosition) / wholeScale,
-        space = space, indent = indent, color = color, textColor = textColor, shadow = shadow
-    )
 }
 
 //hover
@@ -293,7 +283,7 @@ fun <N : Node> N.drag(
             inOutHandler(dragged)
             handler(startPosition, 0.v3)
             startPosition = mouse.clone()
-        } else {
+        } else if (dragged && !state) {
             dragged = false
             inOutHandler(dragged)
         }

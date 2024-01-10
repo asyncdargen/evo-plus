@@ -6,6 +6,8 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sqrt
 
+fun scale(x: Double = 1.0, y: Double = 1.0, z: Double = 1.0) = v3(x, y, z)
+
 fun v3(x: Double = .0, y: Double = .0, z: Double = .0) = Vector3(x, y, z)
 
 val Number.v3 get() = Vector3(toDouble())
@@ -155,7 +157,7 @@ class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
     }
 
     override fun equals(other: Any?) =
-        other is Vector3 && other.x == x && other.y == other.y && other.z == other.z
+        other is Vector3 && other.x == x && other.y == y && other.z == z
 
     fun toMap() = mapOf("x" to x, "y" to y, "z" to z)
 

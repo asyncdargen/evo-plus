@@ -6,19 +6,22 @@ import ru.dargen.evoplus.api.event.game.MinecraftLoadedEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.keybind.Keybinds.MenuKey
 import ru.dargen.evoplus.api.keybind.on
+import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.config.JsonConfig
-import ru.dargen.evoplus.feature.type.clan.ClanFeature
-import ru.dargen.evoplus.feature.type.FishingFeature
-import ru.dargen.evoplus.feature.type.RenderFeature
-import ru.dargen.evoplus.feature.type.boss.BossFeature
-import ru.dargen.evoplus.feature.type.chat.ChatFeature
-import ru.dargen.evoplus.feature.type.misc.MiscFeature
-import ru.dargen.evoplus.feature.type.rune.RuneFeature
-import ru.dargen.evoplus.feature.type.share.ShareFeature
+import ru.dargen.evoplus.features.game.RenderFeature
+import ru.dargen.evoplus.features.boss.BossFeature
+import ru.dargen.evoplus.features.boss.timer.BossTimerFeature
+import ru.dargen.evoplus.features.chat.ChatFeature
+import ru.dargen.evoplus.features.clan.ClanFeature
+import ru.dargen.evoplus.features.game.FishingFeature
+import ru.dargen.evoplus.features.misc.MiscFeature
+import ru.dargen.evoplus.features.rune.RuneFeature
+import ru.dargen.evoplus.features.share.ShareFeature
+import ru.dargen.evoplus.features.staff.StaffFeature
+import ru.dargen.evoplus.features.stats.StatisticFeature
 import ru.dargen.evoplus.util.Gson
-import ru.dargen.evoplus.util.concurrent.every
+import ru.dargen.evoplus.util.catch
 import ru.dargen.evoplus.util.isNull
-import ru.dargen.evoplus.util.log
 import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -43,38 +46,38 @@ data object Features {
 
             Runtime.getRuntime().addShutdownHook(thread(false) {
                 saveSettings()
-                Configs.forEach { it.save() }
+                saveConfigs()
             })
-            every(1, TimeUnit.MINUTES) { Configs.forEach { it.save() } }
+            scheduleEvery(unit = TimeUnit.MINUTES) { saveConfigs()  }
         }
 
         MenuKey.on { FeaturesScreen.open() }
     }
 
     fun load() {
-        BossFeature
-        ChatFeature
-        RuneFeature
-        ClanFeature
-        FishingFeature
-        RenderFeature
-        MiscFeature
-        ShareFeature
+        BossTimerFeature.register()
+        BossFeature.register()
+        StaffFeature.register()
+        RuneFeature.register()
+        StatisticFeature.register()
+        ChatFeature.register()
+        FishingFeature.register()
+        ClanFeature.register()
+        RenderFeature.register()
+        MiscFeature.register()
+        ShareFeature.register()
     }
 
-    inline fun <reified T> config(name: String, value: T) = JsonConfig(name, object : TypeToken<T>() {}, value).apply {
-        load()
-        Configs.add(this)
-    }
+    fun Feature.register() = List.add(this)
 
     fun loadSettings() {
-        if (SettingsFile.exists()) runCatching {
+        if (SettingsFile.exists()) catch("Error while loading features settings") {
             val json = Gson.fromJson(SettingsFile.reader(), JsonObject::class.java)
 
             List.associateBy { json.asJsonObject[it.settings.id] }
                 .filterKeys { !it.isNull }
                 .forEach { (element, feature) -> feature.settings.load(element) }
-        }.exceptionOrNull()?.log("Error while loading features settings")
+        }
     }
 
     fun saveSettings() {
@@ -82,13 +85,20 @@ data object Features {
             SettingsFile.parent?.createDirectories()
         }
 
-        runCatching {
-            val json = JsonObject()
-
-            List.forEach { json.add(it.settings.id, it.settings.store()) }
+        catch("Error while loading features settings") {
+            val json = JsonObject().apply {
+                List.forEach { add(it.settings.id, it.settings.store()) }
+            }
 
             SettingsFile.writeText(Gson.toJson(json))
-        }.exceptionOrNull()?.log("Error while saving features settings")
+        }
     }
 
+    fun saveConfigs() = Configs.forEach(JsonConfig<*>::save)
+
+    inline fun <reified T> config(name: String, value: T) =
+        JsonConfig(name, object : TypeToken<T>() {}, value).apply {
+            load()
+            Configs.add(this)
+        }
 }

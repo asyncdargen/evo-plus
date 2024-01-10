@@ -8,6 +8,3 @@ pluginManagement {
     }
 }
 
-include 'protocol'
-include 'protocol-bukkit-template'
-

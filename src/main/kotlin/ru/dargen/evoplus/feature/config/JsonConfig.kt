@@ -3,7 +3,7 @@ package ru.dargen.evoplus.feature.config
 import com.google.gson.reflect.TypeToken
 import ru.dargen.evoplus.feature.Features
 import ru.dargen.evoplus.util.Gson
-import ru.dargen.evoplus.util.log
+import ru.dargen.evoplus.util.catch
 import kotlin.io.path.exists
 import kotlin.io.path.reader
 import kotlin.io.path.writeText
@@ -15,17 +15,13 @@ class JsonConfig<T>(val name: String, val token: TypeToken<T>, var value: T) : R
     val file = Features.Folder.resolve("$name.json")
 
     fun load() {
-        runCatching {
-            if (file.exists()) {
-                value = Gson.fromJson(file.reader(), token)
-            }
-        }.exceptionOrNull()?.log("Error while loading config: $name.json")
+        catch("Error while loading config: $name.json") {
+            if (file.exists()) value = Gson.fromJson(file.reader(), token)
+        }
     }
 
     fun save() {
-        runCatching { file.writeText(Gson.toJson(value)) }
-            .exceptionOrNull()
-            ?.log("Error while saving config: $name.json")
+        catch("Error while saving config: $name.json") { file.writeText(Gson.toJson(value)) }
     }
 
     override fun getValue(thisRef: Any, property: KProperty<*>) = value

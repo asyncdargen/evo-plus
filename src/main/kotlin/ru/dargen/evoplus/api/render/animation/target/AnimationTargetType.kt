@@ -3,7 +3,7 @@ package ru.dargen.evoplus.api.render.animation.target
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.progressTo
-import ru.dargen.evoplus.util.progressTo
+import ru.dargen.evoplus.util.render.progressTo
 import java.awt.Color
 
 private typealias Vector = Vector3
@@ -16,7 +16,7 @@ interface AnimationTargetType<C> {
 
     companion object {
 
-        val TypeMap = mutableMapOf(
+        val TypeMap = hashMapOf(
             Vector::class.java to Vector3,
             JDouble::class.java to Double,
             java.lang.Double::class.java to Double,

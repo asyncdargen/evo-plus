@@ -22,11 +22,11 @@ object Tips {
         val height = lines.size * TextRenderer.fontHeight + (lines.size - 1) * space + indent * 2
 
         matrices.push()
+        matrices.loadIdentity()
         RenderSystem.disableScissor()
-        matrices.translate(position)
-        matrices.translate(0f, 0f, 1000f)
-//        matrices.scale(Overlay.Scale)
 
+        matrices.translate(position)
+        matrices.translate(0f, 0f, 1000f) //z buffer hehe
         matrices.fill(.0, .0, width, height, color.rgb)
 
         matrices.translate(indent, indent, .0)

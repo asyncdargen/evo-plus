@@ -49,7 +49,7 @@ data class Animation<N : Node?>(val context: AnimationContext<N>) {
         if (isCancelled) context.cancellationHandler?.invoke(this)
         else if (isCompleted) context.completionHandler?.invoke(this)
 
-        return context.buildNextAnimation()
+        return context.buildNextAnimationOrNull()
     }
 
     fun next(

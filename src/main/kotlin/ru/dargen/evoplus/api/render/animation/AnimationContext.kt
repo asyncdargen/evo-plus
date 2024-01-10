@@ -40,14 +40,16 @@ data class AnimationContext<N : Node?>(
 
     infix fun on(handler: AnimationHandler<N>) = apply { this.handler = handler }
 
-    fun after(force: Boolean = false, handler: AnimationHandler<N>) = apply {
+    fun after(force: Boolean, handler: AnimationHandler<N>) = apply {
         completionHandler = handler
         if (force) {
-            cancel(handler)
+            onCancel(handler)
         }
     }
 
-    infix fun cancel(handler: AnimationHandler<N>) = apply { cancellationHandler = handler }
+    infix fun after(handler: AnimationHandler<N>) = after(false, handler)
+
+    infix fun onCancel(handler: AnimationHandler<N>) = apply { cancellationHandler = handler }
 
     fun next(
         id: String = this.id,
@@ -63,7 +65,7 @@ data class AnimationContext<N : Node?>(
         builder: AnimationContext<N>.() -> Unit
     ) = next(id, duration.seconds, easing, builder)
 
-    fun buildNextAnimation() = nextAnimation?.let { (context, builder) -> context.build(builder) }
+    fun buildNextAnimationOrNull() = nextAnimation?.let { (context, builder) -> context.build(builder) }
 
     inline fun build(crossinline builder: AnimationBlock<N>) = AnimationRunner.run(this) {
         Contexts.set(this)

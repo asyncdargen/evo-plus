@@ -17,12 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.dargen.evoplus.MinecraftClientExtension;
 import ru.dargen.evoplus.api.event.EventBus;
-import ru.dargen.evoplus.api.event.interact.InteractEvent;
 import ru.dargen.evoplus.api.event.game.MinecraftLoadedEvent;
 import ru.dargen.evoplus.api.event.game.PostTickEvent;
 import ru.dargen.evoplus.api.event.game.PreTickEvent;
+import ru.dargen.evoplus.api.event.interact.InteractEvent;
 import ru.dargen.evoplus.api.event.window.WindowResizeEvent;
-import ru.dargen.evoplus.feature.type.RenderFeature;
+import ru.dargen.evoplus.features.game.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
 @Mixin(MinecraftClient.class)

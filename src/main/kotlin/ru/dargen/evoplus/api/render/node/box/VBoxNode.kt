@@ -10,6 +10,8 @@ class VBoxNode : AbstractGridBoxNode() {
         var translateY = indent.y
         var maxX = .0
 
+        val children = children.filter { it !in nonComposingChildren }
+
         children.forEachIndexed { index, node ->
             if (index > 0) {
                 translateY += space
@@ -29,13 +31,15 @@ class VBoxNode : AbstractGridBoxNode() {
         if (dependSizeX) {
             size.x = if (children.isEmpty()) .0 else maxX + indent.x * 2
         }
-        if (dependSizeX) {
+        if (dependSizeY) {
             size.y = if (children.isEmpty()) .0 else translateY + indent.y
         }
 
         if (fixChildSize) {
             enabledChildren.forEach {
-                it.size.x = (if (dependSizeX) maxX else size.x - indent.x * 2) / it.scale.x
+                if (it !in nonComposingChildren) {
+                    it.size.x = (if (dependSizeX) maxX else size.x - indent.x * 2) / it.scale.x
+                }
             }
         }
     }

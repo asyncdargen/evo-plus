@@ -16,4 +16,16 @@ object Relative {
     val CenterBottom get() = v3(.5, 1.0)
     val RightBottom get() = v3(1.0, 1.0)
 
+    val entries get() = sequence {
+        yield(LeftTop)
+        yield(CenterTop)
+        yield(RightTop)
+        yield(LeftCenter)
+        yield(Center)
+        yield(RightCenter)
+        yield(LeftBottom)
+        yield(CenterBottom)
+        yield(RightBottom)
+    }
+
 }

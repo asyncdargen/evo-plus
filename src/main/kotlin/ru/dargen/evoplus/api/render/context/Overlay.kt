@@ -7,7 +7,7 @@ import ru.dargen.evoplus.api.event.window.WindowRescaleEvent
 import ru.dargen.evoplus.api.event.window.WindowResizeEvent
 import ru.dargen.evoplus.api.render.node.resize
 import ru.dargen.evoplus.api.render.node.tick
-import ru.dargen.evoplus.util.math.Vector3
+import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.minecraft.Window
 import ru.dargen.evoplus.util.minecraft.WindowInitialized
@@ -15,10 +15,9 @@ import ru.dargen.evoplus.util.minecraft.WindowInitialized
 data object Overlay : RenderContext() {
 
     val ScaleFactor get() = if (!WindowInitialized) 1.0 else Window.scaleFactor
-    val BaseScaleFactor = 2.0
     val WindowSize
-        get() = if (!WindowInitialized) Vector3()
-        else Vector3(Window.scaledWidth.toDouble(), Window.scaledHeight.toDouble(), .0)
+        get() = if (!WindowInitialized) v3()
+        else v3(Window.scaledWidth.toDouble(), Window.scaledHeight.toDouble(), .0)
 
     val ScaledMouse get() = MousePosition / Scale
     val ScaledResolution get() = size.clone()
@@ -26,10 +25,7 @@ data object Overlay : RenderContext() {
     val Scale get() = scale.clone()
 
     init {
-        resize {
-//            scale = Vector3(BaseScaleFactor / ScaleFactor)
-            size = WindowSize // * (ScaleFactor / BaseScaleFactor)
-        }
+        resize { size = WindowSize }
         tick { mouseMove(MousePosition) }
         resize()
     }

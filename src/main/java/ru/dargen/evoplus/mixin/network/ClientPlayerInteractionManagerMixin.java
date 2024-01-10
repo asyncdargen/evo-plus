@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.mixin.network;
 
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.math.BlockPos;
@@ -10,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.dargen.evoplus.api.event.EventBus;
+import ru.dargen.evoplus.api.event.interact.AttackEvent;
 import ru.dargen.evoplus.api.event.interact.BlockBreakEvent;
 import ru.dargen.evoplus.api.event.inventory.InventoryClickEvent;
 
@@ -23,9 +25,17 @@ public class ClientPlayerInteractionManagerMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "breakBlock")
+    @Inject(at = @At("HEAD"), method = "breakBlock", cancellable = true)
     public void breakBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        EventBus.INSTANCE.fire(new BlockBreakEvent(pos));
+        if (!EventBus.INSTANCE.fireResult(new BlockBreakEvent(pos))) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "attackEntity", cancellable = true)
+    public void attackEntity(PlayerEntity player, Entity target, CallbackInfo ci) {
+        if (!EventBus.INSTANCE.fireResult(new AttackEvent(target)))
+            ci.cancel();
     }
 
 }

@@ -5,6 +5,7 @@ import ru.dargen.evoplus.api.event.input.KeyTypeEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.mixin.input.keybind.KeyBindingAccessor
 import ru.dargen.evoplus.util.kotlin.cast
+import ru.dargen.evoplus.util.log
 
 object KeyBindings {
 
@@ -14,7 +15,9 @@ object KeyBindings {
     init {
         on<KeyTypeEvent> {
             PressHandlers.forEach { (key, handler) ->
-                if (key.isPressed) handler()
+                runCatching {
+                    if (key.isPressed) handler()
+                }.exceptionOrNull()?.log("Error while processing key handler ${key.translationKey}")
             }
         }
     }

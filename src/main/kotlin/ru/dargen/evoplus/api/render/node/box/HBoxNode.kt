@@ -10,6 +10,8 @@ class HBoxNode : AbstractGridBoxNode() {
         var translateX = indent.x
         var maxY = .0
 
+        val children = children.filter { it !in nonComposingChildren }
+
         children.forEachIndexed { index, node ->
             if (index > 0) {
                 translateX += space
@@ -35,7 +37,9 @@ class HBoxNode : AbstractGridBoxNode() {
 
         if (fixChildSize) {
             enabledChildren.forEach {
-                it.size.y = (if (dependSizeY) maxY else size.y - indent.y * 2) / it.scale.y
+                if (it !in nonComposingChildren) {
+                    it.size.y = (if (dependSizeY) maxY else size.y - indent.y * 2) / it.scale.y
+                }
             }
         }
     }

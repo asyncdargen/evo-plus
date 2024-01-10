@@ -14,3 +14,7 @@ abstract class CancellableEvent : Event {
     }
 
 }
+
+fun Event.fire() = EventBus.fire(this)
+
+fun CancellableEvent.fire() = EventBus.fireResult(this)

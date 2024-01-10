@@ -2,24 +2,26 @@
 
 ---
 
-EvoPlus - модификация сделанная под Fabric 1.19.4 для режима PrisonEvo проекта DiamondWorld.
+EvoPlus - утилитарная модификация, сделанная под Fabric 1.19.4 для режима PrisonEvo проекта DiamondWorld.
 
 ---
 
 # Как установить и использовать мод?
 1. Скачать и установить [Fabric Loader (0.14.21+) версии 1.19.4](https://fabricmc.net/use/installer)
 2. В папке mods должны быть ниже упомянутые моды:
-   * [EvoPlus 2.0.0 Beta](https://github.com/asyncdargen/evo-plus/releases/2.0.0-beta)
+   * [EvoPlus 2.0.2 Beta](https://github.com/asyncdargen/evo-plus/releases/tag/2.0.4-beta)
    * [Fabric Language Kotlin 1.10.10 (kotlin 1.9.10)](https://modrinth.com/mod/fabric-language-kotlin/version/1.10.10+kotlin.1.9.10)
    * [Fabric API 0.87.0+ для 1.19.4](https://modrinth.com/mod/fabric-api/version/0.87.0+1.19.4)
-3. Запустить майнкрафт. Меню мода по умолчанию открывается на **правый шифт**.
+3. Запустить майнкрафт. Меню мода, по умолчанию, открывается на **правый шифт**.
 ---
 
 # Feedback
-* [Группа ВК](https://vk.com/evo_pluss): в лс писать о багах, идеях, проблемах, а так же здесь самая свежая информация по моду.
-* [ВК](https://vk.com/evo_pluss)\\[Телеграм](https://asyncdargen.t.me/): писать при огромной необходимости или по личным предложениям.
+* [Группа ВК](https://vk.com/evo_pluss): информация об обновлениях и обратная связь.
+* [ВК](https://vk.com/evo_pluss)\\[Телеграм](https://asyncdargen.t.me/) (asyncdargen): разработчик.
+* [ВК](https://vk.com/smole17)\\[Телеграм](https://chmol17.t.me/) (Smole17): разработчик.
 
 ---
 
-### Поддержать автора
- * Tinkoff: 2200 7007 2314 0975
+### Поддержать авторов
+* Tinkoff: 2200 7007 2314 0975 (asyncdargen)
+* Сбербанк: 2202 2032 5098 2644 (Smole17)

@@ -33,12 +33,7 @@ public class MouseMixin {
 
     @Inject(method = "onCursorPos", at = @At("RETURN"))
     private void onMove(long window, double x, double y, CallbackInfo ci) {
-        EventBus.INSTANCE.fire(new MouseMoveEvent(
-                MinecraftKt.getMousePosition()
-//                        .div(this.x, this.y, 1.0)
-//                        .times(x, y, .0)
-//                        .fixNaN()
-        ));
+        EventBus.INSTANCE.fire(new MouseMoveEvent(MinecraftKt.getMousePosition()));
     }
 
 }

@@ -10,6 +10,7 @@ import net.minecraft.text.HoverEvent
 import net.minecraft.text.Text
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.EntityHitResult
+import ru.dargen.evoplus.MinecraftClientExtension
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.mixin.MinecraftClientAccessor
 import ru.dargen.evoplus.util.kotlin.cast
@@ -17,9 +18,11 @@ import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3
 
 val Client get() = MinecraftClient.getInstance()
-val ClientExtension get() = Client.cast<MinecraftClientAccessor>()
+val ClientExtension get() = Client.cast<MinecraftClientExtension>()
+val ClientAccessor get() = Client.cast<MinecraftClientAccessor>()
 
 val Player get() = Client?.player
+val World get() = Client?.world
 val InteractionManager get() = Client?.interactionManager
 
 val TargetEntity get() = Client?.crosshairTarget?.safeCast<EntityHitResult>()?.entity
@@ -38,7 +41,13 @@ val MousePosition
         Client.mouse.y * Window.scaledHeight / Window.height,
     ).fixNaN()
 
-fun postToMainThread(runnable: () -> Unit) = Client.cast<MinecraftClientAccessor>().renderTaskQueue.add(runnable)
+fun postToMainThread(runnable: () -> Unit) =
+    Client.cast<MinecraftClientAccessor>().renderTaskQueue.add(runnable)
+
+fun forceInMainThread(runnable: () -> Unit) {
+
+    if (!MinecraftClient.getInstance().isOnThread) postToMainThread(runnable) else runnable()
+}
 
 fun playSound(event: SoundEvent) = Player?.playSound(event, 1f, 1f)
 fun playSound(event: RegistryEntry.Reference<SoundEvent>) = playSound(event.value())

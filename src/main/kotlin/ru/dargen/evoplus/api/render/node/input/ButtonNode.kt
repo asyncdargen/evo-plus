@@ -9,6 +9,7 @@ import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
+import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.playSound
 import java.awt.Color
 
@@ -51,3 +52,8 @@ class ButtonNode(label: String = "") : RectangleNode() {
 }
 
 fun button(label: String = "", block: ButtonNode.() -> Unit = {}) = ButtonNode(label).apply(block)
+
+fun symbolButton(label: String, block: ButtonNode.() -> Unit = {}) = button(label) {
+    size = v3(10.0, 10.0)
+    block()
+}

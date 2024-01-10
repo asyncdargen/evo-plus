@@ -113,10 +113,12 @@ class InputNode : RectangleNode() {
             if (shift > 0) {
                 content.substring(0, oldCursor) + content.substring(cursor).apply { cursor -= shift }
             } else content.substring(0, cursor) + content.substring(oldCursor)
+        inputHandler(content)
     }
 
     fun paste() {
         put(Client.keyboard.clipboard.replace("\n", "").replace("\\n", ""))
+        inputHandler(content)
     }
 
     fun on(handler: InputNode.(content: String) -> Unit) = apply { inputHandler = handler }
