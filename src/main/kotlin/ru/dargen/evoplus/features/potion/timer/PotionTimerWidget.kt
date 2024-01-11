@@ -16,8 +16,8 @@ import ru.dargen.evoplus.util.math.v3
 object PotionTimerWidget : WidgetBase {
 
     override val node = vbox {
-        indent = v3(-5.0, .0, 5.0)
-        space = -10.0
+        space = .0
+        indent = v3()
     }
 
     fun update() {
@@ -43,6 +43,7 @@ object PotionTimerWidget : WidgetBase {
 
                         lines = listOf("${potionType.displayName} ($quality%)§8:§f ${remainTime.asShortTextTime}")
                     }
+                    recompose()
                 }
             }.toMutableList()
     }
