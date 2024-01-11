@@ -121,7 +121,13 @@ class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node
             value.origin.apply { set(it["x"].asDouble(x), it["y"].asDouble(y), it["z"].asDouble(z)) }
         }
         element["align"].asObject()?.let {
-            value.align.apply { set(it["x"].asDouble(x), it["y"].asDouble(y), it["z"].asDouble(z)) }
+            value.align.apply {
+                set(
+                    it["x"].asDouble(x.coerceAtLeast(.0)),
+                    it["y"].asDouble(y).coerceAtLeast(.0),
+                    it["z"].asDouble(z).coerceAtLeast(.0)
+                )
+            }
         }
         element["scale"].asObject()?.let {
             value.scale.apply { set(it["x"].asDouble(x), it["y"].asDouble(y), it["z"].asDouble(z)) }
