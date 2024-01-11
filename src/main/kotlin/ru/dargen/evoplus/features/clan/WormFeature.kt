@@ -37,8 +37,8 @@ object WormFeature : Feature("worms", "Черви", Items.TURTLE_EGG) {
                 .apply {
                     if (Worms < size) {
 
-                        val text = "§6Возле вас обнаружен${if (Worms > 1) "о" else ""} $Worms ${
-                            Worms.nounEndings("червь", "червя", "червей")
+                        val text = "§6Возле вас обнаружен${if (size > 1) "о" else ""} $size ${
+                            size.nounEndings("червь", "червя", "червей")
                         }"
                         if (WormNotify) Notifies.showText(text)
                         if (WormMessage) printMessage(text)
