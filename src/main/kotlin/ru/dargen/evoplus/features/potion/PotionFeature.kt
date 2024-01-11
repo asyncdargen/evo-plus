@@ -65,7 +65,7 @@ object PotionFeature : Feature("potion", "Зелья", customItem(Items.POTION, 
         listen<PotionData> { potionData ->
             PotionTimers.putAll(potionData
                 .data
-                .mapKeys { PotionType.byOrdinal(it.key - 1)!! }
+                .mapKeys { PotionType.byOrdinal(it.key)!! }
                 .mapValues { PotionState(it.value.quality, currentMillis + it.value.remained) }
             )
         }
