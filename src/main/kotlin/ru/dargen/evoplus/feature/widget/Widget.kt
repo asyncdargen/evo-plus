@@ -66,7 +66,6 @@ class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node
     }
 
     private fun fixPosition() = value.apply {
-        this@Widget.position = true
 
         val scale = (wholeScale / scale)
         val minPosition = wholePosition / scale
@@ -91,13 +90,15 @@ class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node
     }
 
     private fun usePosition() = value.apply {
-        this@Widget.position = false
+        this@Widget.position = true
 
         position = parent!!.size * align
         align = v3()
     }
 
     private fun useAlign() = value.apply {
+        this@Widget.position = false
+
         var pos = position + translation
 
         position = v3()

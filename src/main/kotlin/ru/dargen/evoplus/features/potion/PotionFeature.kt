@@ -19,9 +19,10 @@ import ru.dargen.evoplus.util.selector.toSelector
 
 object PotionFeature : Feature("potion", "Зелья", customItem(Items.POTION, 3)) {
 
-    val PotionTimers = mutableMapOf<PotionType, PotionState>()
+    val PotionTimers = mutableMapOf<Int, PotionState>()
     val ComparedPotionsTimers
         get() = PotionTimers
+            .mapKeys { PotionType.byOrdinal(it.key)!! }
             .asSequence()
             .sortedBy { it.value.endTime }
 
@@ -67,9 +68,7 @@ object PotionFeature : Feature("potion", "Зелья", customItem(Items.POTION, 
         }
 
         listen<PotionData> { potionData ->
-            PotionTimers.putAll(potionData
-                .data
-                .mapKeys { PotionType.byOrdinal(it.key)!! }
+            PotionTimers.putAll(potionData.data
                 .mapValues { PotionState(it.value.quality, currentMillis + it.value.remained) }
             )
         }
@@ -82,19 +81,17 @@ object PotionFeature : Feature("potion", "Зелья", customItem(Items.POTION, 
     }
 
     private fun updatePotions() {
-        PotionTimers.entries
-            .removeIf { (potionType, potionState) ->
+        ComparedPotionsTimers.forEach { (potionType, potionState) ->
                 val potionName = potionType.displayName
                 val (quality, endTime) = potionState
                 val remainTime = endTime - currentMillis
-                val isExpired = remainTime < 0
 
-                if (isExpired) {
+                if (remainTime < 0) {
                     if (EnabledNotify) Notifies.showText("$potionName ($quality%)§c закончилось")
                     if (EnabledMessage) printMessage("$potionName ($quality%)§c закончилось")
-                }
 
-                isExpired
+                    PotionTimers.remove(potionType.id)
+                }
             }
     }
 }

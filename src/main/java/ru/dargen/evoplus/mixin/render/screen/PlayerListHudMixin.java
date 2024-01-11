@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import ru.dargen.evoplus.features.misc.MiscFeature;
 import ru.dargen.evoplus.features.potion.PotionFeature;
 import ru.dargen.evoplus.protocol.EvoPlusProtocol;
+import ru.dargen.evoplus.protocol.registry.PotionType;
 import ru.dargen.evoplus.util.format.TimeKt;
 
 import java.util.List;
@@ -28,13 +29,16 @@ public abstract class PlayerListHudMixin {
             val potionTimers = PotionFeature.INSTANCE.getPotionTimers();
             if (!potionTimers.isEmpty()) {
                 stringBuilder.append("\n§e§lАктивные Эффекты §r§8(%s)".formatted(potionTimers.size()));
-                potionTimers.forEach((potionType, potionState) ->
-                        stringBuilder.append("\n%s (%s%%) §f%s".formatted(
-                                potionType.getDisplayName(),
-                                potionState.getQuality(),
-                                TimeKt.getAsShortTextTime(potionState.getEndTime() - System.currentTimeMillis()))
-                        )
-                );
+                potionTimers.forEach((potionId, potionState) -> {
+                    var type = PotionType.Companion.byOrdinal(potionId);
+                    if (type == null) return;
+
+                    stringBuilder.append("\n%s (%s%%) §f%s".formatted(
+                            type.getDisplayName(),
+                            potionState.getQuality(),
+                            TimeKt.getAsShortTextTime(potionState.getEndTime() - System.currentTimeMillis()))
+                    );
+                });
                 stringBuilder.append("\n");
             }
         }

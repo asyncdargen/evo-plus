@@ -7,8 +7,11 @@ import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.isWidgetEditor
 import ru.dargen.evoplus.feature.widget.WidgetBase
+import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.ShortName
+import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.ShortTimeFormat
 import ru.dargen.evoplus.protocol.registry.BossType
 import ru.dargen.evoplus.util.currentMillis
+import ru.dargen.evoplus.util.format.asShortTextTime
 import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
@@ -32,7 +35,13 @@ object BossTimerWidget : WidgetBase {
                     indent = v3()
 
                     +item(type.displayItem) { scale = scale(.7, .7) }
-                    +text("${type.displayName}§8: §f${remaining.asTextTime}") { isShadowed = true }
+                    +text(
+                        "${
+                            if (ShortName) type.displayLevel else type.displayName
+                        }§8: §f${
+                            if (ShortTimeFormat) remaining.asShortTextTime else remaining.asTextTime
+                        }"
+                    ) { isShadowed = true }
 
                     leftClick { _, state ->
                         if (isHovered && state && !isWidgetEditor && BossTimerFeature.WidgetTeleport) {

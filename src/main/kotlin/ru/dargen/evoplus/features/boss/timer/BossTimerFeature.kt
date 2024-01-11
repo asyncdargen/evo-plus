@@ -45,6 +45,9 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     val MaxLevel by settings.selector("Макс. уровень босса", (0..450).toSelector(-1))
     val BossesCount by settings.selector("Кол-во отображаемых боссов", (0..60).toSelector(-1))
 
+    val ShortName by settings.boolean("Сокращение имени босса")
+    val ShortTimeFormat by settings.boolean("Сокращенный формат времени")
+
     val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..120 step 5).toSelector()) { "$it сек." }
     val InlineMenuTime by settings.boolean("Отображать время до спавна в меню", true)
 

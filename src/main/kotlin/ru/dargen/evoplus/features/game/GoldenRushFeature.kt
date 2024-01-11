@@ -21,7 +21,7 @@ import ru.dargen.evoplus.util.minecraft.printMessage
 
 private val GoldenCristalItem = customItem(Items.PAPER, 271)
 
-object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорадка", GoldenCristalItem) {
+object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорадка", Items.GOLD_INGOT) {
 
     var GoldenCrystalAround = false
         set(value) {
@@ -33,6 +33,7 @@ object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорад
         scale = scale(1.2, 1.2)
     }
     val GoldenCrystalWidget by widgets.widget("Золотой Кристалл", "golden-crystal", false) {
+        align = v3(.95, .26)
         +hbox {
             indent = v3()
             space = 3.0

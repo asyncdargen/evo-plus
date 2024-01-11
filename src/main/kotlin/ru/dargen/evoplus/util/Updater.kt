@@ -25,7 +25,7 @@ import kotlin.system.exitProcess
 
 object Updater {
 
-    private const val DOWNLOAD_URL = "https://github.com/asyncdargen/evo-plus/releases/download/%s/evo-plus-beta.jar"
+    private const val DOWNLOAD_URL = "https://github.com/asyncdargen/evo-plus/releases/download/%s/evo-plus.jar"
     private const val VK_GROUP_URL = "https://vk.com/evo_pluss"
     private const val PROJECT_PROPERTIES_URL =
         "https://raw.githubusercontent.com/asyncdargen/evo-plus/kotlin/gradle.properties"
@@ -62,10 +62,9 @@ object Updater {
 
             +text(
                 "Обнаружена новая версия EvoPlus - §e$LatestVersion.",
-                "Запущено автоматическое обновление.",
                 "",
-                "Возможно потребуется обновить другие моды подробнее",
-                "вы можете ознакомиться с обновлениями в группе ВК.",
+                "Возможно потребуется обновить другие моды, подробнее",
+                "вы можете ознакомиться с обновлениям в группе ВК.",
                 "",
                 "Для выхода с обновлением нажмите кнопку \"Обновить\"."
             ) {

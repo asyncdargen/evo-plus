@@ -15,9 +15,9 @@ val Long.asShortTextTime
         "${
             if (hours > 0) "$hours:" else ""
         }${
-            if (minutes > 0) "$minutes:".let { if (it.length < 3) "0$it" else it } else "00:"
+            if (minutes > 0) "${if (minutes < 10) 0 else ""}$minutes:" else "00:"
         }${
-            if (seconds > 0) "$seconds" else ""
+            if (seconds > 0) "${if (seconds < 10) 0 else ""}$seconds" else "00"
         }"
     }
 
