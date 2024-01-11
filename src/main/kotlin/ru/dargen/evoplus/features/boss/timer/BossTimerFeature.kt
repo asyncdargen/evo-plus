@@ -38,7 +38,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
     val TimerWidget by widgets.widget("Таймер боссов", "boss-timer", widget = BossTimerWidget)
 
-    val ClickTeleport by settings.boolean("Телепорт по клику в виджете", true)
+    val WidgetTeleport by settings.boolean("Телепорт по клику в виджете")
     val PremiumTimers by settings.boolean("Покупной таймер")
 
     val MinLevel by settings.selector("Мин. уровень босса", (0..450).toSelector())

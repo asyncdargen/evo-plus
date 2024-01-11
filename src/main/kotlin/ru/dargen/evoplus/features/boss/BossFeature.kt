@@ -34,10 +34,10 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
     }
 
     val NotifyCapture by settings.boolean("Уведомление о захватах боссов", true)
-    val FastTeleport by settings.boolean("Телепорт к ближайшему боссу", true)
+    val NearTeleport by settings.boolean("Телепорт к ближайшему боссу")
 
     init {
-        FastBossTeleport.on { if (FastTeleport) { sendCommand("boss ${ComparedBosses.first().key.level}") } }
+        FastBossTeleport.on { if (NearTeleport) { sendCommand("boss ${ComparedBosses.first().key.level}") } }
 
         listen<BossDamage> {
             val type = BossType.valueOf(it.id) ?: return@listen

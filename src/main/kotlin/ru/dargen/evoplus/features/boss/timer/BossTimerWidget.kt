@@ -34,7 +34,7 @@ object BossTimerWidget : WidgetBase {
                     +text("${type.displayName}§8: §f${remaining.asTextTime}")
 
                     leftClick { _, state ->
-                        if (isHovered && state && !isWidgetEditor && BossTimerFeature.ClickTeleport) {
+                        if (isHovered && state && !isWidgetEditor && BossTimerFeature.WidgetTeleport) {
                             sendCommand("boss ${type.level}")
                         }
                     }

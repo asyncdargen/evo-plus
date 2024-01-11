@@ -20,6 +20,7 @@ import ru.dargen.evoplus.util.math.v3
 @KotlinOpens
 class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node>(id, name) {
 
+    var position = false
     var enabled
         get() = value.enabled
         set(enabled) {
@@ -41,7 +42,7 @@ class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node
         }
         drag(inOutHandler = {
             if (it && isWidgetEditor) usePosition()
-            else if (!it) useAlign()
+            else if (!it && this@Widget.position) useAlign()
         }) { _, delta ->
             if (isWidgetEditor) {
                 translation = delta / (wholeScale / scale)
@@ -65,6 +66,8 @@ class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node
     }
 
     private fun fixPosition() = value.apply {
+        this@Widget.position = true
+
         val scale = (wholeScale / scale)
         val minPosition = wholePosition / scale
         val maxPosition = minPosition + wholeSize / scale
@@ -88,6 +91,8 @@ class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node
     }
 
     private fun usePosition() = value.apply {
+        this@Widget.position = false
+
         position = parent!!.size * align
         align = v3()
     }
