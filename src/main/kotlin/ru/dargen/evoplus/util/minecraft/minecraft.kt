@@ -25,6 +25,7 @@ val Player get() = Client?.player
 val World get() = Client?.world
 val InteractionManager get() = Client?.interactionManager
 
+val WorldEntities get() = World?.entities ?: emptyList()
 val TargetEntity get() = Client?.crosshairTarget?.safeCast<EntityHitResult>()?.entity
 val TargetBlock get() = Client?.crosshairTarget?.safeCast<BlockHitResult>()?.blockPos
 

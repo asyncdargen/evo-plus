@@ -22,7 +22,7 @@ import ru.dargen.evoplus.api.event.game.PostTickEvent;
 import ru.dargen.evoplus.api.event.game.PreTickEvent;
 import ru.dargen.evoplus.api.event.interact.InteractEvent;
 import ru.dargen.evoplus.api.event.window.WindowResizeEvent;
-import ru.dargen.evoplus.features.game.RenderFeature;
+import ru.dargen.evoplus.features.misc.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
 @Mixin(MinecraftClient.class)

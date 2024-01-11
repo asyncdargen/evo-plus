@@ -5,6 +5,7 @@ import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.potion.PotionData
 import ru.dargen.evoplus.api.event.inventory.InventoryClickEvent
 import ru.dargen.evoplus.api.event.on
+import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
@@ -24,14 +25,17 @@ object PotionFeature : Feature("potion", "Зелья", customItem(Items.POTION, 
             .asSequence()
             .sortedBy { it.value.endTime }
 
-    val TimerWidget by widgets.widget("Зелья", "potions", false, PotionTimerWidget)
+    val TimerWidget by widgets.widget("Зелья", "potions-timer", enabled = false, widget = PotionTimerWidget)
 
     val RecipeText = text("Закрепите рецепт нажатием ПКМ в меню")
-    val RecipeWidget by widgets.widget("Рецепт", "recipe", false) {
+    val RecipeWidget by widgets.widget("Рецепт", "recipe", enabled = false) {
+        align = Relative.LeftCenter
+        origin = Relative.LeftCenter
+
         +RecipeText
     }
 
-    val PotionsCount by settings.selector("Кол-во отображаемых зелий", (0..PotionType.size).toSelector(-1))
+    val PotionsCount by settings.selector("Кол-во отображаемых зелий", (0..15).toSelector(-1))
     val EnabledNotify by settings.boolean("Уведомление об окончании", true)
     val EnabledMessage by settings.boolean("Сообщение об окончании")
     val EnabledPotionsInTab by settings.boolean("Отображать сведения в табе", true)

@@ -4,9 +4,9 @@
   "version": "${version}",
   "name": "Evo Plus",
   "description": "Open-Source мод, для улучшения качества игры на PrisonEvo (DiamondWorld)",
-  "authors": ["dargen"],
+  "authors": ["dargen", "smole17"],
   "contact": {
-    "website": "https://vk.com/asyncdargen"
+    "website": "https://vk.com/evo_pluss"
   },
   "license": "MIT",
   "icon": "assets/evo-plus/icon.png",

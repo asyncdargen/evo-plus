@@ -9,10 +9,12 @@ class WidgetGroup(screen: FeatureScreenElements) : SettingsGroup("widgets", "В�
 
     fun widget(
         name: String, id: String = "",
-        toggler: Boolean = true, widget: Node.() -> Unit
-    ) = widget(Widget(id, name, widget), toggler)
+        toggler: Boolean = true, enabled: Boolean = true,
+        widget: Node.() -> Unit
+    ) = widget(Widget(id, name, widget), toggler, enabled)
 
-    fun widget(widget: Widget, toggler: Boolean = true): Widget {
+    fun widget(widget: Widget, toggler: Boolean = true, enabled: Boolean = true): Widget {
+        widget.enabled = enabled
         setting(
             BooleanSetting("toggler-${widget.id}", "§6Виджет: §f${widget.name}", widget.enabled)
         ) on { widget.enabled = it }

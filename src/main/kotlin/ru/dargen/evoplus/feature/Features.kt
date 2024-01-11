@@ -8,15 +8,16 @@ import ru.dargen.evoplus.api.keybind.Keybinds.MenuKey
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.config.JsonConfig
-import ru.dargen.evoplus.features.game.RenderFeature
 import ru.dargen.evoplus.features.boss.BossFeature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature
-import ru.dargen.evoplus.features.boss.worm.WormFeature
 import ru.dargen.evoplus.features.chat.ChatFeature
 import ru.dargen.evoplus.features.clan.ClanFeature
+import ru.dargen.evoplus.features.clan.WormFeature
 import ru.dargen.evoplus.features.game.FishingFeature
-import ru.dargen.evoplus.features.goldenrush.GoldenRushFeature
+import ru.dargen.evoplus.features.game.GoldenRushFeature
 import ru.dargen.evoplus.features.misc.MiscFeature
+import ru.dargen.evoplus.features.misc.RenderFeature
+import ru.dargen.evoplus.features.potion.PotionFeature
 import ru.dargen.evoplus.features.rune.RuneFeature
 import ru.dargen.evoplus.features.share.ShareFeature
 import ru.dargen.evoplus.features.staff.StaffFeature
@@ -61,6 +62,7 @@ data object Features {
         BossFeature.register()
         StaffFeature.register()
         RuneFeature.register()
+        PotionFeature.register()
         StatisticFeature.register()
         ChatFeature.register()
         FishingFeature.register()

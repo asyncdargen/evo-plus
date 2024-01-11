@@ -28,20 +28,24 @@ object StaffFeature : Feature("staff", "Посохи", customItem(Items.WOODEN_H
                 .forEach { (id, timestamp) -> Staffs[id] = timestamp + 500 }
         }
         scheduleEvery(period = 2) {
-            if (TimerWidget.enabled) StaffTimerWidget.update()
+            updateStaffs()
 
-            Staffs.forEach { (id, timestamp) ->
-                val type = StaffType.byOrdinal(id) ?: return@forEach
-                val remainTime = timestamp - currentMillis
+            StaffTimerWidget.update()
+        }
+    }
 
-                if (remainTime in 0..1000) {
-                    if (ReadyNotify) Notifies.showText("${type.displayName} §aготов")
-                    if (ReadyMessage) printMessage("${type.displayName} §aготов")
-                    Staffs.remove(id)
-                }
+    private fun updateStaffs() {
+        Staffs.forEach { (id, timestamp) ->
+            val type = StaffType.byOrdinal(id) ?: return@forEach
+            val remainTime = timestamp - currentMillis
 
-                if (remainTime < 0) Staffs.remove(id)
+            if (remainTime in 0..1000) {
+                if (ReadyNotify) Notifies.showText("${type.displayName} §aготов")
+                if (ReadyMessage) printMessage("${type.displayName} §aготов")
+                Staffs.remove(id)
             }
+
+            if (remainTime < 0) Staffs.remove(id)
         }
     }
 

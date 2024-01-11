@@ -20,6 +20,8 @@ fun itemStack(type: Item, block: ItemStack.() -> Unit = {}) = ItemStack(type).ap
 fun customItem(type: Item, customModelData: Int, block: ItemStack.() -> Unit = {}) =
     itemStack(type).apply { this.customModelData = customModelData }.apply(block)
 
+fun ItemStack.equalCustomModel(item: ItemStack) = this.item == item.item && customModelData == item.customModelData
+
 fun ItemStack.editNBT(block: NbtCompound.() -> Unit) = apply {
     nbt = orCreateNbt.apply(block)
 }

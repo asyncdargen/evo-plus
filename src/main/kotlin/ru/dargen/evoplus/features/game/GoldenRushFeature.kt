@@ -1,52 +1,52 @@
-package ru.dargen.evoplus.features.goldenrush
+package ru.dargen.evoplus.features.game
 
 import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.item
-import ru.dargen.evoplus.api.render.node.preRender
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.Notifies
+import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.WorldEntities
 import ru.dargen.evoplus.util.minecraft.customItem
-import ru.dargen.evoplus.util.minecraft.customModelData
+import ru.dargen.evoplus.util.minecraft.equalCustomModel
 import ru.dargen.evoplus.util.minecraft.printMessage
 
-private const val GOLDEN_CRYSTAL_DATA = 271
-private val goldenCrystalItem = Items.PAPER
 
-object GoldenRushFeature :
-    Feature("golden_rush", "Золотая Лихорадка", customItem(goldenCrystalItem, GOLDEN_CRYSTAL_DATA)) {
+private val GoldenCristalItem = customItem(Items.PAPER, 271)
+
+object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорадка", GoldenCristalItem) {
 
     var GoldenCrystalAround = false
+        set(value) {
+            field = value
+            GoldenCrystalIndicatorText.text = if (value) "§a✔" else "§c❌"
+        }
+    val GoldenCrystalIndicatorText = text {
+        isShadowed = true
+        scale = scale(1.2, 1.2)
+    }
+    val GoldenCrystalWidget by widgets.widget("Золотой Кристалл", "golden-crystal", false) {
+        +hbox {
+            indent = v3()
+            space = 3.0
 
-    val GoldenCrystalBox = hbox {
-        +item(customItem(goldenCrystalItem, GOLDEN_CRYSTAL_DATA)) {
-            translation.y += 3
-            scale = v3(.5, .5, .5)
-        }
-        +text {
-            isShadowed = true
-            preRender { _, _ ->
-                lines = listOf(if (GoldenCrystalAround) "§a✔" else "§c❌")
-            }
+            +item(GoldenCristalItem) { scale = v3(.5, .5, .5) }
+            +GoldenCrystalIndicatorText
         }
     }
-    val GoldenCrystalWidget by widgets.widget("Золотой Кристалл", "golden_crystal", false) {
-        +GoldenCrystalBox
-    }
+
     val GoldenCrystalNotify by settings.boolean("Уведомление о появлении золотого кристалла")
     val GoldenCrystalMessage by settings.boolean("Сообщение о появлении золотого кристалла", true)
 
     init {
         scheduleEvery(period = 10) {
-            Client?.world?.entities
-                ?.filterNotNull()
-                ?.filterIsInstance<ArmorStandEntity>()
-                ?.find { stand -> stand.armorItems.any { it.item === goldenCrystalItem && it.customModelData == GOLDEN_CRYSTAL_DATA } }
+            WorldEntities
+                .filterIsInstance<ArmorStandEntity>()
+                .find { stand -> stand.armorItems.any { it.equalCustomModel(GoldenCristalItem) } }
                 .also {
                     val previousGoldenCrystalAround = GoldenCrystalAround
                     GoldenCrystalAround = it != null

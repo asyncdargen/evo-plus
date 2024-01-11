@@ -10,6 +10,7 @@ import ru.dargen.evoplus.feature.widget.WidgetBase
 import ru.dargen.evoplus.protocol.registry.BossType
 import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.format.asTextTime
+import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.sendCommand
 
@@ -30,8 +31,8 @@ object BossTimerWidget : WidgetBase {
                     space = 1.0
                     indent = v3()
 
-                    +item(type.displayItem) { scale = v3(.7, .7, .7) }
-                    +text("${type.displayName}§8: §f${remaining.asTextTime}")
+                    +item(type.displayItem) { scale = scale(.7, .7) }
+                    +text("${type.displayName}§8: §f${remaining.asTextTime}") { isShadowed = true }
 
                     leftClick { _, state ->
                         if (isHovered && state && !isWidgetEditor && BossTimerFeature.WidgetTeleport) {

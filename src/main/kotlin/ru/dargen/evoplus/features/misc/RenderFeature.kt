@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.features.game
+package ru.dargen.evoplus.features.misc
 
 import net.minecraft.item.Items
 import ru.dargen.evoplus.feature.Feature

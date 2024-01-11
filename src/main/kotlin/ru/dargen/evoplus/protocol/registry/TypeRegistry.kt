@@ -1,7 +1,6 @@
 package ru.dargen.evoplus.protocol.registry
 
 import pro.diamondworld.protocol.util.ProtocolSerializable
-import ru.dargen.evoplus.Logger
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import java.util.concurrent.ConcurrentHashMap
@@ -17,7 +16,6 @@ class TypeRegistry<K, V, E : TypeRegistry.TypeRegistryEntry<K>, P : ProtocolSeri
     init {
         listen(packetType) {
             val received = extractor(it).mapValues { (key, value) -> converter(value) }
-            Logger.info("Received ${javaClass.simpleName}: ${received.size}")
             putAll(received)
             update(received)
         }

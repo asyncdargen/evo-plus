@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-import ru.dargen.evoplus.features.game.RenderFeature;
+import ru.dargen.evoplus.features.misc.RenderFeature;
 
 @Mixin(LightmapTextureManager.class)
 public class LightmapTextureManagerMixin {
