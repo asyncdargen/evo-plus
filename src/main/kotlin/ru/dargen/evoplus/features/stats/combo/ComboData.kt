@@ -22,13 +22,6 @@ data class ComboData(
 
     fun fetch(blocks: ComboBlocks) {
         this.blocks = blocks.blocks
-
-        //tmp
-        if (this.blocks < 1000) {
-            booster = 1.0
-            nextBooster = 1.1
-            requiredBlocks = 1000
-        }
     }
 
 }
