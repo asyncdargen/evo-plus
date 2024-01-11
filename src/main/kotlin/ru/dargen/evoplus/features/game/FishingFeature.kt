@@ -23,7 +23,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
     val AutoFish by settings.boolean("Автоматическая удочка", true)
     val HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
     val HigherBitingNotify by settings.boolean("Уведомления о повышенном клёве", true)
-    val ShowFishExpInInventory by settings.boolean("Отображение опыта рыбы в интвентаре", true)
+    val ShowFishExpInInventory by settings.boolean("Отображение опыта рыбы в инвентаре", true)
 
     init {
         var fishHookTicks = 0
