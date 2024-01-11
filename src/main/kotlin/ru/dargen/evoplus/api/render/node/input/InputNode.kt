@@ -6,6 +6,7 @@ import net.minecraft.client.util.InputUtil
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.*
+import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.format.safeSlice
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.v3
@@ -84,7 +85,7 @@ class InputNode : RectangleNode() {
                     .coerceAtLeast(.0)
         }
         text.postRender { matrices, tickDelta ->
-            if (!focused || (System.currentTimeMillis() / 100) % 2 == 0L) return@postRender
+            if (!focused || (currentMillis / 100) % 2 == 0L) return@postRender
             val preCursorSize = TextRenderer.getWidth(contentBefore) * scale.x
             matrices.fill(
                 preCursorSize, -this@InputNode.size.y / 2,

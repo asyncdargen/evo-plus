@@ -18,11 +18,17 @@ fun itemOf(path: String) = Registries.ITEM.get(Identifier.of("minecraft", path.l
 fun itemStack(type: Item, block: ItemStack.() -> Unit = {}) = ItemStack(type).apply(block)
 
 fun customItem(type: Item, customModelData: Int, block: ItemStack.() -> Unit = {}) =
-    itemStack(type) { editNBT { putInt("CustomModelData", customModelData) } }.apply(block)
+    itemStack(type).apply { this.customModelData = customModelData }.apply(block)
 
 fun ItemStack.editNBT(block: NbtCompound.() -> Unit) = apply {
     nbt = orCreateNbt.apply(block)
 }
+
+var ItemStack.customModelData: Int?
+    get() = nbt?.getInt("CustomModelData")
+    set(value) {
+        if (value != null) editNBT { putInt("CustomModelData", value) }
+    }
 
 var ItemStack.displayName: Text?
     get() = name

@@ -70,7 +70,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
             if (PremiumTimers) it.timers
                 .filter { it.value > 6000 }
                 .mapKeys { BossType.valueOf(it.key)?.link ?: return@listen }
-                .mapValues { it.value + System.currentTimeMillis() }
+                .mapValues { it.value + currentMillis }
                 .mapKeys { it.key.id }
                 .let(Bosses::putAll)
         }
@@ -127,7 +127,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
         screen.screenHandler.stacks.forEach {
             val type = BossType.valueOfName(it.displayName?.string ?: return@forEach) ?: return@forEach
-            val timeText = ((Bosses[type.id] ?: return@forEach) - System.currentTimeMillis()).asTextTime
+            val timeText = ((Bosses[type.id] ?: return@forEach) - currentMillis).asTextTime
 
             val resetText = "§fВозрождение: §e$timeText".asText()
 
@@ -143,7 +143,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     private fun fillBossData() {
         val (type, additionTime) = fetchWorldBossData() ?: return
 
-        val spawnTime = System.currentTimeMillis() + additionTime
+        val spawnTime = currentMillis + additionTime
         val currentSpawnTime = Bosses[type.id] ?: 0
 
         if ((spawnTime - currentSpawnTime).absoluteValue < 13000) return

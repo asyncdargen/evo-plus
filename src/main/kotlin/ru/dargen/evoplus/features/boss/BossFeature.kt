@@ -16,6 +16,7 @@ import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.features.share.ShareFeature
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.protocol.registry.BossType
+import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.fromJson
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.sendCommand
@@ -33,7 +34,7 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
     }
 
     val NotifyCapture by settings.boolean("Уведомление о захватах боссов", true)
-    val FastTeleport by settings.boolean("Телепорт к скорому боссу", true)
+    val FastTeleport by settings.boolean("Телепорт к ближайшему боссу", true)
 
     init {
         FastBossTeleport.on { if (FastTeleport) { sendCommand("boss ${ComparedBosses.first().key.level}") } }
@@ -55,11 +56,11 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
         ShareFeature.create(
             "bosses", "Таймеры боссов",
-            { toJson(Bosses.mapValues { it.value - System.currentTimeMillis() }) }
+            { toJson(Bosses.mapValues { it.value - currentMillis }) }
         ) { nick, data ->
             val shared = fromJson<Map<String, Long>>(data)
                 .mapKeys { BossType.valueOf(it.key) ?: return@create }
-                .mapValues { it.value + System.currentTimeMillis() }
+                .mapValues { it.value + currentMillis }
 
             Notifies.showText(
                 "§6$nick §fотправил вам боссов §7(${shared.size}).",

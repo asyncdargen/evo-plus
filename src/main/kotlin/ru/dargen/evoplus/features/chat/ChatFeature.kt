@@ -10,6 +10,7 @@ import ru.dargen.evoplus.util.minecraft.uncolored
 object ChatFeature : Feature("chat", "Чат", Items.WRITABLE_BOOK) {
 
     var NoSpam by settings.boolean("Отключение спам-сообщений")
+    var CopyMessages by settings.boolean("Копировать сообщение (ПКМ)", true)
     var EmojiMenu by settings.boolean("Меню эмодзи", true)
 
     init {

@@ -13,7 +13,7 @@ import java.awt.Color
 object Tips {
 
     fun draw(
-        matrices: MatrixStack, vararg lines: String, position: Vector3 = MousePosition,
+        matrices: MatrixStack, vararg lines: String, position: Vector3 = MousePosition.apply { x += 5 },
         space: Double = 1.0, indent: Double = 2.5,
         color: Color = Colors.TransparentBlack,
         textColor: Color = Colors.White, shadow: Boolean = false

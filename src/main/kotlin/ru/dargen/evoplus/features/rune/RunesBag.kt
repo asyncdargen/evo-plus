@@ -69,9 +69,11 @@ object RunesBag {
                 matrices.translate(x, y, .0)
                 matrices.scale(scale, scale, scale)
 
-                RunesProperties.values.forEachIndexed { index, property ->
-                    matrices.drawText(property.toString(), v3(y = (index * height / scale).toDouble()), -1)
-                }
+                RunesProperties.values
+                    .filter { it.value != .0 }
+                    .forEachIndexed { index, property ->
+                        matrices.drawText(property.toString(), v3(y = (index * height / scale).toDouble()), -1)
+                    }
 
                 matrices.pop()
             }
