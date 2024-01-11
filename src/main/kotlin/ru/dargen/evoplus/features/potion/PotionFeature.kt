@@ -45,17 +45,14 @@ object PotionFeature : Feature("potion", "Зелья", customItem(Items.POTION, 
         on<InventoryClickEvent> {
             if (!RecipeWidget.enabled || button != 1) return@on
 
-            val screen = Client.currentScreen
-
-            if (screen !is GenericContainerScreen) return@on
+            val screen = CurrentScreen as? GenericContainerScreen ?: return@on
             val title = screen.title.string.uncolored()
 
             if (title != "Список зелий") return@on
 
-            val itemStack = Player?.currentScreenHandler?.cursorStack ?: return@on
+            val itemStack = CurrentScreenHandler?.getSlot(slot)?.stack ?: return@on
 
-            val stringifyLore = itemStack.lore
-                .map { it.string }
+            val stringifyLore = itemStack.lore.map { it.string }
 
             if (stringifyLore.none { "Рецепт" in it }) return@on
 
