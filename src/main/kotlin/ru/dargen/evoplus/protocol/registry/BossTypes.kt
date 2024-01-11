@@ -1,12 +1,11 @@
 package ru.dargen.evoplus.protocol.registry
 
-import net.minecraft.registry.Registries
-import net.minecraft.util.Identifier
 import pro.diamondworld.protocol.packet.boss.BossTypes
 import ru.dargen.evoplus.util.adapter
 import ru.dargen.evoplus.util.collection.concurrentHashMapOf
 import ru.dargen.evoplus.util.gson
 import ru.dargen.evoplus.util.minecraft.customItem
+import ru.dargen.evoplus.util.minecraft.itemOf
 import ru.dargen.evoplus.util.minecraft.uncolored
 
 
@@ -21,8 +20,7 @@ data class BossType(val data: BossTypes.BossType) : TypeRegistry.TypeRegistryEnt
     val displayLevel = "§8[§6$level§8]"
     val displayName = "§6$name $displayLevel"
 
-    val displayItem =
-        customItem(Registries.ITEM.get(Identifier.of("minecraft", data.material.lowercase())), data.customModelData)
+    val displayItem = customItem(itemOf(data.material), data.customModelData)
 
     override fun compareTo(other: BossType) = compareValues(level, other.level)
 

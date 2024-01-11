@@ -52,7 +52,7 @@ class EnumRegistry<V, E : TypeRegistry.TypeRegistryEntry<String>, P : ProtocolSe
     converter: (V) -> E
 ) : TypeRegistry<String, V, E, P>(packetType, extractor, converter) {
 
-    fun valueOf(name: String) = get(name.lowercase())
+    fun valueOf(name: String) = get(name)
 
 }
 
