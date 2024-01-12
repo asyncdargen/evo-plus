@@ -54,7 +54,7 @@ object ComboWidget : WidgetBase {
         } else {
             Text.lines = listOf(
                 "Блоки: ${data.isCompleted.color + "${data.blocks}/${data.requiredBlocks}"}",
-                "Бустер: §ax${data.booster.fix(1)} §8-> §7x${data.nextBooster.fix(1)}"
+                "Бустер: §ax${data.booster.fix(2)} §8-> §7x${data.nextBooster.fix(2)}"
             )
             ProgressBar.progress = data.progress
         }
