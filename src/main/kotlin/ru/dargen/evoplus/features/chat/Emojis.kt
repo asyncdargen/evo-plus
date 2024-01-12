@@ -37,7 +37,11 @@ object Emojis {
             indent = v3(1.5, 1.5)
             space = 1.5
 
-            tick { enabled = CurrentScreen?.javaClass?.name?.contains("Chat") == true && ChatFeature.EmojiMenu }
+            tick {
+                val screenName = CurrentScreen?.javaClass?.name ?: return@tick
+                val isChatScreen = "class_408" in screenName || "Chat" in screenName
+                enabled = isChatScreen && ChatFeature.EmojiMenu
+            }
 
             EmojiMap.toList().chunked(9).forEach {
                 +hbox {
