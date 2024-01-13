@@ -3,6 +3,7 @@ package ru.dargen.evoplus.features.stats
 import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.combo.Combo
 import pro.diamondworld.protocol.packet.combo.ComboBlocks
+import pro.diamondworld.protocol.packet.game.GameEvent
 import pro.diamondworld.protocol.packet.game.LevelInfo
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.box.hbox
@@ -45,6 +46,8 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
         }
     }
 
+    var CurrentEvent = GameEvent.EventType.NONE
+
     init {
         screen.baseElement("Сбросить счетчик блоков") { button("Сбросить") { on { BlocksCount = Statistic.blocks } } }
 
@@ -63,6 +66,9 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
 
             if (BlocksCount == 0) BlocksCount = it.blocks
             BlocksCounterText.text = "${it.blocks - BlocksCount}"
+        }
+        listen<GameEvent> {
+            CurrentEvent = it.type
         }
     }
 

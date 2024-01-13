@@ -2,6 +2,7 @@ package ru.dargen.evoplus.util
 
 import net.fabricmc.loader.api.FabricLoader
 import ru.dargen.crowbar.Accessors
+import ru.dargen.evoplus.EvoPlus
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.context.screen
@@ -9,6 +10,7 @@ import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.text
+import ru.dargen.evoplus.util.common.LazyExpiringReference
 import ru.dargen.evoplus.util.math.v3
 import java.awt.Desktop
 import java.awt.GraphicsEnvironment
@@ -19,6 +21,7 @@ import java.net.URL
 import java.net.URLClassLoader
 import java.nio.channels.Channels
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 import kotlin.io.path.deleteIfExists
 import kotlin.system.exitProcess
@@ -30,15 +33,13 @@ object Updater {
     private const val PROJECT_PROPERTIES_URL =
         "https://raw.githubusercontent.com/asyncdargen/evo-plus/kotlin/gradle.properties"
 
-    val ModVersion by lazy {
-        FabricLoader.getInstance().getModContainer("evo-plus").get().metadata.version.friendlyString
-    }
-    val LatestVersion by lazy {
+    val ModVersion by lazy { EvoPlus.ModContainer.metadata.version.friendlyString }
+    val LatestVersion by LazyExpiringReference(2, TimeUnit.MINUTES) {
         Properties().apply { load(URL(PROJECT_PROPERTIES_URL).openStream()) }.getProperty("mod_version")
     }
 
     val IsDevEnvironment = java.lang.Boolean.getBoolean("evo-plus.dev")
-    val Outdated by lazy { !IsDevEnvironment && ModVersion < LatestVersion }
+    val Outdated get() = !IsDevEnvironment && ModVersion < LatestVersion
 
     val ModFiles = FabricLoader.getInstance().getModContainer("evo-plus").get().origin.paths
 
@@ -47,6 +48,7 @@ object Updater {
     }
 
     fun update() = screen {
+        //fix awt GraphicsEnvironment
         Accessors.unsafe().openField<Boolean>(GraphicsEnvironment::class.java, "headless").staticValue = false
 
         color = Colors.TransparentBlack
@@ -101,7 +103,6 @@ object Updater {
                 }
             }
         }
-
     }.open()
 
 }
