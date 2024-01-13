@@ -3,7 +3,6 @@ package ru.dargen.evoplus.features.boss.timer
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.boss.BossTimers
-import pro.diamondworld.protocol.packet.game.GameEvent.EventType
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.node.input.button
@@ -13,7 +12,6 @@ import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MaxLevel
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MinLevel
 import ru.dargen.evoplus.features.misc.Notifies
-import ru.dargen.evoplus.features.stats.StatisticFeature.CurrentEvent
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.protocol.registry.BossLink
 import ru.dargen.evoplus.protocol.registry.BossType
@@ -52,10 +50,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     val ShortTimeFormat by settings.boolean("Сокращенный формат времени")
 
     val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..120 step 5).toSelector()) { "$it сек." }
-    val PostSpawnShowTime by settings.selector(
-        "Сохранять в таймере после спавне",
-        (0..120 step 5).toSelector()
-    ) { "$it сек." }
+    val PostSpawnShowTime by settings.selector("Сохранять в таймере после спавне", (0..120 step 5).toSelector()) { "$it сек." }
     val InlineMenuTime by settings.boolean("Отображать время до спавна в меню", true)
 
     val SpawnMessage by settings.boolean("Сообщение о спавне", true)
@@ -78,8 +73,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         }
         listen<BossTimers> {
             if (PremiumTimers) it.timers
-                .mapKeys { BossType.valueOf(it.key) ?: return@listen }
-                .mapValues { (_, time) -> (if (CurrentEvent == EventType.MYTHICAL_EVENT) (time / 1.5).toLong() else time) + currentMillis }
+                .mapKeys { BossType.valueOf(it.key)?.link ?: return@listen }
+                .mapValues { it.value + currentMillis }
                 .mapKeys { it.key.id }
                 .let(Bosses::putAll)
         }
@@ -182,7 +177,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         ?.run {
             val type = BossType.valueOfName(getOrNull(0) ?: return@run null) ?: return@run null
             val delay = getOrNull(1)?.replace("۞", "")?.fromTextTime
-                ?.let { if (CurrentEvent == EventType.MYTHICAL_EVENT) (it / 1.5).toLong() else it }
+                ?.let { if ('۞' in get(1)) (it / 1.5).toLong() else it }
                 ?.takeIf { it > 6000 }
                 ?: return@run null
 
