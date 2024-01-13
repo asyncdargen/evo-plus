@@ -7,7 +7,7 @@ private val Indexes = intArrayOf(2, 0, 1, 1, 1, 2)
 val Boolean.color get() = if (this) "§a" else "§c"
 
 val FixDoublePattern = "\\.?0?0?0?0\$".toRegex()
-fun String.reduceFloatingZero() = replace(FixDoublePattern, "")
+fun String.reduceFloatingZero() = if ('.' in this) replace(FixDoublePattern, "") else this
 fun Double.fix(floating: Int = 2) = "%.${floating}f".format(this)
     .replace(",", ".")
     .reduceFloatingZero()

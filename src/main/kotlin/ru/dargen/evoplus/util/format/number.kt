@@ -22,7 +22,7 @@ fun Double.format(
     pattern: String = "###.##",
     withSymbols: Boolean = true
 ) = formats.computeIfAbsent(pattern, ::DecimalFormat).run {
-    if (!withSymbols) return@run format(this@format)
+    if (!withSymbols) return@run format(this@format).reduceFloatingZero()
 
     val divider = FormatDividers.keys.run { lastOrNull { this@format / it >= 1 } ?: first() }
     return@run "${format(this@format / divider).reduceFloatingZero()}${FormatDividers[divider]}"
