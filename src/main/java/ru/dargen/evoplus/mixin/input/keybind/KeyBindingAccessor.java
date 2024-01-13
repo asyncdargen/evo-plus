@@ -18,4 +18,10 @@ public interface KeyBindingAccessor {
     @Accessor("boundKey")
     InputUtil.Key getBoundKey();
 
+    @Accessor("timesPressed")
+    int getTimesPressed();
+
+    @Accessor("timesPressed")
+    void setTimesPressed(int times);
+
 }

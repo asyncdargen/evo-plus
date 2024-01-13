@@ -1,7 +1,6 @@
 package ru.dargen.evoplus.features.rune
 
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
-import net.minecraft.client.util.InputUtil
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.text.Text
@@ -10,6 +9,8 @@ import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent
 import ru.dargen.evoplus.api.event.inventory.InventorySlotUpdateEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.ScreenRenderEvent
+import ru.dargen.evoplus.api.keybind.Keybinds
+import ru.dargen.evoplus.api.keybind.boundKey
 import ru.dargen.evoplus.api.schduler.schedule
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
@@ -32,12 +33,10 @@ object RunesBag {
         on<KeyTypeEvent> {
             if (RuneFeature.RunesSetSwitch && CurrentScreen?.title?.string?.contains(MENU_NAME) == true) {
                 var index = SelectedSet.id
-                if (key in InputUtil.GLFW_KEY_1..InputUtil.GLFW_KEY_7) index = key - InputUtil.GLFW_KEY_1
-                else index += when (key) { //shift
-                    InputUtil.GLFW_KEY_A -> -1
-                    InputUtil.GLFW_KEY_D -> 1
-                    else -> return@on
-                }
+                if (Keybinds.SelectRuneSetBinds.any { it.boundKey.code == key }) {
+                    index = Keybinds.SelectRuneSetBinds.indexOfFirst { it.boundKey.code == key }
+                } else index += (if (Keybinds.MoveRuneSetLeft.boundKey.code == key) -1
+                else if (Keybinds.MoveRuneSetRight.boundKey.code == key) 1 else return@on)
 
                 when {
                     index < 0 -> index = RuneSetsSlots.size - 1
