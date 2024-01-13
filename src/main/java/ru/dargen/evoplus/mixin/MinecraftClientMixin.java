@@ -104,12 +104,12 @@ public abstract class MinecraftClientMixin implements MinecraftClientExtension {
 
     @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
     private void setScreen(Screen screen, CallbackInfo ci) {
-        if (currentScreen != null && !EventBus.INSTANCE.fireResult(new ScreenCloseEvent(screen))) {
+        if (currentScreen != null && !EventBus.INSTANCE.fireResult(new ScreenCloseEvent(currentScreen, screen))) {
             ci.cancel();
             return;
         }
 
-        if (!EventBus.INSTANCE.fireResult(new ScreenOpenEvent(screen))) {
+        if (screen != null && !EventBus.INSTANCE.fireResult(new ScreenOpenEvent(screen, currentScreen))) {
             ci.cancel();
         }
     }
