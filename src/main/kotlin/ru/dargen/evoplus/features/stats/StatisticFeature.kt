@@ -72,6 +72,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
             ComboTimerPattern.find(text.uncolored())?.let {
                 val remain = it.groupValues[1].toIntOrNull() ?: return@on
                 ComboData.remain = remain.toLong()
+                ComboWidget.update(ComboData)
             }
         }
 
