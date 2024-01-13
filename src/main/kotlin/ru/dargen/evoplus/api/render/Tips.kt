@@ -2,6 +2,7 @@ package ru.dargen.evoplus.api.render
 
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.util.math.MatrixStack
+import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.minecraft.MousePosition
 import ru.dargen.evoplus.util.render.TextRenderer
@@ -20,6 +21,14 @@ object Tips {
     ) {
         val width = lines.maxOf(TextRenderer::getWidth) + indent * 2
         val height = lines.size * TextRenderer.fontHeight + (lines.size - 1) * space + indent * 2
+
+        if (width + position.x > Overlay.WindowSize.x) {
+            position.x = (Overlay.WindowSize.x - width) - 1
+        }
+        if (height + position.y > Overlay.WindowSize.y) {
+            position.y = (Overlay.WindowSize.y - height) - 1
+        }
+
 
         matrices.push()
         matrices.loadIdentity()
