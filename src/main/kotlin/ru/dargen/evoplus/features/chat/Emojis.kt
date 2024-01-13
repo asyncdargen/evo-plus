@@ -4,6 +4,7 @@ import ru.dargen.evoplus.api.event.chat.ChatSendEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
+import ru.dargen.evoplus.api.render.Tips
 import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.hbox
@@ -48,10 +49,13 @@ object Emojis {
                     indent = v3()
                     space = 1.5
 
-                    it.forEach { (emoji, key) ->
+                    it.forEach { (emoji, data) ->
                         +rectangle {
                             size = v3(11.0, 11.0)
                             color = Colors.TransparentBlack
+                            postRender { matrices, tickDelta ->
+                                if (isHovered) Tips.draw(matrices, data.name)
+                            }
                             hover { _, state ->
                                 color = if (isHovered && state) Colors.TransparentWhite else Colors.TransparentBlack
                             }
