@@ -17,6 +17,7 @@ import java.net.URL
 
 object Emojis {
 
+    private val ChatClassNamePattern = "(class_408|Chat)".toRegex()
     /*emoji to data*/
     val EmojiMap =
         URL("https://docs.google.com/spreadsheets/d/12pLMaVhot71LSz2Trv7ykm90IgRaw75IBM4Mb0yQTps/export?format=csv&id=12pLMaVhot71LSz2Trv7ykm90IgRaw75IBM4Mb0yQTps")
@@ -39,8 +40,7 @@ object Emojis {
             space = 1.5
 
             tick {
-                val screenName = CurrentScreen?.javaClass?.name ?: return@tick
-                val isChatScreen = "class_408" in screenName || "Chat" in screenName
+                val isChatScreen = ChatClassNamePattern.containsMatchIn(CurrentScreen?.javaClass?.name?: "")
                 enabled = isChatScreen && ChatFeature.EmojiMenu
             }
 
