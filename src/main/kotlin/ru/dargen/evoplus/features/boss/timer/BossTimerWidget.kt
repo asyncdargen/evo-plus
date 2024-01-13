@@ -16,6 +16,7 @@ import ru.dargen.evoplus.util.format.asTextTime
 import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.sendCommand
+import kotlin.math.absoluteValue
 
 object BossTimerWidget : WidgetBase {
 
@@ -34,11 +35,14 @@ object BossTimerWidget : WidgetBase {
                     space = 1.0
                     indent = v3()
 
+                    val spawned = remaining < 0
+                    val remaining = remaining.absoluteValue
+
                     +item(type.displayItem) { scale = scale(.7, .7) }
                     +text(
                         "${
                             if (ShortName) type.displayLevel else type.displayName
-                        }§8: §f${
+                        }§8: ${if (spawned) "§cуже " else "§f"}${
                             if (ShortTimeFormat) remaining.asShortTextTime else remaining.asTextTime
                         }"
                     ) { isShadowed = true }

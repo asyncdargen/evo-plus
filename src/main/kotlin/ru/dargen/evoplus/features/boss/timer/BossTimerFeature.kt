@@ -27,6 +27,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     private val BossMenuPattern = "[\uE910\uE911]".toRegex()
 
     val AlertedBosses = mutableSetOf<String>()
+    val PreAlertedBosses = mutableSetOf<String>()
     val Bosses: MutableMap<String, Long> by config("bosses", hashMapOf())
     val ComparedBosses
         get() = Bosses
@@ -49,6 +50,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     val ShortTimeFormat by settings.boolean("Сокращенный формат времени")
 
     val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..120 step 5).toSelector()) { "$it сек." }
+    val PostSpawnShowTime by settings.selector("Сохранять в таймере после спавне", (0..120 step 5).toSelector()) { "$it сек." }
     val InlineMenuTime by settings.boolean("Отображать время до спавна в меню", true)
 
     val SpawnMessage by settings.boolean("Сообщение о спавне", true)
@@ -71,7 +73,6 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         }
         listen<BossTimers> {
             if (PremiumTimers) it.timers
-                .filter { it.value > 6000 }
                 .mapKeys { BossType.valueOf(it.key)?.link ?: return@listen }
                 .mapValues { it.value + currentMillis }
                 .mapKeys { it.key.id }
@@ -95,12 +96,12 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
             if (type.inLevelBounds
                 && PreSpawnAlertTime > 0
-                && type.id !in AlertedBosses
+                && type.id !in PreAlertedBosses
                 && remainTime / 1000 == PreSpawnAlertTime.toLong()
             ) {
                 val timeText = remainTime.asTextTime
 
-                AlertedBosses.add(type.id)
+                PreAlertedBosses.add(type.id)
 
                 if (type.inLevelBounds) {
                     if (PreSpawnMessage) message("§aБосс §6$displayName §aвозродится через §6$timeText", type)
@@ -109,11 +110,16 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
                 }
             }
 
-            if (remainTime < 0) {
-                Bosses.remove(type.id)
-                AlertedBosses.remove(type.id)
+            if (remainTime <= 0) {
+                if (remainTime <= -PostSpawnShowTime * 1000) {
+                    Bosses.remove(type.id)
+                    PreAlertedBosses.remove(type.id)
+                    AlertedBosses.remove(type.id)
+                }
 
-                if (!type.inLevelBounds || remainTime !in -2000..0) return@forEach
+                if (!type.inLevelBounds || type.id in AlertedBosses || remainTime !in -2000..0) return@forEach
+
+                AlertedBosses.add(type.id)
                 if (SpawnMessage) message("§aБосс §6$displayName §aвозродился.", type)
                 if (SpawnClanMessage) sendClanMessage("§aБосс $displayName §aвозродился.")
                 if (SpawnNotify) notify(type, "Босс §6$displayName §fвозродился")

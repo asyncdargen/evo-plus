@@ -33,12 +33,12 @@ object EvoPlus : ModInitializer {
 
         Features
 
-        listen<StatisticInfo> {
-            printMessage(it.data.entries.joinToString("\n") { (key, value) -> "$key: $value"})
-        }
-        listen<ClanInfo> {
-            printMessage(it.data.entries.joinToString("\n") { (key, value) -> "$key: $value"})
-        }
+//        listen<StatisticInfo> {
+//            printMessage(it.data.entries.joinToString("\n") { (key, value) -> "$key: $value"})
+//        }
+//        listen<ClanInfo> {
+//            printMessage(it.data.entries.joinToString("\n") { (key, value) -> "$key: $value"})
+//        }
     }
 
 }

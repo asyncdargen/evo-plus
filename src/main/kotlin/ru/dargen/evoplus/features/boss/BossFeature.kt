@@ -37,7 +37,9 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
     val NearTeleport by settings.boolean("Телепорт к ближайшему боссу")
 
     init {
-        FastBossTeleport.on { if (NearTeleport) { sendCommand("boss ${ComparedBosses.first().key.level}") } }
+        FastBossTeleport.on {
+            if (NearTeleport) sendCommand("boss ${ComparedBosses.firstOrNull { it.value > currentMillis }?.key?.level}")
+        }
 
         listen<BossDamage> {
             val type = BossType.valueOf(it.id) ?: return@listen
