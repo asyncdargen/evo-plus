@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.mixin;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.util.Window;
@@ -21,6 +22,8 @@ import ru.dargen.evoplus.api.event.game.MinecraftLoadedEvent;
 import ru.dargen.evoplus.api.event.game.PostTickEvent;
 import ru.dargen.evoplus.api.event.game.PreTickEvent;
 import ru.dargen.evoplus.api.event.interact.InteractEvent;
+import ru.dargen.evoplus.api.event.screen.ScreenCloseEvent;
+import ru.dargen.evoplus.api.event.screen.ScreenOpenEvent;
 import ru.dargen.evoplus.api.event.window.WindowResizeEvent;
 import ru.dargen.evoplus.features.misc.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.MinecraftKt;
@@ -28,17 +31,28 @@ import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 @Mixin(MinecraftClient.class)
 public abstract class MinecraftClientMixin implements MinecraftClientExtension {
 
-    @Unique private boolean doItemUseCalled;
-    @Unique private boolean doAttackCalled;
-    @Unique private boolean rightClick;
-    @Unique private boolean leftClick;
+    @Unique
+    private boolean doItemUseCalled;
+    @Unique
+    private boolean doAttackCalled;
+    @Unique
+    private boolean rightClick;
+    @Unique
+    private boolean leftClick;
 
-    @Shadow protected abstract void doItemUse();
-    @Shadow protected abstract boolean doAttack();
+    @Shadow
+    protected abstract void doItemUse();
+
+    @Shadow
+    protected abstract boolean doAttack();
 
     @Shadow
     @Nullable
     public ClientPlayerInteractionManager interactionManager;
+
+    @Shadow
+    @Nullable
+    public Screen currentScreen;
 
     @Inject(method = "onResolutionChanged", at = @At("RETURN"))
     private void onResolutionChanged(CallbackInfo ci) {
@@ -86,6 +100,18 @@ public abstract class MinecraftClientMixin implements MinecraftClientExtension {
     private void doAttack(CallbackInfoReturnable<Boolean> cir) {
         EventBus.INSTANCE.fire(new InteractEvent(false));
         doAttackCalled = true;
+    }
+
+    @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
+    private void setScreen(Screen screen, CallbackInfo ci) {
+        if (currentScreen != null && !EventBus.INSTANCE.fireResult(new ScreenCloseEvent(screen))) {
+            ci.cancel();
+            return;
+        }
+
+        if (!EventBus.INSTANCE.fireResult(new ScreenOpenEvent(screen))) {
+            ci.cancel();
+        }
     }
 
     @Override
