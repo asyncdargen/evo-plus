@@ -14,6 +14,7 @@ import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.features.stats.combo.ComboData
 import ru.dargen.evoplus.features.stats.combo.ComboWidget
 import ru.dargen.evoplus.features.stats.level.LevelWidget
@@ -33,6 +34,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
 
     val LevelRequireWidget by widgets.widget("Требования на уровень", "level-require", widget = LevelWidget)
     val Statistic = Statistic()
+    val NotifyCompleteLevelRequire by settings.boolean("Увдомлять при выполнении требований", true)
 
     var BlocksCount = 0
         set(value) {
@@ -77,8 +79,16 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
         }
 
         listen<LevelInfo> {
+            val previousCompleted = Statistic.blocks >= Statistic.nextLevel.blocks
+                    && Statistic.money >= Statistic.nextLevel.money
             Statistic.fetch(it)
             LevelWidget.update(Statistic)
+            val isCompleted = Statistic.blocks >= Statistic.nextLevel.blocks
+                    && Statistic.money >= Statistic.nextLevel.money
+
+            if (NotifyCompleteLevelRequire && isCompleted && !previousCompleted) {
+                Notifies.showText("§aВы можете повысить уровень!")
+            }
 
             if (BlocksCount == 0) BlocksCount = it.blocks
             BlocksCounterText.text = "${it.blocks - BlocksCount}"
