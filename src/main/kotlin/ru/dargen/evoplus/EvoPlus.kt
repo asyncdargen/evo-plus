@@ -17,6 +17,7 @@ import ru.dargen.evoplus.util.Updater
 import ru.dargen.evoplus.util.minecraft.Client
 import java.util.concurrent.TimeUnit
 
+
 val ModLabel = "§f§lEvo§6§lPlus"
 
 val Logger = java.util.logging.Logger.getLogger("EvoPlus")
@@ -39,7 +40,6 @@ object EvoPlus : ModInitializer {
         Features
 
         scheduleUpdater()
-
 //        listen<StatisticInfo> {
 //            printMessage(it.data.entries.joinToString("\n") { (key, value) -> "$key: $value"})
 //        }

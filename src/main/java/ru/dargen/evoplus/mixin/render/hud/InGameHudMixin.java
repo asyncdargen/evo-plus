@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.mixin.render.screen;
+package ru.dargen.evoplus.mixin.render.hud;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;

@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.mixin.render.screen;
+package ru.dargen.evoplus.mixin.render.hud;
 
 import lombok.val;
 import net.minecraft.client.gui.hud.ChatHud;
@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.dargen.evoplus.features.chat.ChatFeature;
+import ru.dargen.evoplus.mixin.render.hud.ChatHudAccessor;
 import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 import ru.dargen.evoplus.util.mixin.ChatCopyUtil;
 
@@ -21,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(ChatScreen.class)
-public abstract class ChatScreenMixin extends Screen {
-    protected ChatScreenMixin(Text title) {
+public abstract class ChatHudMixin extends Screen {
+    protected ChatHudMixin(Text title) {
         super(title);
     }
 

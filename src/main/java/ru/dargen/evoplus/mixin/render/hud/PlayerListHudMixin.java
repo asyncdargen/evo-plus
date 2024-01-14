@@ -1,14 +1,17 @@
-package ru.dargen.evoplus.mixin.render.screen;
+package ru.dargen.evoplus.mixin.render.hud;
 
 import lombok.val;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.PlayerListHud;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.dargen.evoplus.features.misc.MiscFeature;
 import ru.dargen.evoplus.features.potion.PotionFeature;
 import ru.dargen.evoplus.protocol.EvoPlusProtocol;
@@ -49,6 +52,13 @@ public abstract class PlayerListHudMixin {
 
         text = Text.of(stringBuilder.toString());
         return instance.wrapLines(text, width);
+    }
+
+    @Inject(method = "getPlayerName", at = @At("RETURN"), cancellable = true)
+    private void getPlayerName(PlayerListEntry entry, CallbackInfoReturnable<Text> cir) {
+//        if (entry.getProfile().getProperties().containsKey("evo_plus")) {
+            cir.setReturnValue(Text.literal("EP ").append(cir.getReturnValue()));
+//        }
     }
 
 }
