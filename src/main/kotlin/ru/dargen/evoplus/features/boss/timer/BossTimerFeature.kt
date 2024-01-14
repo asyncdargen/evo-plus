@@ -49,8 +49,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     val ShortName by settings.boolean("Сокращение имени босса")
     val ShortTimeFormat by settings.boolean("Сокращенный формат времени")
 
-    val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..120 step 5).toSelector()) { "$it сек." }
-    val PostSpawnShowTime by settings.selector("Сохранять в таймере после спавне", (0..120 step 5).toSelector()) { "$it сек." }
+    val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..360 step 5).toSelector()) { "$it сек." }
+    val PostSpawnShowTime by settings.selector("Сохранять в таймере после спавне", (0..360 step 5).toSelector()) { "$it сек." }
     val InlineMenuTime by settings.boolean("Отображать время до спавна в меню", true)
 
     val SpawnMessage by settings.boolean("Сообщение о спавне", true)
