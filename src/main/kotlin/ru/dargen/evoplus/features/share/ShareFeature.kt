@@ -13,7 +13,7 @@ object ShareFeature : Feature("share", "Поделиться", Items.SCULK_SENSO
     val OutgoingSharePattern = "^ЛС \\| Я »(?:| .) \\w+: evoplus:\\w+:\\w+\$".toRegex()
     val IncomingSharePattern = "^ЛС \\|(?:| .) (\\w+) » Я: evoplus:(\\w+):(\\w+)\$".toRegex()
 
-    val ClanSharePattern = "^\\[Клан] (\\w+) \\[.*]: evoplus:(\\w+):(\\w+)\$".toRegex()
+    val ClanSharePattern = "^\\[Клан] (?:.+ )?(\\w+) \\[.*]: evoplus:(\\w+):(\\w+)\$".toRegex()
 
     init {
         on<ChatReceiveEvent> {

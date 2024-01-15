@@ -8,6 +8,7 @@ import ru.dargen.evoplus.api.keybind.Keybinds.MenuKey
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.config.JsonConfig
+import ru.dargen.evoplus.features.alchemy.AlchemyFeature
 import ru.dargen.evoplus.features.boss.BossFeature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature
 import ru.dargen.evoplus.features.chat.ChatFeature
@@ -62,6 +63,7 @@ data object Features {
         BossFeature.register()
         StaffFeature.register()
         RuneFeature.register()
+        AlchemyFeature.register()
         PotionFeature.register()
         StatisticFeature.register()
         ChatFeature.register()
