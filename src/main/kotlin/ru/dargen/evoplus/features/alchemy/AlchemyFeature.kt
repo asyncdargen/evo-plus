@@ -48,10 +48,6 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
         "Задержка перед оповещением при варке по закреп. рецепту (мс)",
         (100..2000).toSelector()
     )
-    val BrewingAlertDisappears by settings.selector(
-        "Исчезновение оповещения при варке по закреп. рецепту (мс)",
-        (250..1000).toSelector()
-    )
     val SoundAlert by settings.boolean("Звук оповещения")
 
     init {
@@ -100,33 +96,6 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
             AlertText.lines = listOf("§c$nearestAlert")
 
             if (SoundAlert) repeat (5) { Player?.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f) }
-        }
-
-        on<BossBarRenderEvent> {
-            if (isAlertRendered) return@on
-
-            val title = bossBar.name.string.uncolored()
-            val time = alchemyTimePattern.find(title)
-                ?.groupValues
-                ?.getOrNull(1)
-                ?.toDoubleOrNull() ?: return@on
-
-            val nearestAlert = PotionRecipe?.getNearestAlert(BrewingAlertDelay / 1000.0, time) ?: return@on
-
-            isAlertRendered = true
-
-            val text = +text("§c$nearestAlert") {
-                align = Relative.CenterTop
-                origin = Relative.CenterTop
-                scale = v3(3.5, 3.5, 3.5)
-
-                translation.y += 100
-                if (SoundAlert) repeat (5) { Player?.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f) }
-            }
-            schedule(BrewingAlertDisappears, TimeUnit.MILLISECONDS) {
-                -text
-                isAlertRendered = false
-            }
         }
     }
 }
