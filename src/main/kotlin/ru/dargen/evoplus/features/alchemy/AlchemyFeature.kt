@@ -11,8 +11,11 @@ import ru.dargen.evoplus.api.render.context.Overlay.unaryMinus
 import ru.dargen.evoplus.api.render.context.Overlay.unaryPlus
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.api.schduler.schedule
+import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.alchemy.recipe.PotionRecipe
+import ru.dargen.evoplus.mixin.render.hud.BossBarHudAccessor
+import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
 import ru.dargen.evoplus.util.selector.toSelector
@@ -31,6 +34,15 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
         origin = Relative.LeftCenter
 
         +RecipeText
+    }
+    val AlertText = +text {
+        enabled = false
+
+        align = Relative.CenterTop
+        origin = Relative.CenterTop
+        scale = v3(3.5, 3.5, 3.5)
+
+        translation.y += 100
     }
     val BrewingAlertDelay by settings.selector(
         "Задержка перед оповещением при варке по закреп. рецепту (мс)",
@@ -66,6 +78,28 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
                     RecipeText.lines = listOf("§a${itemStack.name.string}:", *it.toTypedArray())
                     PotionRecipe = PotionRecipe(it.drop(1).dropLast(1))
                 }
+        }
+
+        scheduleEvery(period = 10) {
+            val title = Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
+                ?.firstOrNull()
+                ?.name
+                ?.string
+                ?.uncolored() ?: return@scheduleEvery
+            val time = alchemyTimePattern.find(title)
+                ?.groupValues
+                ?.getOrNull(1)
+                ?.toDoubleOrNull() ?: return@scheduleEvery
+
+            val nearestAlert = PotionRecipe?.getNearestAlert(BrewingAlertDelay / 1000.0, time) ?: run {
+                AlertText.enabled = false
+                return@scheduleEvery
+            }
+
+            AlertText.enabled = true
+            AlertText.lines = listOf("§c$nearestAlert")
+
+            if (SoundAlert) repeat (5) { Player?.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f) }
         }
 
         on<BossBarRenderEvent> {
