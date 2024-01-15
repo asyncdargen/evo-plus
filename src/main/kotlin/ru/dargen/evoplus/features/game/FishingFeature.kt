@@ -18,7 +18,6 @@ import ru.dargen.evoplus.util.selector.toSelector
 object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) {
 
     val PetExpPattern = "^Опыта дает питомцу: (\\d+)\$".toRegex()
-    val HigherBitingPattern = "^На локации \"([\\S\\s]+)\" повышенный клёв!\$".toRegex()
 
     val AutoFish by settings.boolean("Автоматическая удочка", true)
     val HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
@@ -35,12 +34,6 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
                     InteractionManager?.interactItem(Player!!, Hand.MAIN_HAND)
                 }
             } else fishHookTicks = 0
-        }
-
-        on<ChatReceiveEvent> {
-            if (HigherBitingNotify) HigherBitingPattern.find(text.uncolored())?.run {
-                Notifies.showText("На локации §6${groupValues[1]}", "повышенный клёв.")
-            }
         }
 
         on<ScreenRenderEvent.Post> {
