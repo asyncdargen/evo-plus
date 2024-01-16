@@ -13,14 +13,12 @@ import ru.dargen.evoplus.api.event.EventBus;
 import ru.dargen.evoplus.api.event.entity.EntityRemoveEvent;
 import ru.dargen.evoplus.api.event.entity.EntitySpawnEvent;
 
-import java.util.Objects;
-
 @Mixin(ClientWorld.class)
 public abstract class ClientWorldMixin {
 
     @Shadow @Nullable public abstract Entity getEntityById(int id);
 
-    @Inject(at = @At("TAIL"), method = "addEntityPrivate", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "addEntityPrivate", cancellable = true)
     private void addEntity(int id, Entity entity, CallbackInfo ci) {
         if (!EventBus.INSTANCE.fireResult(new EntitySpawnEvent(entity))) ci.cancel();
     }
