@@ -1,5 +1,6 @@
 package ru.dargen.evoplus.util.math
 
+import net.minecraft.util.math.Vec3d
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import kotlin.math.absoluteValue
 import kotlin.math.max
@@ -11,6 +12,9 @@ fun scale(x: Double = 1.0, y: Double = 1.0, z: Double = 1.0) = v3(x, y, z)
 fun v3(x: Double = .0, y: Double = .0, z: Double = .0) = Vector3(x, y, z)
 
 val Number.v3 get() = Vector3(toDouble())
+
+val Vec3d.asV3 get() = v3(x, y, z)
+
 
 @KotlinOpens
 

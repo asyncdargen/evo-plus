@@ -14,7 +14,8 @@ data object World : RenderContext() {
     lateinit var Camera: Camera
     lateinit var VertexConsumers: Immediate
 
-    override var scale = v3(.025, .025, .025)
+//    override var rotation = v3(y = 180.0).radians()
+    override var scale = v3(-.025, -.025, .025)
     override var translationScale = v3(1.0, 1.0, 1.0) / scale
 
     override fun registerRenderHandlers() {

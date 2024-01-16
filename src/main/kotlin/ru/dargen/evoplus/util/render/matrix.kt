@@ -12,8 +12,8 @@ val ItemRenderer get() = Client.itemRenderer
 val Tesselator = Tessellator.getInstance()
 lateinit var MatrixStack: MatrixStack
 
-private val DefaultScale = v3(1.0, 1.0, 1.0)
-private val ZeroPosition = v3()
+val DefaultScale = v3(1.0, 1.0, 1.0)
+ val ZeroPosition = v3()
 
 val MatrixStack.positionMatrix get() = peek().positionMatrix
 
@@ -26,8 +26,8 @@ fun MatrixStack.scale(scale: Vector3 = DefaultScale) {
 }
 
 fun MatrixStack.rotate(rotation: Vector3) = with(peek()) {
-    positionMatrix.rotate(rotation.x.toFloat(), 1f, 0f, 0f) //yaw
-    positionMatrix.rotate(rotation.y.toFloat(), 0f, 1f, 0f) //pitch
+    positionMatrix.rotate(rotation.y.toFloat(), 0f, 1f, 0f) //yaw
+    positionMatrix.rotate(rotation.x.toFloat(), 1f, 0f, 0f) //pitch
     positionMatrix.rotate(rotation.z.toFloat(), 0F, 0f, 1f) //roll
 }
 

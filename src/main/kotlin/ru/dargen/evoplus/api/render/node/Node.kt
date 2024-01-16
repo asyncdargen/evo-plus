@@ -14,6 +14,7 @@ import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Window
+import ru.dargen.evoplus.util.render.DefaultScale
 import ru.dargen.evoplus.util.render.rotate
 import ru.dargen.evoplus.util.render.scale
 import ru.dargen.evoplus.util.render.translate
@@ -161,9 +162,9 @@ abstract class Node {
 
         parent?.let { matrices.translate(it.size, align) }
 
-        //val positionScale = context?.takeIf { this != it }?.translationScale ?: v3(1.0, 1.0, 1.0)
-        matrices.translate(translation)//, positionScale)
-        matrices.translate(position)//, positionScale)
+        val positionScale = context?.takeIf { this != it }?.translationScale ?: DefaultScale
+        matrices.translate(translation, positionScale)
+        matrices.translate(position, positionScale)
 
         matrices.scale(scale)
 
