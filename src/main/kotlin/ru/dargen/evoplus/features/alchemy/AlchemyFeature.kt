@@ -3,14 +3,11 @@ package ru.dargen.evoplus.features.alchemy
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
 import net.minecraft.sound.SoundEvents
-import ru.dargen.evoplus.api.event.bossbar.BossBarRenderEvent
 import ru.dargen.evoplus.api.event.inventory.InventoryClickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.Relative
-import ru.dargen.evoplus.api.render.context.Overlay.unaryMinus
 import ru.dargen.evoplus.api.render.context.Overlay.unaryPlus
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.schduler.schedule
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.alchemy.recipe.PotionRecipe
@@ -19,7 +16,6 @@ import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
 import ru.dargen.evoplus.util.selector.toSelector
-import java.util.concurrent.TimeUnit
 
 object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND) {
 
@@ -77,16 +73,13 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
         }
 
         scheduleEvery(period = 10) {
-            val title = Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
-                ?.firstOrNull()
-                ?.name
-                ?.string
-                ?.uncolored() ?: return@scheduleEvery
-            val time = alchemyTimePattern.find(title)
-                ?.groupValues
-                ?.getOrNull(1)
-                ?.toDoubleOrNull() ?: return@scheduleEvery
-
+            val time = Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
+                ?.firstNotNullOfOrNull {
+                    alchemyTimePattern.find(it.name.string.uncolored())
+                        ?.groupValues
+                        ?.getOrNull(1)
+                        ?.toDoubleOrNull()
+                } ?: return@scheduleEvery
             val nearestAlert = PotionRecipe?.getNearestAlert(BrewingAlertDelay / 1000.0, time) ?: run {
                 AlertText.enabled = false
                 return@scheduleEvery
@@ -95,7 +88,7 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
             AlertText.enabled = true
             AlertText.lines = listOf("§c$nearestAlert")
 
-            if (SoundAlert) repeat (5) { Player?.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f) }
+            if (SoundAlert) repeat(5) { Player?.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f) }
         }
     }
 }
