@@ -9,7 +9,7 @@ object Colors {
     data object White : Color(-1)
     data object Black : Color(0)
 
-    data object TransparentBlack : Color(0, 0, 0, 100)
+    data object TransparentBlack : Color(0, 0, 0, 63)
     data object TransparentWhite : Color(255, 255, 255, 100)
 
     data object Primary : Color(38, 72, 140)

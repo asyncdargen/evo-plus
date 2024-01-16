@@ -162,7 +162,7 @@ abstract class Node {
 
         parent?.let { matrices.translate(it.size, align) }
 
-        val positionScale = context?.takeIf { this != it }?.translationScale ?: DefaultScale
+        val positionScale = parent?.safeCast<RenderContext>()?.translationScale ?: DefaultScale
         matrices.translate(translation, positionScale)
         matrices.translate(position, positionScale)
 

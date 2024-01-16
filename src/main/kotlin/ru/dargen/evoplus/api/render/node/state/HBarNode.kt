@@ -23,7 +23,7 @@ class HBarNode : RectangleNode() {
         }
 
     var interpolationEasing = Easings.Linear
-    var interpolationTime = .1
+    var interpolationTime = .05
 
     var progress = .0
         set(value) {
