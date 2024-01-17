@@ -90,7 +90,10 @@ object HealthBars {
                         progressRectangle.color = Colors.Green.progressTo(Colors.Red, 1 - progress)
                     }
                 }
+
             }
+
+            tick { enabled = !isDead && !isSpectator }
 
             renderedHealthBars[uuid] = this
         }
