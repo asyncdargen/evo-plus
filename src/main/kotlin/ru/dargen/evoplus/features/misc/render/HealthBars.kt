@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity
 import org.joml.Math
 import ru.dargen.evoplus.api.event.entity.EntityRemoveEvent
 import ru.dargen.evoplus.api.event.entity.EntitySpawnEvent
-import ru.dargen.evoplus.api.event.evo.ServerChangeEvent
+import ru.dargen.evoplus.api.event.network.ChangeServerEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
@@ -29,7 +29,7 @@ object HealthBars {
     private val renderedHealthBars = concurrentHashMapOf<UUID, Node>()
 
     init {
-        on<ServerChangeEvent> { clearHealthBars() }
+        on<ChangeServerEvent> { clearHealthBars() }
         on<EntitySpawnEvent> {
             if (!RenderFeature.HealthBarsRender) return@on
             entity.createHealthBar()
