@@ -25,7 +25,10 @@ import ru.dargen.evoplus.features.stats.level.LevelWidget
 import ru.dargen.evoplus.features.stats.pet.PetInfo
 import ru.dargen.evoplus.features.stats.pet.PetInfoWidget
 import ru.dargen.evoplus.protocol.listen
+import ru.dargen.evoplus.protocol.registry.PetType
+import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.Player
 import ru.dargen.evoplus.util.minecraft.itemStack
 import ru.dargen.evoplus.util.minecraft.uncolored
 import java.util.concurrent.TimeUnit
@@ -43,7 +46,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
     val LevelRequireWidget by widgets.widget("Требования на уровень", "level-require", widget = LevelWidget)
 
     val NotifyCompleteLevelRequire by settings.boolean("Уведомлять при выполнении требований", true)
-    val ActivePets = mutableListOf<PetInfo>()
+    var ActivePets = listOf<PetInfo>()
 
     var BlocksCount = 0
         set(value) {
@@ -66,22 +69,16 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
     }
 
     var CurrentEvent = GameEvent.EventType.NONE
+    var CurrentGameLocation = ""
 
     init {
         screen.baseElement("Сбросить счетчик блоков") { button("Сбросить") { on { BlocksCount = Statistic.blocks } } }
 
-        listen<StatisticInfo> { statisticInfo ->
-            if (!statisticInfo.data.containsKey("pets")) return@listen
-
-            val petsData = statisticInfo.data["pets"] as String
-            val petsJsons = Json.decodeFromString<Array<JsonElement>>(petsData)
-            val pets = petsJsons.map { Json.decodeFromJsonElement<PetInfo>(it) }
-
-            ActivePets.clear()
-            ActivePets.addAll(pets)
+        PetType
+        scheduleEvery(unit = TimeUnit.SECONDS) {
+            PetInfoWidget.update()
+            ComboWidget.update(ComboData)
         }
-
-        scheduleEvery(unit = TimeUnit.SECONDS) { ComboWidget.update(ComboData) }
         listen<Combo> {
             ComboData.fetch(it)
             ComboWidget.update(ComboData)
@@ -115,6 +112,22 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
         }
         listen<GameEvent> {
             CurrentEvent = it.type
+        }
+        listen<StatisticInfo> { statisticInfo ->
+            val data = statisticInfo.data
+            when {
+                data.containsKey("gameLocation") -> CurrentGameLocation =
+                    data["gameLocation"]?.cast<String>()?.replace("\"", "") ?: return@listen
+
+                data.containsKey("pets") -> {
+                    val petsData = data["pets"] as String
+                    val petsJsons = Json.decodeFromString<Array<JsonElement>>(petsData)
+                    val pets = petsJsons.map { Json.decodeFromJsonElement<PetInfo>(it) }
+
+                    ActivePets = pets
+                }
+            }
+
         }
     }
 

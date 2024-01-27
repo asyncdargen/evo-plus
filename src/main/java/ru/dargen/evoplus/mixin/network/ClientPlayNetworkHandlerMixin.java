@@ -38,6 +38,7 @@ import ru.dargen.evoplus.api.event.network.ChangeServerEvent;
 import ru.dargen.evoplus.api.event.network.CustomPayloadEvent;
 import ru.dargen.evoplus.features.misc.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.Inventories;
+import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 import ru.dargen.evoplus.util.minecraft.TextKt;
 
 import java.time.Instant;

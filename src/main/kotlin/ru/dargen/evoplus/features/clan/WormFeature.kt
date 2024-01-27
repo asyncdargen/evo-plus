@@ -7,10 +7,12 @@ import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.Notifies
+import ru.dargen.evoplus.features.stats.StatisticFeature
 import ru.dargen.evoplus.util.format.nounEndings
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.WorldEntities
 import ru.dargen.evoplus.util.minecraft.printMessage
+import ru.dargen.evoplus.util.minecraft.sendClanMessage
 
 object WormFeature : Feature("worms", "Черви", Items.TURTLE_EGG) {
 
@@ -28,6 +30,7 @@ object WormFeature : Feature("worms", "Черви", Items.TURTLE_EGG) {
 
     val WormNotify by settings.boolean("Уведомление о найденных червях", true)
     val WormMessage by settings.boolean("Сообщение о найденных червях")
+    val WormClanMessage by settings.boolean("Сообщение о найденных червях в клан чат с указанием шахты")
 
     init {
         scheduleEvery(period = 10) {
@@ -35,13 +38,24 @@ object WormFeature : Feature("worms", "Черви", Items.TURTLE_EGG) {
                 .filterIsInstance<ArmorStandEntity>()
                 .filter { "Червь" in it.name.string }
                 .apply {
-                    if (Worms < size) {
+                    if (Worms < size) condition@{
 
-                        val text = "§6Возле вас обнаружен${if (size > 1) "о" else ""} $size ${
+                        val text = "§6Обнаружен${if (size > 1) "о" else ""} $size ${
                             size.nounEndings("червь", "червя", "червей")
                         }"
                         if (WormNotify) Notifies.showText(text)
                         if (WormMessage) printMessage(text)
+                        if (WormClanMessage) {
+                            val gameLocation = StatisticFeature.CurrentGameLocation
+
+                            if ("shaft" !in gameLocation) return@scheduleEvery
+
+                            // getting shaft level
+                            gameLocation.split("_")
+                                .getOrNull(1)
+                                ?.toIntOrNull()
+                                ?.let { sendClanMessage("$text &8[&e/mine $it&8]") }
+                        }
                     }
 
                     Worms = size

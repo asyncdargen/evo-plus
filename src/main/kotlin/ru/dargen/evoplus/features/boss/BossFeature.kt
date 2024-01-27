@@ -1,12 +1,9 @@
 package ru.dargen.evoplus.features.boss
 
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.boss.BossDamage
-import pro.diamondworld.protocol.packet.boss.BossTypes
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.on
-import ru.dargen.evoplus.api.event.screen.ScreenOpenEvent
 import ru.dargen.evoplus.api.keybind.Keybinds.FastBossTeleport
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.api.render.Relative
@@ -26,7 +23,10 @@ import ru.dargen.evoplus.util.format.format
 import ru.dargen.evoplus.util.fromJson
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.minecraft.*
+import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.sendClanMessage
+import ru.dargen.evoplus.util.minecraft.sendCommand
+import ru.dargen.evoplus.util.minecraft.uncolored
 import ru.dargen.evoplus.util.selector.toSelector
 import ru.dargen.evoplus.util.toJson
 import java.util.concurrent.TimeUnit
@@ -60,23 +60,6 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
         listen<BossDamage> {
             val type = BossType.valueOf(it.id) ?: return@listen
             BossDamageText.text = "${type.displayName}: §c${it.count}§r\uE35E"
-        }
-
-        on<ScreenOpenEvent> {
-            val screen = CurrentScreen
-            if (!InlineMenuClanScores || screen !is GenericContainerScreen || !BossMenuPattern.containsMatchIn(screen.title.string.uncolored())) return@on
-
-            screen.screenHandler.stacks.forEach {
-                val type = BossType.valueOfName(it.displayName?.string ?: return@forEach) ?: return@forEach
-
-                val pointsText = "§fК.О.: §e${type.data.capturePoints}".asText()
-
-                val lore = it.lore.toMutableList()
-
-                lore[lore.size - 1] = pointsText
-
-                it.lore = lore
-            }
         }
 
         on<ChatReceiveEvent> {

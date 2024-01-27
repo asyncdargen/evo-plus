@@ -17,16 +17,17 @@ import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
 import ru.dargen.evoplus.util.render.drawText
 import ru.dargen.evoplus.util.selector.toSelector
+import java.util.concurrent.TimeUnit
 
 object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) {
 
     val PetExpPattern = "^Опыта дает питомцу: (\\d+)\$".toRegex()
     val Nibbles = mutableMapOf<String, Double>()
 
+    val NibblesWidget by widgets.widget("Клёв на территориях", "spot-nibbles", widget = SpotNibblesWidget, enabled = false)
     val AutoFish by settings.boolean("Автоматическая удочка", true)
     val HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
     val ShowFishExpInInventory by settings.boolean("Отображение опыта рыбы в инвентаре", true)
-    val NibblesWidget by widgets.widget("Клёв на территориях", "spot-nibbles", widget = SpotNibblesWidget, enabled = false)
 
     init {
         var fishHookTicks = 0
@@ -40,7 +41,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
             } else fishHookTicks = 0
         }
 
-        scheduleEvery(period = 10) { SpotNibblesWidget.update() }
+        scheduleEvery(unit = TimeUnit.SECONDS) { SpotNibblesWidget.update() }
         listen<SpotNibbles> { spotNibbles ->
             Nibbles.putAll(spotNibbles.nibbles)
         }

@@ -5,7 +5,6 @@ import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.boss.BossTimers
 import pro.diamondworld.protocol.packet.game.GameEvent
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
-import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.leftClick
@@ -53,6 +52,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
     val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..360 step 5).toSelector()) { "$it сек." }
     val PostSpawnShowTime by settings.selector("Сохранять в таймере после спавне", (0..360 step 5).toSelector()) { "$it сек." }
+    val OnlyRaidBosses by settings.boolean("Отображать только рейдовых боссов")
     val InlineMenuTime by settings.boolean("Отображать время до спавна в меню", true)
 
     val SpawnMessage by settings.boolean("Сообщение о спавне", true)
@@ -153,7 +153,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     }
 
     private fun fillInventory() {
-        if (!InlineMenuTime) return
+        if (!OnlyRaidBosses) return
 
         val screen = CurrentScreen
 
@@ -169,6 +169,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
             if (lore.getOrNull(1)?.string?.contains("Возрождение") == true) lore[1] = resetText
             else lore = (listOf(lore.first(), resetText) + lore.drop(1)).toMutableList()
+
+            if (BossFeature.InlineMenuClanScores) lore.add("§fБазовое К.О. для захвата: §e${type.data.capturePoints}".asText())
 
             it.lore = lore
         }

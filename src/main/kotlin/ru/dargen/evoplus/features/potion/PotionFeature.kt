@@ -32,6 +32,7 @@ object PotionFeature : Feature("potion", "Зелья", customItem(Items.POTION, 
     init {
         listen<PotionData> { potionData ->
             PotionTimers.putAll(potionData.data
+                .filterValues { it.remained > 0 && it.quality > 0 }
                 .mapValues { PotionState(it.value.quality, currentMillis + it.value.remained) }
             )
         }

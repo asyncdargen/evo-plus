@@ -1,5 +1,7 @@
 package ru.dargen.evoplus.features.stats.pet
 
+import ru.dargen.evoplus.api.render.Relative
+import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.api.render.node.item
@@ -21,8 +23,8 @@ object PetInfoWidget : WidgetBase {
     fun update() {
         node._children = StatisticFeature.ActivePets
             .ifEmpty { if (isWidgetEditor) listOf(PetInfo.getDummy(), PetInfo.getDummy()) else emptyList() }
-            .map { info ->
-                val type = info.type
+            .map {
+                val type = it.type
 
                 hbox {
                     space = 1.0
@@ -30,10 +32,15 @@ object PetInfoWidget : WidgetBase {
 
                     +item(type.displayItem) { scale = scale(.7, .7) }
                     +text(
-                        "${type.displayName} §8[§e${info.level}§8] §8(§e${info.energy.format("###")}⚡§8)"
+                        "${type.displayName} §8[§e${it.level}§8] §8(§e${it.energy.format("###")}⚡§8)"
                     ) { isShadowed = true }
                     recompose()
                 }
             }.toMutableList()
+    }
+
+    override fun Node.prepare() {
+        origin = Relative.CenterBottom
+        align = v3(.75, .99)
     }
 }
