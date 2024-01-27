@@ -57,7 +57,9 @@ public abstract class PlayerListHudMixin {
     @Inject(method = "getPlayerName", at = @At("RETURN"), cancellable = true)
     private void getPlayerName(PlayerListEntry entry, CallbackInfoReturnable<Text> cir) {
         if (entry.getProfile().getProperties().containsKey("evo_plus")) {
-            cir.setReturnValue(Text.literal("EP ").append(cir.getReturnValue()));
+            val prefix = "EP ";
+
+            cir.setReturnValue(Text.literal(prefix).append(cir.getReturnValue()));
         }
     }
 

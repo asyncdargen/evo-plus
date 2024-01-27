@@ -21,6 +21,7 @@ import ru.dargen.evoplus.protocol.registry.BossType
 import ru.dargen.evoplus.protocol.registry.PotionType
 import ru.dargen.evoplus.protocol.registry.StaffType
 import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.minecraft.Player
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 

@@ -2,7 +2,6 @@ package ru.dargen.evoplus.mixin.network;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.mojang.authlib.properties.Property;
 import com.mojang.brigadier.ParseResults;
 import lombok.val;
 import net.minecraft.client.MinecraftClient;
@@ -26,7 +25,6 @@ import net.minecraft.network.packet.s2c.play.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -43,7 +41,6 @@ import ru.dargen.evoplus.util.minecraft.Inventories;
 import ru.dargen.evoplus.util.minecraft.TextKt;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Mixin(ClientPlayNetworkHandler.class)
@@ -198,21 +195,6 @@ public abstract class ClientPlayNetworkHandlerMixin {
         if (!EventBus.INSTANCE.fireResult(new CustomPayloadEvent(packet.getChannel().toString(), packet.getData()))) {
             ci.cancel();
         }
-    }
-
-    @Unique
-    private static final List<String> USERS = List.of("algebroid", "smole17", "evoplustest");
-    @Unique
-    private static final Property EVO_PLUS_PROPERTY = new Property("evo_plus", "true");
-
-    @Inject(at = @At("HEAD"), method = "onPlayerList")
-    private void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci) {
-        packet.getEntries().forEach(entry -> {
-            var profile = entry.profile();
-            if (profile != null && profile.getName() != null && USERS.contains(profile.getName().toLowerCase())) {
-                profile.getProperties().put("evo_plus", EVO_PLUS_PROPERTY);
-            }
-        });
     }
 
 }

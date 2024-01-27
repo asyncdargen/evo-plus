@@ -4,6 +4,7 @@ plugins {
     id 'java'
     id 'org.jetbrains.kotlin.jvm' version '1.9.0'
     id 'org.jetbrains.kotlin.plugin.allopen' version '1.9.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.9.0'
 }
 
 version = project.mod_version
@@ -45,7 +46,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
     //Protocol
-    include(implementation("pro.diamondworld.evoplusprotocol:evoplusprotocol:1.1"))
+    include(implementation("pro.diamondworld.evoplusprotocol:evoplusprotocol:1.2"))
 
     include(implementation('com.github.asyncdargen.crowbar:crowbar-core:48361c8411'))
 }

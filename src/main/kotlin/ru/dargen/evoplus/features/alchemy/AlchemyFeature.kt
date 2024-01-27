@@ -22,7 +22,6 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
     private val alchemyTimePattern = "Время: ([.\\d]+)с".toRegex()
 
     var PotionRecipe: PotionRecipe? = null
-    var isAlertRendered = false
 
     val RecipeText = text("Закрепите рецепт нажатием ПКМ в меню")
     val RecipeWidget by widgets.widget("Рецепт", "recipe", enabled = false) {
@@ -74,12 +73,15 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
 
         scheduleEvery(period = 10) {
             val time = Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
+                ?.map { it.name.string.uncolored().trim() }
+                ?.filter { it.isNotEmpty() }
                 ?.firstNotNullOfOrNull {
-                    alchemyTimePattern.find(it.name.string.uncolored())
+                    alchemyTimePattern.find(it)
                         ?.groupValues
                         ?.getOrNull(1)
                         ?.toDoubleOrNull()
                 } ?: return@scheduleEvery
+
             val nearestAlert = PotionRecipe?.getNearestAlert(BrewingAlertDelay / 1000.0, time) ?: run {
                 AlertText.enabled = false
                 return@scheduleEvery

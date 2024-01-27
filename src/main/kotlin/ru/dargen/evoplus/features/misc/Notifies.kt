@@ -1,5 +1,6 @@
 package ru.dargen.evoplus.features.misc
 
+import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.Easings
@@ -12,6 +13,7 @@ import ru.dargen.evoplus.feature.isWidgetEditor
 import ru.dargen.evoplus.feature.widget.WidgetBase
 import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.CurrentScreen
 import java.util.concurrent.TimeUnit
 
 object Notifies : WidgetBase {
@@ -77,7 +79,7 @@ object Notifies : WidgetBase {
             }
         }
 
-        click { _, _, state -> if (!isWidgetEditor && isHovered && state) hide() }
+        click { _, _, state -> if (!isWidgetEditor && CurrentScreen !is GenericContainerScreen && isHovered && state) hide() }
         hover { _, hovered ->
             animate("scale", .2) { scale = if (hovered) v3(1.2, 1.2, 1.2) else v3(1.0, 1.0, 1.0) }
             color = if (!isWidgetEditor && hovered) Colors.TransparentBlack.darker() else Colors.TransparentBlack

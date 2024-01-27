@@ -40,13 +40,6 @@ object EvoPlus : ModInitializer {
         Features
 
         scheduleUpdater()
-
-//        listen<StatisticInfo> {
-//            printMessage(it.data.entries.joinToString("\n") { (key, value) -> "$key: $value"})
-//        }
-//        listen<ClanInfo> {
-//            printMessage(it.data.entries.joinToString("\n") { (key, value) -> "$key: $value"})
-//        }
     }
 
     private fun scheduleUpdater() = scheduleEvery(5, 5, unit = TimeUnit.MINUTES) {

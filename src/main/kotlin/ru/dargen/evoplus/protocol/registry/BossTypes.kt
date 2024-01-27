@@ -41,7 +41,7 @@ data class BossType(val data: BossTypes.BossType) : TypeRegistry.TypeRegistryEnt
         private val MedalPattern = "\\s([\uE124\uE125\uE126])(\\sx\\d+|)".toRegex()
         private val name2type = concurrentHashMapOf<String, BossType>()
         override fun update(received: Map<String, BossType>) =
-            name2type.putAll(received.values.associate { it.name.lowercase() to it })
+            name2type.putAll(received.values.associateBy { it.name.lowercase() })
 
         fun valueOfName(name: String) = name2type[name.uncolored().lowercase().replace(MedalPattern, "")]
 

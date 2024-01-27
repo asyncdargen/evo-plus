@@ -1,14 +1,17 @@
-package ru.dargen.evoplus.features.game
+package ru.dargen.evoplus.features.game.fishing
 
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
 import net.minecraft.item.Items
 import net.minecraft.util.Hand
-import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
+import pro.diamondworld.protocol.packet.fishing.FishingSpots
+import pro.diamondworld.protocol.packet.fishing.SpotNibbles
 import ru.dargen.evoplus.api.event.game.PostTickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.ScreenRenderEvent
+import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.features.misc.Notifies
+import ru.dargen.evoplus.protocol.listen
+import ru.dargen.evoplus.protocol.registry.FishingSpot
 import ru.dargen.evoplus.util.format.spacing
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
@@ -18,11 +21,12 @@ import ru.dargen.evoplus.util.selector.toSelector
 object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) {
 
     val PetExpPattern = "^Опыта дает питомцу: (\\d+)\$".toRegex()
+    val Nibbles = mutableMapOf<String, Double>()
 
     val AutoFish by settings.boolean("Автоматическая удочка", true)
     val HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
-    val HigherBitingNotify by settings.boolean("Уведомления о повышенном клёве", true)
     val ShowFishExpInInventory by settings.boolean("Отображение опыта рыбы в инвентаре", true)
+    val NibblesWidget by widgets.widget("Клёв на территориях", "spot-nibbles", widget = SpotNibblesWidget, enabled = false)
 
     init {
         var fishHookTicks = 0
@@ -36,12 +40,19 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
             } else fishHookTicks = 0
         }
 
+        scheduleEvery(period = 10) { SpotNibblesWidget.update() }
+        listen<SpotNibbles> { spotNibbles ->
+            Nibbles.putAll(spotNibbles.nibbles)
+        }
+
         on<ScreenRenderEvent.Post> {
             if (ShowFishExpInInventory && screen is InventoryScreen) {
                 val exp = Player!!.inventory.items.mapNotNull { item ->
                     item.lore.getOrNull(2)
                         ?.string
-                        ?.let { PetExpPattern.find(it.trim())?.groupValues?.getOrNull(1)?.toIntOrNull()?.times(item.count) }
+                        ?.let {
+                            PetExpPattern.find(it.trim())?.groupValues?.getOrNull(1)?.toIntOrNull()?.times(item.count)
+                        }
                 }.sum().takeIf { it > 0 } ?: return@on
 
                 val scale = .9f

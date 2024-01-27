@@ -3,15 +3,19 @@ package ru.dargen.evoplus.features.boss.timer
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.boss.BossTimers
+import pro.diamondworld.protocol.packet.game.GameEvent
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
+import ru.dargen.evoplus.api.event.inventory.InventoryFillEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.features.boss.BossFeature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MaxLevel
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MinLevel
 import ru.dargen.evoplus.features.misc.Notifies
+import ru.dargen.evoplus.features.stats.StatisticFeature
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.protocol.registry.BossLink
 import ru.dargen.evoplus.protocol.registry.BossType
@@ -23,8 +27,6 @@ import ru.dargen.evoplus.util.selector.toSelector
 import kotlin.math.absoluteValue
 
 object BossTimerFeature : Feature("boss-timer", "Таймер боссов", itemStack(Items.CLOCK)) {
-
-    private val BossMenuPattern = "[\uE910\uE911]".toRegex()
 
     val AlertedBosses = mutableSetOf<String>()
     val PreAlertedBosses = mutableSetOf<String>()
@@ -71,6 +73,29 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         on<ChatReceiveEvent> {
             if (AutoReset && text == "Перезагрузка сервера") Bosses.clear()
         }
+
+        listen<GameEvent> {
+            when (it.type) {
+                GameEvent.EventType.MYTHICAL_EVENT -> Bosses
+                    .replaceAll { bossId, spawn ->
+                        val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
+
+                        if (bossType.data.isRaid) return@replaceAll spawn
+
+                        (spawn * 1.5).toLong()
+                    }
+                GameEvent.EventType.NONE -> Bosses
+                    .replaceAll { bossId, spawn ->
+                        val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
+
+                        if (bossType.data.isRaid) return@replaceAll spawn
+
+                        (spawn / 1.5).toLong()
+                    }
+                else -> {}
+            }
+        }
+
         listen<BossTimers> {
             if (PremiumTimers) it.timers
                 .mapKeys { BossType.valueOf(it.key)?.link ?: return@listen }
@@ -130,9 +155,9 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     private fun fillInventory() {
         if (!InlineMenuTime) return
 
-        val screen = Client.currentScreen
+        val screen = CurrentScreen
 
-        if (screen !is GenericContainerScreen || !BossMenuPattern.containsMatchIn(screen.title.string.uncolored())) return
+        if (screen !is GenericContainerScreen || !BossFeature.BossMenuPattern.containsMatchIn(screen.title.string.uncolored())) return
 
         screen.screenHandler.stacks.forEach {
             val type = BossType.valueOfName(it.displayName?.string ?: return@forEach) ?: return@forEach
@@ -177,7 +202,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         ?.run {
             val type = BossType.valueOfName(getOrNull(0) ?: return@run null) ?: return@run null
             val delay = getOrNull(1)?.replace("۞", "")?.fromTextTime
-                ?.let { if ('۞' in get(1)) (it / 1.5).toLong() else it }
+                ?.let { if (StatisticFeature.CurrentEvent === GameEvent.EventType.MYTHICAL_EVENT) (it / 1.5).toLong() else it }
                 ?.takeIf { it > 6000 }
                 ?: return@run null
 

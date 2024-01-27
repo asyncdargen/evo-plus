@@ -14,7 +14,7 @@ import ru.dargen.evoplus.features.boss.timer.BossTimerFeature
 import ru.dargen.evoplus.features.chat.ChatFeature
 import ru.dargen.evoplus.features.clan.ClanFeature
 import ru.dargen.evoplus.features.clan.WormFeature
-import ru.dargen.evoplus.features.game.FishingFeature
+import ru.dargen.evoplus.features.game.fishing.FishingFeature
 import ru.dargen.evoplus.features.game.GoldenRushFeature
 import ru.dargen.evoplus.features.misc.MiscFeature
 import ru.dargen.evoplus.features.misc.RenderFeature

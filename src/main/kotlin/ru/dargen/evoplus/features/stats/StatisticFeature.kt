@@ -1,10 +1,14 @@
 package ru.dargen.evoplus.features.stats
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.decodeFromJsonElement
 import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.combo.Combo
 import pro.diamondworld.protocol.packet.combo.ComboBlocks
 import pro.diamondworld.protocol.packet.game.GameEvent
 import pro.diamondworld.protocol.packet.game.LevelInfo
+import pro.diamondworld.protocol.packet.statistic.StatisticInfo
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.Relative
@@ -18,6 +22,8 @@ import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.features.stats.combo.ComboData
 import ru.dargen.evoplus.features.stats.combo.ComboWidget
 import ru.dargen.evoplus.features.stats.level.LevelWidget
+import ru.dargen.evoplus.features.stats.pet.PetInfo
+import ru.dargen.evoplus.features.stats.pet.PetInfoWidget
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.itemStack
@@ -32,9 +38,12 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
     val ComboCounterWidget by widgets.widget("Счетчик комбо", "combo-counter", widget = ComboWidget)
     val ComboData = ComboData()
 
-    val LevelRequireWidget by widgets.widget("Требования на уровень", "level-require", widget = LevelWidget)
     val Statistic = Statistic()
-    val NotifyCompleteLevelRequire by settings.boolean("Увдомлять при выполнении требований", true)
+    val ActivePetsWidget by widgets.widget("Активные питомцы", "active-pets", widget = PetInfoWidget)
+    val LevelRequireWidget by widgets.widget("Требования на уровень", "level-require", widget = LevelWidget)
+
+    val NotifyCompleteLevelRequire by settings.boolean("Уведомлять при выполнении требований", true)
+    val ActivePets = mutableListOf<PetInfo>()
 
     var BlocksCount = 0
         set(value) {
@@ -60,6 +69,17 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
 
     init {
         screen.baseElement("Сбросить счетчик блоков") { button("Сбросить") { on { BlocksCount = Statistic.blocks } } }
+
+        listen<StatisticInfo> { statisticInfo ->
+            if (!statisticInfo.data.containsKey("pets")) return@listen
+
+            val petsData = statisticInfo.data["pets"] as String
+            val petsJsons = Json.decodeFromString<Array<JsonElement>>(petsData)
+            val pets = petsJsons.map { Json.decodeFromJsonElement<PetInfo>(it) }
+
+            ActivePets.clear()
+            ActivePets.addAll(pets)
+        }
 
         scheduleEvery(unit = TimeUnit.SECONDS) { ComboWidget.update(ComboData) }
         listen<Combo> {

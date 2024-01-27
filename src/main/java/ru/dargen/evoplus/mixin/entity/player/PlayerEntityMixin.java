@@ -20,15 +20,4 @@ public abstract class PlayerEntityMixin {
     @Shadow
     public abstract Text getName();
 
-//    @Inject(at = @At("HEAD"), method = "getDisplayName", cancellable = true)
-//    public void getDisplayName(CallbackInfoReturnable<Text> cir) {
-//        if (gameProfile.getProperties().containsKey("evo_plus")) {
-//            var name = getEntityName();
-//            cir.setReturnValue(
-//                    literal("EP ")
-//                            .append(decorateName(getWorld().getScoreboard().getPlayerTeam(name), literal(name)))
-//            );
-//        }
-//    }
-
 }
