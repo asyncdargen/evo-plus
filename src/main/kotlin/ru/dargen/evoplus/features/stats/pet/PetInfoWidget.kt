@@ -30,7 +30,7 @@ object PetInfoWidget : WidgetBase {
 
                     +item(type.displayItem) { scale = scale(.7, .7) }
                     +text(
-                        "${type.displayName} §f${info.level} ур. §8(§e${info.energy.format("###")}⚡§8)"
+                        "${type.displayName} §8[§e${info.level}§8] §8(§e${info.energy.format("###")}⚡§8)"
                     ) { isShadowed = true }
                     recompose()
                 }

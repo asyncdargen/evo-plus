@@ -13,7 +13,7 @@ data class PetType(val data: PetTypes.PetType) : TypeRegistry.TypeRegistryEntry<
 
     val name get() = data.name
 
-    val displayName = data.name.colored()
+    val displayName = "§a${data.name.colored()} ${data.rarity}"
     val displayItem = customItem(itemOf(data.material), data.customModelData)
 
     companion object : EnumRegistry<PetTypes.PetType, PetType, PetTypes>(
