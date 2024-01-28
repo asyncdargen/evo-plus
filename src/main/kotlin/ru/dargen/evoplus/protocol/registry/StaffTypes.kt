@@ -7,7 +7,7 @@ import ru.dargen.evoplus.util.minecraft.customItem
 
 data class StaffType(val data: StaffTypes.StaffType) : TypeRegistry.TypeRegistryEntry<Int>(data.modelId) {
 
-    override val link = StaffLink(id)
+    override val holder = StaffHolder(id)
 
     val displayName = data.name.colored()
 
@@ -19,9 +19,9 @@ data class StaffType(val data: StaffTypes.StaffType) : TypeRegistry.TypeRegistry
 
 }
 
-class StaffLink(key: Int) : RegistryLink<Int, StaffType>(key) {
+class StaffHolder(key: Int) : RegistryHolder<Int, StaffType>(key) {
 
     override val isPresent get() = StaffType.containsKey(id)
-    override val ref get() = StaffType.byOrdinal(id)
+    override fun get() = StaffType.byOrdinal(id)
 
 }

@@ -7,7 +7,7 @@ import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.api.schduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.Notifies
-import ru.dargen.evoplus.features.stats.StatisticFeature
+import ru.dargen.evoplus.features.stats.info.StatisticHolder
 import ru.dargen.evoplus.util.format.nounEndings
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.WorldEntities
@@ -38,7 +38,7 @@ object WormFeature : Feature("worms", "Черви", Items.TURTLE_EGG) {
                 .filterIsInstance<ArmorStandEntity>()
                 .filter { "Червь" in it.name.string }
                 .apply {
-                    if (Worms < size) condition@{
+                    if (Worms < size) condition@ {
 
                         val text = "§6Обнаружен${if (size > 1) "о" else ""} $size ${
                             size.nounEndings("червь", "червя", "червей")
@@ -46,15 +46,7 @@ object WormFeature : Feature("worms", "Черви", Items.TURTLE_EGG) {
                         if (WormNotify) Notifies.showText(text)
                         if (WormMessage) printMessage(text)
                         if (WormClanMessage) {
-                            val gameLocation = StatisticFeature.CurrentGameLocation
-
-                            if ("shaft" !in gameLocation) return@scheduleEvery
-
-                            // getting shaft level
-                            gameLocation.split("_")
-                                .getOrNull(1)
-                                ?.toIntOrNull()
-                                ?.let { sendClanMessage("$text &8[&e/mine $it&8]") }
+                            StatisticHolder.Location.shaftLevel?.let { sendClanMessage("$text &8[&e/mine $it&8]") }
                         }
                     }
 

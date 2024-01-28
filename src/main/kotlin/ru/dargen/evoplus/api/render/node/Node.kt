@@ -60,6 +60,7 @@ abstract class Node {
     var isSeeThrough = false
     var isScissor = false
     var enabled = true
+    var render = true
     var isHovered = false
 
     val preTransformHandlers = mutableSetOf<RenderHandler<Node>>()
@@ -155,7 +156,7 @@ abstract class Node {
     }
 
     fun render(matrices: MatrixStack, tickDelta: Float) {
-        if (!enabled) return
+        if (!enabled || !render) return
         matrices.push()
 
         preTransformHandlers.forEach { it(matrices, tickDelta) }

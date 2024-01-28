@@ -23,9 +23,9 @@ import ru.dargen.evoplus.features.rune.RuneFeature
 import ru.dargen.evoplus.features.share.ShareFeature
 import ru.dargen.evoplus.features.staff.StaffFeature
 import ru.dargen.evoplus.features.stats.StatisticFeature
-import ru.dargen.evoplus.util.Gson
+import ru.dargen.evoplus.util.json.Gson
 import ru.dargen.evoplus.util.catch
-import ru.dargen.evoplus.util.isNull
+import ru.dargen.evoplus.util.json.isNull
 import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread

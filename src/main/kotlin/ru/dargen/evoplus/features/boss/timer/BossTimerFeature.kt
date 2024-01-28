@@ -3,8 +3,9 @@ package ru.dargen.evoplus.features.boss.timer
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.boss.BossTimers
-import pro.diamondworld.protocol.packet.game.GameEvent
+import pro.diamondworld.protocol.packet.game.GameEvent.EventType.MYTHICAL_EVENT
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
+import ru.dargen.evoplus.api.event.evo.GameChangeEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.leftClick
@@ -14,9 +15,8 @@ import ru.dargen.evoplus.features.boss.BossFeature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MaxLevel
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MinLevel
 import ru.dargen.evoplus.features.misc.Notifies
-import ru.dargen.evoplus.features.stats.StatisticFeature
+import ru.dargen.evoplus.features.stats.info.StatisticHolder
 import ru.dargen.evoplus.protocol.listen
-import ru.dargen.evoplus.protocol.registry.BossLink
 import ru.dargen.evoplus.protocol.registry.BossType
 import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.format.asTextTime
@@ -51,7 +51,10 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     val ShortTimeFormat by settings.boolean("Сокращенный формат времени")
 
     val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..360 step 5).toSelector()) { "$it сек." }
-    val PostSpawnShowTime by settings.selector("Сохранять в таймере после спавне", (0..360 step 5).toSelector()) { "$it сек." }
+    val PostSpawnShowTime by settings.selector(
+        "Сохранять в таймере после спавне",
+        (0..360 step 5).toSelector()
+    ) { "$it сек." }
     val OnlyRaidBosses by settings.boolean("Отображать только рейдовых боссов")
     val InlineMenuTime by settings.boolean("Отображать время до спавна в меню", true)
 
@@ -74,31 +77,19 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
             if (AutoReset && text == "Перезагрузка сервера") Bosses.clear()
         }
 
-        listen<GameEvent> {
-            when (it.type) {
-                GameEvent.EventType.MYTHICAL_EVENT -> Bosses
-                    .replaceAll { bossId, spawn ->
-                        val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
+        on<GameChangeEvent> {
+            if (old == MYTHICAL_EVENT || new == MYTHICAL_EVENT) Bosses.replaceAll { bossId, spawn ->
+                val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
 
-                        if (bossType.data.isRaid) return@replaceAll spawn
+                if (bossType.isRaid) return@replaceAll spawn
 
-                        (spawn * 1.5).toLong()
-                    }
-                GameEvent.EventType.NONE -> Bosses
-                    .replaceAll { bossId, spawn ->
-                        val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
-
-                        if (bossType.data.isRaid) return@replaceAll spawn
-
-                        (spawn / 1.5).toLong()
-                    }
-                else -> {}
+                (if (old == MYTHICAL_EVENT) spawn * 1.5 else spawn / 1.5).toLong()
             }
         }
 
         listen<BossTimers> {
             if (PremiumTimers) it.timers
-                .mapKeys { BossType.valueOf(it.key)?.link ?: return@listen }
+                .mapKeys { BossType.valueOf(it.key) ?: return@listen }
                 .mapValues { it.value + currentMillis }
                 .mapKeys { it.key.id }
                 .let(Bosses::putAll)
@@ -165,14 +156,11 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
             val resetText = "§fВозрождение: §e$timeText".asText()
 
-            var lore = it.lore.toMutableList()
-
-            if (lore.getOrNull(1)?.string?.contains("Возрождение") == true) lore[1] = resetText
-            else lore = (listOf(lore.first(), resetText) + lore.drop(1)).toMutableList()
-
-            if (BossFeature.InlineMenuClanScores) lore.add("§fБазовое К.О. для захвата: §e${type.data.capturePoints}".asText())
-
-            it.lore = lore
+            it.lore = it.lore.toMutableList().run {
+                if (getOrNull(1)?.string?.contains("Возрождение") == true) set(1, resetText)
+                else return@run (listOf(first(), resetText) + drop(1))
+                this
+            }.apply { println(this) }
         }
     }
 
@@ -204,7 +192,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         ?.run {
             val type = BossType.valueOfName(getOrNull(0) ?: return@run null) ?: return@run null
             val delay = getOrNull(1)?.replace("۞", "")?.fromTextTime
-                ?.let { if (StatisticFeature.CurrentEvent === GameEvent.EventType.MYTHICAL_EVENT) (it / 1.5).toLong() else it }
+                ?.let { if (StatisticHolder.Event === MYTHICAL_EVENT) (it / 1.5).toLong() else it }
                 ?.takeIf { it > 6000 }
                 ?: return@run null
 
@@ -220,7 +208,6 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
 }
 
-val BossLink?.inLevelBounds get() = this?.ref?.level in MinLevel..MaxLevel
 val BossType?.inLevelBounds get() = this?.level in MinLevel..MaxLevel
 
 private val Long.fixSeconds get() = (this / 1000) * 1000

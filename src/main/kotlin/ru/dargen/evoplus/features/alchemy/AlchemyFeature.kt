@@ -19,7 +19,7 @@ import ru.dargen.evoplus.util.selector.toSelector
 
 object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND) {
 
-    private val alchemyTimePattern = "Время: ([.\\d]+)с".toRegex()
+    private val AlchemyTimePattern = "Время: ([.\\d]+)с".toRegex()
 
     var PotionRecipe: PotionRecipe? = null
 
@@ -76,7 +76,7 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
                 ?.map { it.name.string.uncolored().trim() }
                 ?.filter { it.isNotEmpty() }
                 ?.firstNotNullOfOrNull {
-                    alchemyTimePattern.find(it)
+                    AlchemyTimePattern.find(it)
                         ?.groupValues
                         ?.getOrNull(1)
                         ?.toDoubleOrNull()

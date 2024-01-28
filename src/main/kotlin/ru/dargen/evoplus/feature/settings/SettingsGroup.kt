@@ -3,7 +3,7 @@ package ru.dargen.evoplus.feature.settings
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import ru.dargen.evoplus.feature.screen.FeatureScreenElements
-import ru.dargen.evoplus.util.isNull
+import ru.dargen.evoplus.util.json.isNull
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.selector.Selector
 

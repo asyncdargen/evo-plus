@@ -9,7 +9,7 @@ import ru.dargen.evoplus.util.minecraft.uncolored
 
 data class PetType(val data: PetTypes.PetType) : TypeRegistry.TypeRegistryEntry<String>(data.id) {
 
-    override val link = PetLink(id)
+    override val holder = PetHolder(id)
 
     val name get() = data.name
 
@@ -21,6 +21,7 @@ data class PetType(val data: PetTypes.PetType) : TypeRegistry.TypeRegistryEntry<
     ) {
 
         private val name2type = concurrentHashMapOf<String, PetType>()
+
         override fun update(received: Map<String, PetType>) =
             name2type.putAll(received.values.associateBy { it.name.uncolored().lowercase() })
 
@@ -31,9 +32,9 @@ data class PetType(val data: PetTypes.PetType) : TypeRegistry.TypeRegistryEntry<
 }
 
 
-class PetLink(key: String) : RegistryLink<String, PetType>(key) {
+class PetHolder(key: String) : RegistryHolder<String, PetType>(key) {
 
     override val isPresent get() = PetType.containsKey(id)
-    override val ref get() = PetType.valueOf(id)
+    override fun get() = PetType.valueOf(id)
 
 }

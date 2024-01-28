@@ -1,6 +1,5 @@
 package ru.dargen.evoplus.api.schduler.task
 
-import ru.dargen.evoplus.api.schduler.task.Task
 import ru.dargen.evoplus.util.catch
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 
@@ -13,10 +12,10 @@ abstract class AbstractTask(
     val repeats: Int
 ) : Task {
 
-    var executions = 0
+    override var executions = 0
 
-    override val isNeedExecute get() = !isCanceleld
-    override var isCanceleld = false
+    override val isNeedExecute get() = !isCancelled
+    override var isCancelled = false
 
     override var terminationHandler: (Task) -> Unit = {}
 
@@ -37,8 +36,8 @@ abstract class AbstractTask(
     }
 
     override fun cancel() {
-        if (!isCanceleld) {
-            isCanceleld = true
+        if (!isCancelled) {
+            isCancelled = true
             catch("Error while processing task termination handler: $id") { terminationHandler(this) }
         }
     }

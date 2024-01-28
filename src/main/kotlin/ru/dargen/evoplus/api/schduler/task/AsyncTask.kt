@@ -18,7 +18,7 @@ class AsyncTask(
     var future: ScheduledFuture<*>? = null
         set(value) {
             field = value
-            if (isCanceleld) {
+            if (isCancelled) {
                 value?.cancel(true)
             }
         }

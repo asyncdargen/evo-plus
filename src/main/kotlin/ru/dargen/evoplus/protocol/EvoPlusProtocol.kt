@@ -17,11 +17,8 @@ import ru.dargen.evoplus.api.event.network.ChangeServerEvent
 import ru.dargen.evoplus.api.event.network.CustomPayloadEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.schduler.scheduleEvery
-import ru.dargen.evoplus.protocol.registry.BossType
-import ru.dargen.evoplus.protocol.registry.PotionType
-import ru.dargen.evoplus.protocol.registry.StaffType
+import ru.dargen.evoplus.protocol.registry.*
 import ru.dargen.evoplus.util.minecraft.Client
-import ru.dargen.evoplus.util.minecraft.Player
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -71,6 +68,8 @@ object EvoPlusProtocol {
         BossType
         StaffType
         PotionType
+        PetType
+        FishingSpot
     }
 
 }

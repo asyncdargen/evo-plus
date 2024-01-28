@@ -63,7 +63,7 @@ object Scheduler {
         if (isNeedExecute) {
             execute()
         }
-        if (isCanceleld) {
+        if (isCancelled) {
             tasks.remove(id)
         }
     }

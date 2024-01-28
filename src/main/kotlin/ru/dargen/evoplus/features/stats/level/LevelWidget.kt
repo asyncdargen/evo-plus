@@ -8,7 +8,7 @@ import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.widget.WidgetBase
-import ru.dargen.evoplus.features.stats.Statistic
+import ru.dargen.evoplus.features.stats.info.StatisticData
 import ru.dargen.evoplus.util.format.color
 import ru.dargen.evoplus.util.format.format
 import ru.dargen.evoplus.util.math.v3
@@ -33,7 +33,7 @@ object LevelWidget : WidgetBase {
         }
     }
 
-    fun update(statistic: Statistic) {
+    fun update(statistic: StatisticData) {
         if (statistic.nextLevel.isMaxLevel) Text.text = "§aMAX"
         else Text.lines = listOf(
             "Блоки: ${(statistic.blocks >= statistic.nextLevel.blocks).color}${statistic.blocks}/${statistic.nextLevel.blocks}",

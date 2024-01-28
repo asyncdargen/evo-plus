@@ -7,7 +7,7 @@ import ru.dargen.evoplus.util.minecraft.customItem
 
 data class PotionType(val data: PotionTypes.PotionType) : TypeRegistry.TypeRegistryEntry<Int>(data.modelId) {
 
-    override val link = PotionLink(id)
+    override val holder = PotionHolder(id)
 
     val displayName = data.name.colored()
 
@@ -20,9 +20,9 @@ data class PotionType(val data: PotionTypes.PotionType) : TypeRegistry.TypeRegis
 }
 
 
-class PotionLink(key: Int) : RegistryLink<Int, PotionType>(key) {
+class PotionHolder(key: Int) : RegistryHolder<Int, PotionType>(key) {
 
     override val isPresent get() = PotionType.containsKey(id)
-    override val ref get() = PotionType.byOrdinal(id)
+    override fun get() = PotionType.byOrdinal(id)
 
 }

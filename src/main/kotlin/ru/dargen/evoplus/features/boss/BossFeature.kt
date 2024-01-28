@@ -19,8 +19,8 @@ import ru.dargen.evoplus.mixin.render.hud.BossBarHudAccessor
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.protocol.registry.BossType
 import ru.dargen.evoplus.util.currentMillis
-import ru.dargen.evoplus.util.format.format
-import ru.dargen.evoplus.util.fromJson
+import ru.dargen.evoplus.util.format.fix
+import ru.dargen.evoplus.util.json.fromJson
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Client
@@ -28,14 +28,13 @@ import ru.dargen.evoplus.util.minecraft.sendClanMessage
 import ru.dargen.evoplus.util.minecraft.sendCommand
 import ru.dargen.evoplus.util.minecraft.uncolored
 import ru.dargen.evoplus.util.selector.toSelector
-import ru.dargen.evoplus.util.toJson
+import ru.dargen.evoplus.util.json.toJson
 import java.util.concurrent.TimeUnit
 
 object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
     private val BossCapturePattern = "^Босс (.*) захвачен кланом (.*)!\$".toRegex()
     private val BossHealthsPattern = "([а-яА-Я ]+)\\s\\s(\\d+)".toRegex()
-
     val BossMenuPattern = "[\uE910\uE911]".toRegex()
 
     val BossDamageText = text("???? [??]: ??\uE35E") { isShadowed = true }
@@ -47,10 +46,12 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
     val NearTeleport by settings.boolean("Телепорт к ближайшему боссу")
     val NotifyCapture by settings.boolean("Уведомление о захватах боссов", true)
-    val InlineMenuClanScores by settings.boolean("Отображать базовое К.О. боссов для захвата в меню", true)
     val BossLowHealthsMessage by settings.boolean("Сообщение об определённом проценте здоровья босса в клановый чат")
     val BossHealthsPercent by settings.selector("Оповещать о здоровье босса при", (5..75).toSelector()) { "$it%" }
-    val BossHealthsCooldown by settings.selector("Оповещать о здоровье босса раз в", (5..25).toSelector()) { "$it сек." }
+    val BossHealthsCooldown by settings.selector(
+        "Оповещать о здоровье босса раз в",
+        (5..25).toSelector()
+    ) { "$it сек." }
 
     init {
         FastBossTeleport.on {
@@ -71,12 +72,8 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
             }
         }
 
-        var passedSeconds = 0
-
-        scheduleEvery(period = 1, unit = TimeUnit.SECONDS) {
-            if (++passedSeconds != BossHealthsCooldown) return@scheduleEvery
-
-            passedSeconds = 0
+        scheduleEvery(unit = TimeUnit.SECONDS) {
+            if (it.executions % BossHealthsCooldown == 0) return@scheduleEvery
 
             Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
                 ?.filter { it.name.string.uncolored().trim().isNotEmpty() }
@@ -92,7 +89,9 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
                         val type = BossType.valueOfName(groupValues[1]) ?: return@run
                         val health = groupValues[2].toDoubleOrNull() ?: return@run
 
-                        sendClanMessage("§aБосс ${type.displayName}§a имеет §c${percent.format(withSymbols = false)}% §8(§c${health.format(withSymbols = false)}❤§8) §aздоровья!")
+                        sendClanMessage(
+                            "§aБосс ${type.displayName}§a имеет §c${percent.fix()}% §8(§c${health.fix()}❤§8) §aздоровья!"
+                        )
                     }
                 } ?: return@scheduleEvery
         }

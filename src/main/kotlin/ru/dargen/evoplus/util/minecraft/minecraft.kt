@@ -21,6 +21,7 @@ val Client get() = MinecraftClient.getInstance()
 val ClientExtension get() = Client.cast<MinecraftClientExtension>()
 val ClientAccessor get() = Client.cast<MinecraftClientAccessor>()
 
+val PlayerName get() = Client?.session?.username ?: ""
 val Player get() = Client?.player
 val World get() = Client?.world
 val InteractionManager get() = Client?.interactionManager

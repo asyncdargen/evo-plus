@@ -5,7 +5,7 @@ import com.google.gson.JsonPrimitive
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.feature.screen.FeatureScreenElement
 import ru.dargen.evoplus.feature.screen.FeatureBaseElement
-import ru.dargen.evoplus.util.asBoolean
+import ru.dargen.evoplus.util.json.asBoolean
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 
 @KotlinOpens

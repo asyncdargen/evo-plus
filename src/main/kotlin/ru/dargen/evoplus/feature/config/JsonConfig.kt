@@ -2,7 +2,7 @@ package ru.dargen.evoplus.feature.config
 
 import com.google.gson.reflect.TypeToken
 import ru.dargen.evoplus.feature.Features
-import ru.dargen.evoplus.util.Gson
+import ru.dargen.evoplus.util.json.Gson
 import ru.dargen.evoplus.util.catch
 import kotlin.io.path.exists
 import kotlin.io.path.reader

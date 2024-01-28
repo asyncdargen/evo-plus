@@ -4,7 +4,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import ru.dargen.evoplus.api.render.node.input.selector.scroll.hScrollSelector
 import ru.dargen.evoplus.feature.screen.FeatureBaseElement
-import ru.dargen.evoplus.util.asInt
+import ru.dargen.evoplus.util.json.asInt
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.selector.Selector
 import ru.dargen.evoplus.util.selector.observable

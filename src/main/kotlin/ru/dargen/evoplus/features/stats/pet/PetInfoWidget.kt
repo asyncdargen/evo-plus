@@ -8,7 +8,8 @@ import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.isWidgetEditor
 import ru.dargen.evoplus.feature.widget.WidgetBase
-import ru.dargen.evoplus.features.stats.StatisticFeature
+import ru.dargen.evoplus.features.stats.info.PetData
+import ru.dargen.evoplus.features.stats.info.StatisticHolder
 import ru.dargen.evoplus.util.format.format
 import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
@@ -21,8 +22,8 @@ object PetInfoWidget : WidgetBase {
     }
 
     fun update() {
-        node._children = StatisticFeature.ActivePets
-            .ifEmpty { if (isWidgetEditor) listOf(PetInfo.getDummy(), PetInfo.getDummy()) else emptyList() }
+        node._children = StatisticHolder.ActivePets
+            .ifEmpty { if (isWidgetEditor) listOf(PetData.random(), PetData.random()) else emptyList() }
             .map {
                 val type = it.type
 

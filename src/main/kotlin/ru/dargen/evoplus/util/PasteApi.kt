@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.util
 
 import com.google.gson.JsonObject
+import ru.dargen.evoplus.util.json.Gson
 import ru.dargen.evoplus.util.kotlin.cast
 import java.net.HttpURLConnection
 import java.net.URL

@@ -7,7 +7,9 @@ interface Task {
     val isSync: Boolean
     val order: TaskOrder
     val isNeedExecute: Boolean
-    var isCanceleld: Boolean
+    var isCancelled: Boolean
+
+    val executions: Int
 
     val action: (Task) -> Unit
     var terminationHandler: (Task) -> Unit

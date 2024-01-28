@@ -11,9 +11,9 @@ import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.box
 import ru.dargen.evoplus.feature.isWidgetEditor
 import ru.dargen.evoplus.feature.settings.Setting
-import ru.dargen.evoplus.util.Gson
-import ru.dargen.evoplus.util.asDouble
-import ru.dargen.evoplus.util.asObject
+import ru.dargen.evoplus.util.json.Gson
+import ru.dargen.evoplus.util.json.asDouble
+import ru.dargen.evoplus.util.json.asObject
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.v3
 

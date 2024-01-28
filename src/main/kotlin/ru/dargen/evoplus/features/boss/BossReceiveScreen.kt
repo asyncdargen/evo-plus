@@ -44,7 +44,7 @@ object BossReceiveScreen {
             }
             +button("Рейдовые") {
                 on {
-                    toggles.forEach { it.value.toggled = it.key.data.isRaid }
+                    toggles.forEach { it.value.toggled = it.key.isRaid }
                 }
             }
             +button("Отсутствующие") {

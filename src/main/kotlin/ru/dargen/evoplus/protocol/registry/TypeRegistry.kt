@@ -26,7 +26,7 @@ class TypeRegistry<K, V, E : TypeRegistry.TypeRegistryEntry<K>, P : ProtocolSeri
     @KotlinOpens
     abstract class TypeRegistryEntry<T>(val id: T) {
 
-        abstract val link: RegistryLink<T, *>
+        abstract val holder: RegistryHolder<T, *>
 
     }
 
@@ -55,11 +55,11 @@ class EnumRegistry<V, E : TypeRegistry.TypeRegistryEntry<String>, P : ProtocolSe
 }
 
 @KotlinOpens
-abstract class RegistryLink<K, V>(val id: K) {
+abstract class RegistryHolder<K, V>(val id: K) {
 
     abstract val isPresent: Boolean
 
-    abstract val ref: V?
+    abstract fun get(): V?
 
     override fun hashCode() = id.hashCode()
 
