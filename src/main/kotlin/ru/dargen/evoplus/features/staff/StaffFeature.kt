@@ -24,9 +24,8 @@ object StaffFeature : Feature("staff", "Посохи", customItem(Items.WOODEN_H
     init {
         listen<StaffTimers> {
             it.timers
-                .filterValues { it - currentMillis > 2000 }
-                .filterValues { it + 500 > currentMillis }
-                .forEach { (id, timestamp) -> Staffs[id] = timestamp + 500 }
+                .filterValues { it > 2000 }
+                .forEach { (id, timestamp) -> Staffs[id] = currentMillis + timestamp }
         }
         scheduleEvery(period = 2) {
             updateStaffs()
