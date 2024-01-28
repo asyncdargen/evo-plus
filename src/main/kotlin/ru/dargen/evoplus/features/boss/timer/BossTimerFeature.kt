@@ -153,7 +153,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     }
 
     private fun fillInventory() {
-        if (!OnlyRaidBosses) return
+        if (!InlineMenuTime) return
 
         val screen = CurrentScreen
 
