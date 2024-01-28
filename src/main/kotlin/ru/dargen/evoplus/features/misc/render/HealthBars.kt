@@ -93,7 +93,7 @@ object HealthBars {
 
             }
 
-            tick { enabled = !isDead && !isSpectator }
+            tick { render = !isDead && !isSpectator }
 
             renderedHealthBars[uuid] = this
         }
