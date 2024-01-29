@@ -73,7 +73,7 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
         }
 
         scheduleEvery(unit = TimeUnit.SECONDS) {
-            if (it.executions % BossHealthsCooldown == 0) return@scheduleEvery
+            if (it.executions % BossHealthsCooldown != 0) return@scheduleEvery
 
             Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
                 ?.filter { it.name.string.uncolored().trim().isNotEmpty() }
