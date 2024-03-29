@@ -15,6 +15,7 @@ import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.format.asShortTextTime
 import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.CurrentScreen
 import ru.dargen.evoplus.util.minecraft.customItem
 
 object NormalProgressWidget : QuestProgressWidget("NORMAL") {
@@ -74,7 +75,7 @@ open class QuestProgressWidget(val typeName: String) : WidgetBase {
                         }
 
                         postRender { matrices, _ ->
-                            if (isHovered && !isCompleted && !isWidgetEditor) Tips.draw(matrices, info.lore)
+                            if (isHovered && !isCompleted && !isWidgetEditor && CurrentScreen != null) Tips.draw(matrices, info.lore)
                         }
 
                         recompose()

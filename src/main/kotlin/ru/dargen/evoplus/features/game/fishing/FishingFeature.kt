@@ -85,7 +85,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
     val HigherBitingNotify by settings.boolean("Уведомления о повышенном клёве", true)
 
     init {
-        scheduleEvery(unit = TimeUnit.SECONDS) {
+        scheduleEvery(delay = 200, unit = TimeUnit.MILLISECONDS) {
             SpotNibblesWidget.update()
             NormalProgressWidget.update()
             NetherProgressWidget.update()
