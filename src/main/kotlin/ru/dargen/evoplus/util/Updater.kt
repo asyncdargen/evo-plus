@@ -12,6 +12,7 @@ import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.util.common.LazyExpiringReference
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.Client
 import java.awt.Desktop
 import java.awt.GraphicsEnvironment
 import java.io.File
@@ -92,7 +93,7 @@ object Updater {
                             Thread.sleep(500)
                             ModFiles.forEach { it.deleteIfExists() }
 
-                            exitProcess(0)
+                            Client.scheduleStop()
                         }
 
                         catch("Error while closing classloader") {
