@@ -51,6 +51,16 @@ abstract class Node {
 
     //node properties
     var _children = mutableListOf<Node>()
+        set(value) {
+            value.forEach {
+                if (it.parent !== this) it.parent?.removeChildren(it)
+
+                it.resize()
+
+                it.parent = this
+            }
+            field = value
+        }
     val children get() = _children.toList()
 
     val enabledChildren get() = children.asSequence().filter(Node::enabled)
@@ -204,9 +214,7 @@ abstract class Node {
     //children
     fun addChildren(children: Collection<Node>) {
         children.forEach { child ->
-            if (child.parent !== this) {
-                child.parent?.removeChildren(child)
-            }
+            if (child.parent !== this) child.parent?.removeChildren(child)
             child.resize()
 
             child.parent = this

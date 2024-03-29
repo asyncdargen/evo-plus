@@ -27,10 +27,11 @@ public abstract class PlayerEntityMixin {
     public abstract Text getName();
     @Inject(at = @At("HEAD"), method = "getDisplayName", cancellable = true)
     public void getDisplayName(CallbackInfoReturnable<Text> cir) {
+        var name = getEntityName();
+
         if (gameProfile.getProperties().containsKey("evo_plus")) {
-            var name = getEntityName();
             cir.setReturnValue(
-                    Text.literal("E+ ")
+                    Text.literal("EP ")
                             .append(decorateName(MinecraftKt.getWorld().getScoreboard().getPlayerTeam(name), Text.literal(name)))
             );
         }

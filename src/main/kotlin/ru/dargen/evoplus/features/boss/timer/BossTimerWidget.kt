@@ -51,6 +51,7 @@ object BossTimerWidget : WidgetBase {
                     leftClick { _, state ->
                         if (isHovered && state && !isWidgetEditor && BossTimerFeature.WidgetTeleport) sendCommand("boss ${type.level}")
                     }
+
                     recompose()
                 }
             }.toMutableList()

@@ -4,12 +4,9 @@ import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.fishing.quest.HourlyQuestInfo
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.Tips
-import ru.dargen.evoplus.api.render.node.Node
+import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
-import ru.dargen.evoplus.api.render.node.item
-import ru.dargen.evoplus.api.render.node.postRender
-import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.isWidgetEditor
 import ru.dargen.evoplus.feature.widget.WidgetBase
 import ru.dargen.evoplus.features.stats.info.holder.HourlyQuestInfoHolder
@@ -77,7 +74,6 @@ open class QuestProgressWidget(val typeName: String) : WidgetBase {
                         }
 
                         postRender { matrices, _ ->
-
                             if (isHovered && !isCompleted && !isWidgetEditor) Tips.draw(matrices, info.lore)
                         }
 
