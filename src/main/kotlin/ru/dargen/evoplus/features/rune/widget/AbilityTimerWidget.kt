@@ -20,7 +20,7 @@ object AbilityTimerWidget : WidgetBase {
 
     fun update() {
         node._children = buildList {
-            if (RuneFeature.Abilities.isNotEmpty() || isWidgetEditor) add(text("§fОткат способностей:"))
+            if (RuneFeature.Abilities.isNotEmpty() || isWidgetEditor) add(text("§fЗадержка способностей:") { isShadowed = true })
 
             AbilityType.values
                 .take(if (RuneFeature.Abilities.isEmpty() && isWidgetEditor) 3 else AbilityType.size)
