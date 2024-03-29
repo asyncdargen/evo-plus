@@ -49,7 +49,7 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
     val NearTeleport by settings.boolean("Телепорт к ближайшему боссу")
     val NotifyCapture by settings.boolean("Уведомление о захватах боссов", true)
-    val CurseMessage by settings.boolean("Сообщение о проклинание босса")
+    val CurseMessage by settings.boolean("Сообщение о проклятие босса в клановый чат")
     val BossLowHealthsMessage by settings.boolean("Сообщение об определённом проценте здоровья босса в клановый чат")
     val BossHealthsPercent by settings.selector(
         "Оповещать о здоровье босса при меньше, чем",

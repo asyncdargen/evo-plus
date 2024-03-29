@@ -40,7 +40,7 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
         widget = SpotNibblesWidget,
         enabled = false
     )
-    val FishExpWidget by widgets.widget("Опыт рыбы", "fish-exp") {
+    val FishExpWidget by widgets.widget("Счёт опыта рыбы", "fish-exp") {
         val fishExpText = +text("Опыт питомцам: 0") {
             isShadowed = true
         }
@@ -80,12 +80,13 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
         widget = NetherProgressWidget
     )
 
+    val LoreProgressTips by settings.boolean("Показывать описание при наведении", true)
     val AutoFish by settings.boolean("Автоматическая удочка", true)
     val HookDelay by settings.selector("Задержка удочки (тик = 50 мс)", (0..40).toSelector(1))
     val HigherBitingNotify by settings.boolean("Уведомления о повышенном клёве", true)
 
     init {
-        scheduleEvery(delay = 200, unit = TimeUnit.MILLISECONDS) {
+        scheduleEvery(unit = TimeUnit.SECONDS) {
             SpotNibblesWidget.update()
             NormalProgressWidget.update()
             NetherProgressWidget.update()

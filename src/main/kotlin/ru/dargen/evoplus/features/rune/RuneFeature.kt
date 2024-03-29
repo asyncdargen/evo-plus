@@ -28,7 +28,7 @@ object RuneFeature : Feature("rune", "Руны", customItem(Items.PAPER, 9)) {
         isShadowed = true
     }
     val ActiveAbilitiesWidget by widgets.widget(
-        "Откат активированных способностей",
+        "Задержки способностей",
         "active-abilities",
         enabled = false,
         widget = AbilityTimerWidget

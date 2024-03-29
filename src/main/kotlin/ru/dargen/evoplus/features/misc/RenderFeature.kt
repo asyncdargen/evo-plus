@@ -3,7 +3,9 @@ package ru.dargen.evoplus.features.misc
 import net.minecraft.item.Items
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.render.HealthBars
+import ru.dargen.evoplus.util.format.fix
 import ru.dargen.evoplus.util.selector.enumSelector
+import ru.dargen.evoplus.util.selector.toSelector
 
 object RenderFeature : Feature("render", "Визуализация", Items.REDSTONE) {
 
@@ -18,7 +20,8 @@ object RenderFeature : Feature("render", "Визуализация", Items.REDST
     val NoExcessHud by settings.boolean("Отключение ненужных элементов HUD", true)
     val NoExpHud by settings.boolean("Отключение отрисовки опыта и его уровня", true)
     val NoScoreboardNumbers by settings.boolean("Отключение нумерации скорборда", true)
-    val HealthBarsRender by settings.boolean("Отображать здоровья игроков", true) on(HealthBars::updateRender)
+    val HealthBarsRender by settings.boolean("Отображать полоску здоровья игроков", true) on(HealthBars::updateRender)
+    val HealthBarsY by settings.selector("Сдвиг полоски здоровья игроков", (0..50).toSelector()) { "${it?.div(10.0)?.fix(1)}" }
     val HealthCountRender by settings.boolean("Отображать единицы здоровья игроков", true)
     val HealthRender by settings.switcher("Режим отображения здоровья", enumSelector<HealthRenderMode>())
 

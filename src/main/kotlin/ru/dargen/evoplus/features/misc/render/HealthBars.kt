@@ -62,7 +62,7 @@ object HealthBars {
 
             preTransform { _, tickDelta ->
                 val entityPos = getLerpedPos(tickDelta)
-                position = entityPos.run { v3(x, y + height + .55, z) }
+                position = entityPos.run { v3(x, (y + height + .55) + RenderFeature.HealthBarsY / 10.0, z) }
                 rotation.y = Math.toRadians(Player!!.yaw.toDouble())
                 rotation.x = Math.toRadians(-Player!!.pitch.toDouble())
             }

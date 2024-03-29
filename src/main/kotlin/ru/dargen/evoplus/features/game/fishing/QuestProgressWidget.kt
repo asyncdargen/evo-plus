@@ -9,6 +9,7 @@ import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.feature.isWidgetEditor
 import ru.dargen.evoplus.feature.widget.WidgetBase
+import ru.dargen.evoplus.features.misc.RenderFeature
 import ru.dargen.evoplus.features.stats.info.holder.HourlyQuestInfoHolder
 import ru.dargen.evoplus.protocol.registry.HourlyQuestType
 import ru.dargen.evoplus.util.currentMillis
@@ -60,6 +61,7 @@ open class QuestProgressWidget(val typeName: String) : WidgetBase {
 
                     val text = buildList {
                         add(" §8§a№$order §7${remainTime.asShortTextTime}")
+                        if (!FishingFeature.LoreProgressTips) add(" ${info.lore}")
                         if (isCompleted) return@buildList
 
                         add(" §9Прогресс: ${info.progress}/${info.needed}")
@@ -74,7 +76,7 @@ open class QuestProgressWidget(val typeName: String) : WidgetBase {
                             isShadowed = true
                         }
 
-                        postRender { matrices, _ ->
+                        if (FishingFeature.LoreProgressTips) postRender { matrices, _ ->
                             if (isHovered && !isCompleted && !isWidgetEditor && CurrentScreen != null) Tips.draw(matrices, info.lore)
                         }
 
