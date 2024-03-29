@@ -9,13 +9,13 @@ import ru.dargen.evoplus.api.event.evo.GameChangeEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.leftClick
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.boss.BossFeature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MaxLevel
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.MinLevel
 import ru.dargen.evoplus.features.misc.Notifies
-import ru.dargen.evoplus.features.stats.info.StatisticHolder
+import ru.dargen.evoplus.features.stats.info.holder.StatisticHolder
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.protocol.registry.BossType
 import ru.dargen.evoplus.util.currentMillis
@@ -81,7 +81,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
             if (old == MYTHICAL_EVENT || new == MYTHICAL_EVENT) Bosses.replaceAll { bossId, spawn ->
                 val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
 
-                if (bossType.isRaid) return@replaceAll spawn
+                if (!bossType.isRaid) return@replaceAll spawn
 
                 (if (old == MYTHICAL_EVENT) spawn * 1.5 else spawn / 1.5).toLong()
             }
@@ -160,7 +160,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
                 if (getOrNull(1)?.string?.contains("Возрождение") == true) set(1, resetText)
                 else return@run (listOf(first(), resetText) + drop(1))
                 this
-            }.apply { println(this) }
+            }
         }
     }
 

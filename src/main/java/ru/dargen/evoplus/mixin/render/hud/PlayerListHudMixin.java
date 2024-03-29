@@ -17,6 +17,7 @@ import ru.dargen.evoplus.features.potion.PotionFeature;
 import ru.dargen.evoplus.protocol.EvoPlusProtocol;
 import ru.dargen.evoplus.protocol.registry.PotionType;
 import ru.dargen.evoplus.util.format.TimeKt;
+import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
 import java.util.List;
 
@@ -56,7 +57,8 @@ public abstract class PlayerListHudMixin {
 
     @Inject(method = "getPlayerName", at = @At("RETURN"), cancellable = true)
     private void getPlayerName(PlayerListEntry entry, CallbackInfoReturnable<Text> cir) {
-        if (entry.getProfile().getProperties().containsKey("evo_plus")) {
+        val profile = entry.getProfile();
+        if (profile.getName().equalsIgnoreCase(MinecraftKt.getPlayerName()) || profile.getProperties().containsKey("evo_plus")) {
             cir.setReturnValue(Text.literal("EP ").append(cir.getReturnValue()));
         }
     }

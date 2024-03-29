@@ -9,18 +9,21 @@ import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.leftClick
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.Bosses
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature.ComparedBosses
 import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.features.share.ShareFeature
+import ru.dargen.evoplus.features.stats.info.holder.StatisticHolder
 import ru.dargen.evoplus.mixin.render.hud.BossBarHudAccessor
+import ru.dargen.evoplus.protocol.EvoPlusProtocol
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.protocol.registry.BossType
 import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.format.fix
 import ru.dargen.evoplus.util.json.fromJson
+import ru.dargen.evoplus.util.json.toJson
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Client
@@ -28,13 +31,13 @@ import ru.dargen.evoplus.util.minecraft.sendClanMessage
 import ru.dargen.evoplus.util.minecraft.sendCommand
 import ru.dargen.evoplus.util.minecraft.uncolored
 import ru.dargen.evoplus.util.selector.toSelector
-import ru.dargen.evoplus.util.json.toJson
 import java.util.concurrent.TimeUnit
 
 object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
+    private val BossCursedPattern = "Босс проклят! Особенность: ([а-яА-ЯёЁ ]+)".toRegex()
     private val BossCapturePattern = "^Босс (.*) захвачен кланом (.*)!\$".toRegex()
-    private val BossHealthsPattern = "([а-яА-Я ]+)\\s\\s(\\d+)".toRegex()
+    private val BossHealthsPattern = "([а-яА-ЯёЁ ]+)\\s\\s(\\d+)".toRegex()
     val BossMenuPattern = "[\uE910\uE911]".toRegex()
 
     val BossDamageText = text("???? [??]: ??\uE35E") { isShadowed = true }
@@ -46,8 +49,12 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
     val NearTeleport by settings.boolean("Телепорт к ближайшему боссу")
     val NotifyCapture by settings.boolean("Уведомление о захватах боссов", true)
+    val CurseMessage by settings.boolean("Сообщение о проклинание босса")
     val BossLowHealthsMessage by settings.boolean("Сообщение об определённом проценте здоровья босса в клановый чат")
-    val BossHealthsPercent by settings.selector("Оповещать о здоровье босса при", (5..75).toSelector()) { "$it%" }
+    val BossHealthsPercent by settings.selector(
+        "Оповещать о здоровье босса при меньше, чем",
+        (5..90).toSelector()
+    ) { "$it%" }
     val BossHealthsCooldown by settings.selector(
         "Оповещать о здоровье босса раз в",
         (5..25).toSelector()
@@ -70,36 +77,39 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
                 Notifies.showText("Босс ${type.displayName}§f захвачен", "кланом $clan.")
             }
+            if (CurseMessage) BossCursedPattern.find(text)?.run {
+                val type = StatisticHolder.Location.bossType ?: return@on
+                val curse = groupValues[1]
+                sendClanMessage("§8[§e${EvoPlusProtocol.Server}§8] §a${type.displayName} §3проклят на $curse")
+            }
         }
 
         scheduleEvery(unit = TimeUnit.SECONDS) {
             if (it.executions % BossHealthsCooldown != 0) return@scheduleEvery
 
-            Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
-                ?.filter { it.name.string.uncolored().trim().isNotEmpty() }
-                ?.firstNotNullOfOrNull {
-                    if (!BossLowHealthsMessage) return@scheduleEvery
-                    val text = it.name.string.uncolored().trim()
+            getFilteredBossBars()?.firstNotNullOfOrNull {
+                if (!BossLowHealthsMessage) return@scheduleEvery
+                val text = it.name.string.uncolored().trim()
 
-                    BossHealthsPattern.find(text)?.run {
-                        val percent = it.percent.toDouble() * 100.0
+                BossHealthsPattern.find(text)?.run {
+                    val percent = it.percent.toDouble() * 100.0
 
-                        if (percent > BossHealthsPercent) return@run
+                    if (percent > BossHealthsPercent) return@run
 
-                        val type = BossType.valueOfName(groupValues[1]) ?: return@run
-                        val health = groupValues[2].toDoubleOrNull() ?: return@run
+                    val isCursed = it.name.siblings.any { it.style.color?.name == "#25D192" }
+                    val type = BossType.valueOfName(groupValues[1]) ?: return@run
+                    val health = groupValues[2].toDoubleOrNull() ?: return@run
 
-                        sendClanMessage(
-                            "§aБосс ${type.displayName}§a имеет §c${percent.fix()}% §8(§c${health.fix()}❤§8) §aздоровья!"
-                        )
-                    }
-                } ?: return@scheduleEvery
+                    sendClanMessage("§8[§e${EvoPlusProtocol.Server}§8] ${type.displayName}${if (isCursed) " §8[§3Прок§8]" else ""}§8: §e${percent.fix()}% §8(§c${health.fix()}❤§8)")
+                }
+            } ?: return@scheduleEvery
         }
 
         ShareFeature.create(
             "bosses", "Таймеры боссов",
             { toJson(Bosses.mapValues { it.value - currentMillis }) }
-        ) { nick, data ->
+        )
+        { nick, data ->
             val shared = fromJson<Map<String, Long>>(data)
                 .mapKeys { BossType.valueOf(it.key) ?: return@create }
                 .mapValues { it.value + currentMillis }
@@ -114,5 +124,6 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
         }
     }
 
-
+    private fun getFilteredBossBars() = Client?.inGameHud?.bossBarHud?.cast<BossBarHudAccessor>()?.bossBars?.values
+        ?.filter { it.name.string.uncolored().trim().isNotEmpty() }
 }

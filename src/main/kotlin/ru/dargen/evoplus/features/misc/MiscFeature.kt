@@ -7,7 +7,7 @@ import ru.dargen.evoplus.api.event.game.PostTickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.keybind.Keybinds
 import ru.dargen.evoplus.api.keybind.on
-import ru.dargen.evoplus.api.schduler.schedule
+import ru.dargen.evoplus.api.scheduler.schedule
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.selector.FastSelectorScreen
 import ru.dargen.evoplus.features.misc.selector.FastSelectorSetting

@@ -15,13 +15,13 @@ import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.features.stats.combo.ComboWidget
-import ru.dargen.evoplus.features.stats.info.StatisticHolder
-import ru.dargen.evoplus.features.stats.info.StatisticHolder.Combo
-import ru.dargen.evoplus.features.stats.info.StatisticHolder.Data
+import ru.dargen.evoplus.features.stats.info.holder.StatisticHolder
+import ru.dargen.evoplus.features.stats.info.holder.StatisticHolder.Combo
+import ru.dargen.evoplus.features.stats.info.holder.StatisticHolder.Data
 import ru.dargen.evoplus.features.stats.level.LevelWidget
 import ru.dargen.evoplus.features.stats.pet.PetInfoWidget
 import ru.dargen.evoplus.protocol.listen
@@ -29,6 +29,7 @@ import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.itemStack
 import ru.dargen.evoplus.util.minecraft.uncolored
 import java.util.concurrent.TimeUnit
+import kotlin.math.max
 
 object StatisticFeature : Feature("statistic", "Статистика", Items.PAPER) {
 
@@ -44,7 +45,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
     var BlocksCount = 0
         set(value) {
             field = value
-            BlocksCounterText.text = "${Data.blocks - field}"
+            BlocksCounterText.text = "${max(Data.blocks - field, 0)}"
         }
     val BlocksCounterText = text("0") { isShadowed = true }
     val BlocksCounterWidget by widgets.widget("Счетчик блоков", "block-counter") {
@@ -100,7 +101,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
             }
 
             if (BlocksCount == 0) BlocksCount = it.blocks
-            BlocksCounterText.text = "${it.blocks - BlocksCount}"
+            BlocksCounterText.text = "${max(it.blocks - BlocksCount, 0)}"
         }
         listen<GameEvent> {
             if (StatisticHolder.Event != it.type) {

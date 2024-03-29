@@ -45,7 +45,9 @@ object HealthBars {
         else clearHealthBars()
     }
 
-    fun fillHealthBars() = WorldEntities.filterIsInstance<AbstractClientPlayerEntity>().forEach { it.createHealthBar() }
+    fun fillHealthBars() = WorldEntities
+        .filterIsInstance<AbstractClientPlayerEntity>()
+        .forEach { it.createHealthBar() }
 
     fun clearHealthBars() = renderedHealthBars.values.onEach { World - it }.clear()
 

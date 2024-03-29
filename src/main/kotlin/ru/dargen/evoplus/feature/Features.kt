@@ -6,14 +6,14 @@ import ru.dargen.evoplus.api.event.game.MinecraftLoadedEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.keybind.Keybinds.MenuKey
 import ru.dargen.evoplus.api.keybind.on
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.config.JsonConfig
 import ru.dargen.evoplus.features.alchemy.AlchemyFeature
 import ru.dargen.evoplus.features.boss.BossFeature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature
 import ru.dargen.evoplus.features.chat.ChatFeature
 import ru.dargen.evoplus.features.clan.ClanFeature
-import ru.dargen.evoplus.features.clan.WormFeature
+import ru.dargen.evoplus.features.clan.ShaftFeature
 import ru.dargen.evoplus.features.game.fishing.FishingFeature
 import ru.dargen.evoplus.features.game.GoldenRushFeature
 import ru.dargen.evoplus.features.misc.MiscFeature
@@ -69,7 +69,7 @@ data object Features {
         ChatFeature.register()
         FishingFeature.register()
         ClanFeature.register()
-        WormFeature.register()
+        ShaftFeature.register()
         GoldenRushFeature.register()
         RenderFeature.register()
         MiscFeature.register()

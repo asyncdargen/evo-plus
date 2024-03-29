@@ -14,8 +14,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.dargen.evoplus.features.chat.ChatFeature;
-import ru.dargen.evoplus.mixin.render.hud.ChatHudAccessor;
-import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 import ru.dargen.evoplus.util.mixin.ChatCopyUtil;
 
 import java.util.ArrayList;
@@ -54,7 +52,6 @@ public abstract class ChatHudMixin extends Screen {
         if (messageParts.isEmpty()) return;
 
         ChatCopyUtil.copyString(messageParts);
-        MinecraftKt.printMessage("Скопировано!");
     }
 
     @Inject(method = "mouseClicked", at = @At("RETURN"))

@@ -11,7 +11,7 @@ import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.ScreenRenderEvent
 import ru.dargen.evoplus.api.keybind.Keybinds
 import ru.dargen.evoplus.api.keybind.boundKey
-import ru.dargen.evoplus.api.schduler.schedule
+import ru.dargen.evoplus.api.scheduler.schedule
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
 import ru.dargen.evoplus.util.render.TextRenderer
@@ -123,14 +123,16 @@ object RunesBag {
             .mapValues { (name, values) ->
                 var property: RuneProperty? = null
                 values.forEach { value ->
-                    val (type, matcher) = RuneProperty.Type.entries.firstNotNullOf {
+                    val (type, matcher) = RuneProperty.Type.entries.firstNotNullOfOrNull {
                         it.pattern.find(value)?.run { it to this }
-                    }
+                    } ?: return@forEach
                     property = property ?: RuneProperty(name, type)
                     type.appender(property!!, matcher)
                 }
-                property!!
+                property
             }
+            .filterValues { it?.value != null }
+            .mapValues { it.value!! }
             .toList()
             .sortedByDescending { it.second.value }
             .toMap()

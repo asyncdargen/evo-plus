@@ -53,7 +53,7 @@ object Emojis {
                         +rectangle {
                             size = v3(11.0, 11.0)
                             color = Colors.TransparentBlack
-                            postRender { matrices, tickDelta ->
+                            postRender { matrices, _ ->
                                 if (isHovered) Tips.draw(matrices, data.name)
                             }
                             hover { _, state ->

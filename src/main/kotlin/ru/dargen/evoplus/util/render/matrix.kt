@@ -13,7 +13,7 @@ val Tesselator = Tessellator.getInstance()
 lateinit var MatrixStack: MatrixStack
 
 val DefaultScale = v3(1.0, 1.0, 1.0)
- val ZeroPosition = v3()
+val ZeroPosition = v3()
 
 val MatrixStack.positionMatrix get() = peek().positionMatrix
 

@@ -8,8 +8,8 @@ import ru.dargen.evoplus.api.render.animation.AnimationRunner
 import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.context.World
 import ru.dargen.evoplus.api.render.node.leftClick
-import ru.dargen.evoplus.api.schduler.Scheduler
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.Scheduler
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Features
 import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.protocol.EvoPlusProtocol

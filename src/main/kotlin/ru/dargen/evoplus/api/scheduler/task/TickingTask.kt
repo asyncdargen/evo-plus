@@ -1,6 +1,6 @@
-package ru.dargen.evoplus.api.schduler.task
+package ru.dargen.evoplus.api.scheduler.task
 
-import ru.dargen.evoplus.api.schduler.Scheduler.Executor
+import ru.dargen.evoplus.api.scheduler.Scheduler.Executor
 import ru.dargen.evoplus.util.currentNanos
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import java.util.concurrent.TimeUnit

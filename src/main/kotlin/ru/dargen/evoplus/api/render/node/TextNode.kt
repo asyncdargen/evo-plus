@@ -27,7 +27,7 @@ class TextNode(lines: List<String>) : Node() {
         set(value) {
             lines = value.split("\n")
         }
-    var linesWithWidths: Map<String, Int> = emptyMap()
+    var linesWithWidths: List<Pair<String, Int>> = emptyList()
 
     var linesSpace = 1.0
     var isShadowed = false
@@ -39,16 +39,16 @@ class TextNode(lines: List<String>) : Node() {
     }
 
     fun recompute() {
-        linesWithWidths = lines.associateWith(TextRenderer::getWidth)
+        linesWithWidths = lines.map { it to TextRenderer.getWidth(it) }
         size.set(
-            (linesWithWidths.values.maxOrNull()?.toDouble() ?: .0),
+            (linesWithWidths.maxOfOrNull { it.second }?.toDouble() ?: .0),
             linesCount * (TextRenderer.fontHeight - 1.0) + (linesCount - 1) * linesSpace, .0
         )
     }
 
     override fun renderElement(matrices: MatrixStack, tickDelta: Float) {
         val height = (TextRenderer.fontHeight - 1.0)
-        linesWithWidths.entries.forEachIndexed { index, (line, width) ->
+        linesWithWidths.forEachIndexed { index, (line, width) ->
             val x = if (isCentered) size.x / 2.0 - width / 2.0 else .0
             val y = index * height + index * linesSpace
 

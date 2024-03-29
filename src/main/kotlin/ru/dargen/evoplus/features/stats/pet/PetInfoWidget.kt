@@ -9,7 +9,7 @@ import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.isWidgetEditor
 import ru.dargen.evoplus.feature.widget.WidgetBase
 import ru.dargen.evoplus.features.stats.info.PetData
-import ru.dargen.evoplus.features.stats.info.StatisticHolder
+import ru.dargen.evoplus.features.stats.info.holder.StatisticHolder
 import ru.dargen.evoplus.util.format.format
 import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3

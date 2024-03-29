@@ -33,7 +33,10 @@ object BossReceiveScreen {
         buttons.apply {
             +button("Принять") {
                 on {
-                    BossTimerFeature.Bosses.putAll(bosses.filter { toggles[it.key]!!.toggled }.mapKeys { it.key.id })
+                    BossTimerFeature.Bosses.putAll(bosses
+                        .filter { toggles[it.key] != null }
+                        .filter { toggles[it.key]!!.toggled }
+                        .mapKeys { it.key.id })
                     close()
                 }
             }

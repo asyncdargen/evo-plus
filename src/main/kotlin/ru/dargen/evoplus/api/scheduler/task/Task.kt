@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.api.schduler.task
+package ru.dargen.evoplus.api.scheduler.task
 
 interface Task {
 

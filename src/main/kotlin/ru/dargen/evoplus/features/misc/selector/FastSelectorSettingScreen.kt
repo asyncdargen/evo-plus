@@ -10,7 +10,7 @@ import ru.dargen.evoplus.api.render.node.input.input
 import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.preTransform
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.schduler.after
+import ru.dargen.evoplus.api.scheduler.after
 import ru.dargen.evoplus.util.math.scale
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.identifier

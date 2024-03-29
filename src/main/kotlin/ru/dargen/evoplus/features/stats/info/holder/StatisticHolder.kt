@@ -1,14 +1,20 @@
-package ru.dargen.evoplus.features.stats.info
+package ru.dargen.evoplus.features.stats.info.holder
 
 import pro.diamondworld.protocol.packet.game.GameEvent.EventType
+import ru.dargen.evoplus.features.clan.ShaftFeature
 import ru.dargen.evoplus.features.stats.combo.ComboData
+import ru.dargen.evoplus.features.stats.info.GameLocation
+import ru.dargen.evoplus.features.stats.info.PetData
+import ru.dargen.evoplus.features.stats.info.StatisticData
 import ru.dargen.evoplus.protocol.info.InfoCollector
 import ru.dargen.evoplus.protocol.info.collect
 
 object StatisticHolder : InfoCollector() {
 
-    val Location by collect("gameLocation", GameLocation("spawn"))
-    val ActivePets by collect<List<PetData>>("pets", emptyList())
+    val Location by collect("gameLocation", GameLocation("spawn")) {
+        ShaftFeature.RaidShaftLevel = 0
+    }
+    val ActivePets by collect("pets", emptyList<PetData>())
 
     val Data = StatisticData()
     val Combo = ComboData()

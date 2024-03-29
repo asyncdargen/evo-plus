@@ -7,7 +7,7 @@ import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.input.input
 import ru.dargen.evoplus.api.render.node.rectangle
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.schduler.async
+import ru.dargen.evoplus.api.scheduler.async
 import ru.dargen.evoplus.feature.screen.FeatureScreenElement
 import ru.dargen.evoplus.feature.settings.BooleanSetting
 import ru.dargen.evoplus.util.PasteApi

@@ -1,9 +1,9 @@
-package ru.dargen.evoplus.api.schduler
+package ru.dargen.evoplus.api.scheduler
 
 import ru.dargen.evoplus.api.event.game.PostTickEvent
 import ru.dargen.evoplus.api.event.game.PreTickEvent
 import ru.dargen.evoplus.api.event.on
-import ru.dargen.evoplus.api.schduler.task.*
+import ru.dargen.evoplus.api.scheduler.task.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -29,7 +29,7 @@ object Scheduler {
         val id = Id.getAndIncrement()
         val task = block(id)
         tasks[id] = task
-        return task;
+        return task
     }
 
     fun runAsync(

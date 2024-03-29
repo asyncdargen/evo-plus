@@ -8,7 +8,7 @@ import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.context.Overlay.unaryPlus
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.alchemy.recipe.PotionRecipe
 import ru.dargen.evoplus.mixin.render.hud.BossBarHudAccessor

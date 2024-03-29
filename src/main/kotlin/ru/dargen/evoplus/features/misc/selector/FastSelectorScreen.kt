@@ -11,7 +11,7 @@ import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.input.symbolButton
-import ru.dargen.evoplus.api.schduler.after
+import ru.dargen.evoplus.api.scheduler.after
 import ru.dargen.evoplus.feature.FeaturesScreen
 import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3

@@ -1,7 +1,7 @@
-package ru.dargen.evoplus.api.schduler
+package ru.dargen.evoplus.api.scheduler
 
-import ru.dargen.evoplus.api.schduler.task.Task
-import ru.dargen.evoplus.api.schduler.task.TaskOrder
+import ru.dargen.evoplus.api.scheduler.task.Task
+import ru.dargen.evoplus.api.scheduler.task.TaskOrder
 import java.util.concurrent.TimeUnit
 
 fun async(block: () -> Unit) = Scheduler.Executor.execute(block)

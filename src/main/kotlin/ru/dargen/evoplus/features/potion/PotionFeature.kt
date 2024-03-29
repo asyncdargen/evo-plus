@@ -2,7 +2,7 @@ package ru.dargen.evoplus.features.potion
 
 import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.potion.PotionData
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.features.potion.timer.PotionTimerWidget

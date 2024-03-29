@@ -8,7 +8,7 @@ import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.postTransform
 import ru.dargen.evoplus.api.render.node.preTransform
 import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.schduler.scheduleEvery
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.util.math.scale

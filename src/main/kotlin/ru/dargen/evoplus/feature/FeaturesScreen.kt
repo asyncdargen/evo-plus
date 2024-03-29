@@ -14,7 +14,7 @@ import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.api.render.node.scroll.hScrollView
-import ru.dargen.evoplus.api.schduler.async
+import ru.dargen.evoplus.api.scheduler.async
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.itemStack
 import kotlin.math.sign

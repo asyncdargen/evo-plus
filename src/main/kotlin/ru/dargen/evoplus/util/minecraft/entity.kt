@@ -10,7 +10,7 @@ import ru.dargen.evoplus.util.kotlin.cast
 
 val Entity.fluidHeight get() = cast<EntityAccessor>().fluidHeight
 
-val Entity.isInWater get() = fluidHeight.getDouble(FluidTags.WATER) > .0
+val Entity.isSink get() = fluidHeight.getDouble(FluidTags.WATER) > .0 || fluidHeight.getDouble(FluidTags.LAVA) > .0
 
 val PlayerInventory.items get() = cast<PlayerInventoryAccessor>().combinedInventory.flatten()
 
