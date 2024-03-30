@@ -192,7 +192,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         ?.run {
             val type = BossType.valueOfName(getOrNull(0) ?: return@run null) ?: return@run null
             val delay = getOrNull(1)?.replace("۞", "")?.fromTextTime
-                ?.let { if (StatisticHolder.Event === MYTHICAL_EVENT) (it / 1.5).toLong() else it }
+                ?.let { if (StatisticHolder.Event === MYTHICAL_EVENT && type.isRaid) (it / 1.5).toLong() else it }
                 ?.takeIf { it > 6000 }
                 ?: return@run null
 
