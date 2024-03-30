@@ -46,7 +46,10 @@ object ShaftFeature : Feature("shart", "Шахта", Items.DIAMOND_PICKAXE) {
                 .filterIsInstance<ArmorStandEntity>()
                 .filter { "Червь" in it.name.string }
                 .apply {
-                    if (Worms < size) {
+                    val previousWorms = Worms
+                    Worms = size
+
+                    if (previousWorms < size) {
 
                         val text = "§6Обнаружен${if (size > 1) "о" else ""} $size ${
                             size.nounEndings("червь", "червя", "червей")
@@ -55,8 +58,6 @@ object ShaftFeature : Feature("shart", "Шахта", Items.DIAMOND_PICKAXE) {
                         if (WormMessage) printMessage(text)
                         if (WormClanMessage) sendClanMessage("§8[§e${EvoPlusProtocol.Server}§8] $text &8[&e/mine ${StatisticHolder.Location.shaftLevel}&8]")
                     }
-
-                    Worms = size
                 }
 
             if (!RaidClanMessage) return@scheduleEvery
