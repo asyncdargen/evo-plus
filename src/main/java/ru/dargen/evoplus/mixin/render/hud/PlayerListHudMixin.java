@@ -19,6 +19,7 @@ import ru.dargen.evoplus.protocol.EvoPlusProtocol;
 import ru.dargen.evoplus.protocol.registry.PotionType;
 import ru.dargen.evoplus.util.format.TimeKt;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Mixin(PlayerListHud.class)
@@ -61,7 +62,7 @@ public abstract class PlayerListHudMixin {
 
         val prefix = PrefixParser.INSTANCE.getPrefixes().getProperty(profile.getName());
 
-        if (prefix == null) return;
+        if (prefix == null || prefix.isEmpty()) return;
 
         cir.setReturnValue(Text.literal(prefix).append(cir.getReturnValue()));
     }

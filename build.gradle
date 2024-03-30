@@ -13,19 +13,13 @@ archivesBaseName = project.archives_base_name
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
-allprojects {
-    apply plugin: 'java'
-
-    repositories {
-        mavenCentral()
-        maven { url 'https://gitlab.diamondworld.pro/api/v4/projects/104/packages/maven' }
-        maven { url 'https://jitpack.io' }
-        dependencies {
-            compileOnly(annotationProcessor('org.projectlombok:lombok:1.18.24'))
-        }
+repositories {
+    mavenCentral()
+    maven { url 'https://gitlab.diamondworld.pro/api/v4/projects/104/packages/maven' }
+    maven { url 'https://jitpack.io' }
+    dependencies {
+        compileOnly(annotationProcessor('org.projectlombok:lombok:1.18.24'))
     }
-
-    tasks.withType(JavaCompile)*.options*.encoding = 'UTF-8'
 }
 
 repositories {
@@ -73,3 +67,5 @@ runClient {
 allOpen {
     annotation('ru.dargen.evoplus.util.kotlin.KotlinOpens')
 }
+
+tasks.withType(JavaCompile)*.options*.encoding = 'UTF-8'
