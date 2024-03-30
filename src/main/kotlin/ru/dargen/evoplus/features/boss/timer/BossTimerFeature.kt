@@ -90,7 +90,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         listen<BossTimers> {
             if (PremiumTimers) it.timers
                 .mapKeys { BossType.valueOf(it.key) ?: return@listen }
-                .mapValues { it.value + currentMillis }
+                .mapValues { (it.value + currentMillis * if (StatisticHolder.Event === MYTHICAL_EVENT && it.key.isRaid) 1.5 else 1.0).toLong() }
                 .mapKeys { it.key.id }
                 .let(Bosses::putAll)
         }
