@@ -58,9 +58,11 @@ public abstract class PlayerListHudMixin {
     @Inject(method = "getPlayerName", at = @At("RETURN"), cancellable = true)
     private void getPlayerName(PlayerListEntry entry, CallbackInfoReturnable<Text> cir) {
         val profile = entry.getProfile();
-        if (profile.getName().equalsIgnoreCase(MinecraftKt.getPlayerName()) || profile.getProperties().containsKey("evo_plus")) {
-            cir.setReturnValue(Text.literal("EP ").append(cir.getReturnValue()));
+        if (profile.getName().equalsIgnoreCase("Ethern1tus")) {
+            cir.setReturnValue(Text.literal("ЮРЕЦ ").append(cir.getReturnValue())); // временно, потом он будет должен
+            return;
         }
+        if (profile.getName().equalsIgnoreCase(MinecraftKt.getPlayerName())) cir.setReturnValue(Text.literal("EP ").append(cir.getReturnValue()));
     }
 
 }
