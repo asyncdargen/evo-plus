@@ -1,6 +1,6 @@
 package ru.dargen.evoplus
 
-import ru.dargen.evoplus.api.scheduler.schedule
+import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.*
@@ -14,7 +14,7 @@ object PrefixParser {
     val Prefixes = Properties()
 
     init {
-        schedule(1, TimeUnit.MINUTES) {
+        scheduleEvery(0, 1, unit = TimeUnit.MINUTES) {
             Prefixes.clear()
             Prefixes.load(
                 InputStreamReader(
