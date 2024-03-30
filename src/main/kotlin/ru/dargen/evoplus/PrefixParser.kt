@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 object PrefixParser {
 
-    private const val PROPERTIES_URL = "https://raw.githubusercontent.com/asyncdargen/evo-plus/kotlin/prefix.properties"
+    private const val PROPERTIES_URL = "https://raw.githubusercontent.com/asyncdargen/evo-plus/kotlin/data/prefix.properties"
 
     val Prefixes by LazyExpiringReference(1, TimeUnit.MINUTES) {
         Properties().apply { load(URL(PROPERTIES_URL).openStream()) }
