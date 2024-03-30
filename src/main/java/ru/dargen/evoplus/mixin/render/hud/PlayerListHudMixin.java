@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import ru.dargen.evoplus.PrefixParser;
 import ru.dargen.evoplus.features.misc.MiscFeature;
 import ru.dargen.evoplus.features.potion.PotionFeature;
 import ru.dargen.evoplus.protocol.EvoPlusProtocol;
 import ru.dargen.evoplus.protocol.registry.PotionType;
 import ru.dargen.evoplus.util.format.TimeKt;
-import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
 import java.util.List;
 
@@ -58,11 +58,12 @@ public abstract class PlayerListHudMixin {
     @Inject(method = "getPlayerName", at = @At("RETURN"), cancellable = true)
     private void getPlayerName(PlayerListEntry entry, CallbackInfoReturnable<Text> cir) {
         val profile = entry.getProfile();
-        if (profile.getName().equalsIgnoreCase("Ethern1tus")) {
-            cir.setReturnValue(Text.literal("ЮРЕЦ ").append(cir.getReturnValue())); // временно, потом он будет должен
-            return;
-        }
-        if (profile.getName().equalsIgnoreCase(MinecraftKt.getPlayerName())) cir.setReturnValue(Text.literal("EP ").append(cir.getReturnValue()));
+
+        val prefix = PrefixParser.INSTANCE.getPrefixes().getProperty(profile.getName());
+
+        if (prefix == null) return;
+
+        cir.setReturnValue(Text.literal(prefix).append(cir.getReturnValue()));
     }
 
 }
