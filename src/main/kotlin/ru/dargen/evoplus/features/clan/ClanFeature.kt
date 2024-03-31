@@ -50,13 +50,13 @@ object ClanFeature : Feature("clan", "Клан", Items.SHIELD) {
                     val type = BossType.valueOfName(it.displayName?.string ?: return@forEach) ?: return@forEach
                     if (it.lore.none { it.string.contains("Очков для захвата") }) {
                         val capturePoints = type.capturePoints
-                        val additionalPointsMultiplier = ClanHolder.Bosses.size * 0.02
+                        val additionalPointsMultiplier = ClanHolder.Bosses.size * .03
                         val additionalPoints = additionalPointsMultiplier * capturePoints
 
-                        val baseClanScoreText = "§fОчков для захвата: §e${(capturePoints + additionalPoints).fix()}${
+                        val baseClanScoreText = "§fОчков для захвата: §e${(capturePoints + additionalPoints).toInt()}${
                             if (additionalPointsMultiplier > 0) " §c${(additionalPointsMultiplier * 100).fix()}"
                             else ""
-                        } §8($capturePoints)"
+                        } §8($capturePoints${if (additionalPointsMultiplier > 0) " * " + (additionalPointsMultiplier * 100).fix() else ""})"
 
                         it.lore = (listOf(
                             it.lore.first(),
