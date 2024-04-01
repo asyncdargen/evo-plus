@@ -19,6 +19,7 @@ import ru.dargen.evoplus.util.selector.toSelector
 
 object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND) {
 
+    private val AlchemyPotionListTitle = "넉"
     private val AlchemyTimePattern = "Время: ([.\\d]+)с".toRegex()
 
     var PotionRecipe: PotionRecipe? = null
@@ -52,7 +53,7 @@ object AlchemyFeature : Feature("alchemy", "Алхимия", Items.BREWING_STAND
             val screen = CurrentScreen as? GenericContainerScreen ?: return@on
             val title = screen.title.string.uncolored()
 
-            if (title != "Список зелий") return@on
+            if (AlchemyPotionListTitle !in title) return@on
 
             val itemStack = CurrentScreenHandler?.getSlot(slot)?.stack ?: return@on
 
