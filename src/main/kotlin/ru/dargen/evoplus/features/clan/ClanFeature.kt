@@ -54,9 +54,9 @@ object ClanFeature : Feature("clan", "Клан", Items.SHIELD) {
                         val additionalPoints = additionalPointsMultiplier * capturePoints
 
                         val baseClanScoreText = "§fОчков для захвата: §e${(capturePoints + additionalPoints).toInt()}${
-                            if (additionalPointsMultiplier > 0) " §c${(additionalPointsMultiplier * 100).fix()}"
+                            if (additionalPointsMultiplier > 0) " §c${(additionalPointsMultiplier * 100).fix()}%"
                             else ""
-                        } §8($capturePoints${if (additionalPointsMultiplier > 0) " * " + (additionalPointsMultiplier * 100).fix() else ""})"
+                        } §8($capturePoints${if (additionalPointsMultiplier > 0) " * " + additionalPointsMultiplier.fix() else ""})"
 
                         it.lore = (listOf(
                             it.lore.first(),
