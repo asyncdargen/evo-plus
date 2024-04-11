@@ -3,6 +3,7 @@ package ru.dargen.evoplus.util
 import net.fabricmc.loader.api.FabricLoader
 import ru.dargen.crowbar.Accessors
 import ru.dargen.evoplus.EvoPlus
+import ru.dargen.evoplus.Logger
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.context.screen
@@ -23,6 +24,7 @@ import java.net.URLClassLoader
 import java.nio.channels.Channels
 import java.util.*
 import java.util.concurrent.TimeUnit
+import java.util.logging.Level
 import kotlin.concurrent.thread
 import kotlin.io.path.deleteIfExists
 import kotlin.system.exitProcess
@@ -45,7 +47,9 @@ object Updater {
     val ModFiles = FabricLoader.getInstance().getModContainer("evo-plus").get().origin.paths
 
     fun tryUpdate() {
-        if (Outdated) update()
+        runCatching {
+            if (Outdated) update()
+        }.exceptionOrNull()?.let { Logger.log(Level.SEVERE, "Error while attempting update", it) }
     }
 
     fun update() = screen {
