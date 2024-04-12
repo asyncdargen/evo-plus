@@ -22,12 +22,9 @@ public abstract class PlayerEntityMixin {
     public abstract String getEntityName();
 
     @Shadow
-    @Final
-    private GameProfile gameProfile;
-
-    @Shadow
     public abstract Text getName();
-    @Inject(at = @At("HEAD"), method = "getDisplayName", cancellable = true)
+
+    @Inject(at = @At("RETURN"), method = "getDisplayName", cancellable = true)
     public void getDisplayName(CallbackInfoReturnable<Text> cir) {
         val prefix = PrefixParser.INSTANCE.getPrefixes().getProperty(getEntityName());
 

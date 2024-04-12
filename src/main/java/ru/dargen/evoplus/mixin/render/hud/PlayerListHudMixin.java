@@ -19,7 +19,6 @@ import ru.dargen.evoplus.protocol.EvoPlusProtocol;
 import ru.dargen.evoplus.protocol.registry.PotionType;
 import ru.dargen.evoplus.util.format.TimeKt;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Mixin(PlayerListHud.class)
