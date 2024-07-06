@@ -4,12 +4,12 @@
   "package": "ru.dargen.evoplus.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "input.KeyboardMixin",
     "input.MouseMixin",
+    "input.KeyboardMixin",
 
+    "input.keybind.KeyBindingMixin",
     "input.keybind.GameOptionsMixin",
     "input.keybind.KeyBindingAccessor",
-    "input.keybind.KeyBindingMixin",
 
     "world.ClientWorldMixin",
     "world.ClientChunkManagerMixin",
@@ -19,27 +19,28 @@
     "world.particle.ParticleManagerAccessor",
     "world.particle.ParticleAccessor",
 
-    "render.TextVisitFactoryMixin",
     "render.WindowMixin",
     "render.WorldRendererMixin",
+    "render.TextVisitFactoryMixin",
     "render.InGameOverlayRendererMixin",
     "render.GameRendererMixin",
-    "render.hud.ChatHudAccessor",
-    "render.hud.InGameHudMixin",
-    "render.hud.BossBarHudAccessor",
     "render.hud.ChatHudMixin",
+    "render.hud.InGameHudMixin",
+    "render.hud.ChatHudAccessor",
+    "render.hud.BossBarHudAccessor",
+    "render.hud.PlayerListHudMixin",
     "render.screen.ChatScreenMixin",
     "render.screen.TitleScreenMixin",
 
     "entity.EntityAccessor",
     "entity.player.PlayerInventoryAccessor",
 
-    "network.ClientPlayerInteractionManagerMixin",
     "network.ClientPlayNetworkHandlerMixin",
+    "network.ClientPlayerInteractionManagerMixin",
 
-    "MinecraftClientAccessor",
+    "MessageHandlerMixin",
     "MinecraftClientMixin",
-    "MessageHandlerMixin"
+    "MinecraftClientAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
