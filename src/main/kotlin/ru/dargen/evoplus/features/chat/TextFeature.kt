@@ -36,7 +36,7 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
                 .mapValues { it.value.cast<String>() }
                 .filterKeys { it in text }
                 .entries
-                .fold(text) { currentText, (key, value) -> currentText.replace(key, value).replace("%text%", text) }
+                .fold(text) { currentText, (key, value) -> currentText.replace(key, value).replace("%text%", key) }
         }
     }
 }
