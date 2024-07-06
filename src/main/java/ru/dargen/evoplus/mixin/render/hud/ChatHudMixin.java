@@ -2,67 +2,44 @@ package ru.dargen.evoplus.mixin.render.hud;
 
 import lombok.val;
 import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.hud.MessageIndicator;
+import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.dargen.evoplus.features.chat.ChatFeature;
-import ru.dargen.evoplus.util.mixin.ChatCopyUtil;
+import ru.dargen.evoplus.api.event.EventBus;
+import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Mixin(ChatScreen.class)
-public abstract class ChatHudMixin extends Screen {
-    protected ChatHudMixin(Text title) {
-        super(title);
-    }
+@Mixin(ChatHud.class)
+public abstract class ChatHudMixin {
 
     @Unique
-    private boolean rightClicked = false;
+    private boolean skipOnAddMessage;
 
-    @Inject(method = "render", at = @At("HEAD"))
-    public void onDraw(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!ChatFeature.INSTANCE.getCopyMessages() || !rightClicked) return;
-        this.rightClicked = false;
+    @Shadow public abstract void addMessage(Text message, @Nullable MessageSignatureData signature, @Nullable MessageIndicator indicator);
 
-        val chatHudAccessor = ((ChatHudAccessor) getChatHud());
-        List<ChatHudLine.Visible> visibleMessages = chatHudAccessor.getVisibleMessages();
+    @Inject(at = @At("HEAD"), method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", cancellable = true)
+    public void onAddMessage(Text message, MessageSignatureData signature, MessageIndicator indicator, CallbackInfo ci) {
+        if (skipOnAddMessage) return;
 
-        if (visibleMessages.isEmpty()) return;
+        val event = EventBus.INSTANCE.fire(new ChatReceiveEvent(message));
 
-        double chatLineY = chatHudAccessor.toChatLineYA(mouseY);
-        int index = chatHudAccessor.getMessageIndexA(0, chatLineY);
-
-        if (index < 0) return;
-
-        ArrayList<ChatHudLine.Visible> messageParts = new ArrayList<>();
-        messageParts.add(visibleMessages.get(index));
-        for (int i = index + 1; i < visibleMessages.size(); i++) {
-            if (visibleMessages.get(i).endOfEntry()) break;
-            messageParts.add(0, visibleMessages.get(i));
+        if (event.isCancelled()) {
+            ci.cancel();
+            return;
         }
-        if (messageParts.isEmpty()) return;
 
-        ChatCopyUtil.copyString(messageParts);
-    }
+        if (message == event.getMessage()) return;
 
-    @Inject(method = "mouseClicked", at = @At("RETURN"))
-    public void onMouseClick(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (button != 1) return;
-        this.rightClicked = !cir.getReturnValue();
-    }
+        ci.cancel();
 
-    @Unique
-    private ChatHud getChatHud() {
-        return this.client.inGameHud.getChatHud();
+        skipOnAddMessage = true;
+        addMessage(event.getMessage(), signature, indicator);
+        skipOnAddMessage = false;
     }
 }
-

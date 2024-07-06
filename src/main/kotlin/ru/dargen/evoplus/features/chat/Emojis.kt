@@ -41,7 +41,7 @@ object Emojis {
 
             tick {
                 val isChatScreen = ChatClassNamePattern.containsMatchIn(CurrentScreen?.javaClass?.name?: "")
-                enabled = isChatScreen && ChatFeature.EmojiMenu
+                enabled = isChatScreen && TextFeature.EmojiMenu
             }
 
             EmojiMap.toList().chunked(9).forEach {

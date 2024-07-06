@@ -70,6 +70,15 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
             PetInfoWidget.update()
             ComboWidget.update(Combo)
         }
+
+        on<ChatReceiveEvent> {
+            ComboTimerPattern.find(text.uncolored())?.let {
+                val remain = it.groupValues[1].toIntOrNull() ?: return@on
+                Combo.remain = remain.toLong()
+                ComboWidget.update(Combo)
+            }
+        }
+
         listen<Combo> {
             Combo.fetch(it)
             ComboWidget.update(Combo)
@@ -78,13 +87,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
             Combo.fetch(it)
             ComboWidget.update(Combo)
         }
-        on<ChatReceiveEvent> {
-            ComboTimerPattern.find(text.uncolored())?.let {
-                val remain = it.groupValues[1].toIntOrNull() ?: return@on
-                Combo.remain = remain.toLong()
-                ComboWidget.update(Combo)
-            }
-        }
+
 
         listen<LevelInfo> {
             val previousCompleted = Data.blocks >= Data.nextLevel.blocks
@@ -103,6 +106,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
             if (BlocksCount == 0) BlocksCount = it.blocks
             BlocksCounterText.text = "${max(it.blocks - BlocksCount, 0)}"
         }
+
         listen<GameEvent> {
             if (StatisticHolder.Event != it.type) {
                 GameEventChangeEvent(StatisticHolder.Event, it.type).fire()

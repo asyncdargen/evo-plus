@@ -11,9 +11,10 @@ import ru.dargen.evoplus.feature.config.JsonConfig
 import ru.dargen.evoplus.features.alchemy.AlchemyFeature
 import ru.dargen.evoplus.features.boss.BossFeature
 import ru.dargen.evoplus.features.boss.timer.BossTimerFeature
-import ru.dargen.evoplus.features.chat.ChatFeature
+import ru.dargen.evoplus.features.chat.TextFeature
 import ru.dargen.evoplus.features.clan.ClanFeature
 import ru.dargen.evoplus.features.clan.ShaftFeature
+import ru.dargen.evoplus.features.clicker.AutoClickerFeature
 import ru.dargen.evoplus.features.game.fishing.FishingFeature
 import ru.dargen.evoplus.features.game.GoldenRushFeature
 import ru.dargen.evoplus.features.misc.MiscFeature
@@ -59,6 +60,7 @@ data object Features {
     }
 
     fun load() {
+        AutoClickerFeature.register()
         BossTimerFeature.register()
         BossFeature.register()
         StaffFeature.register()
@@ -66,7 +68,7 @@ data object Features {
         AlchemyFeature.register()
         PotionFeature.register()
         StatisticFeature.register()
-        ChatFeature.register()
+        TextFeature.register()
         FishingFeature.register()
         ClanFeature.register()
         ShaftFeature.register()

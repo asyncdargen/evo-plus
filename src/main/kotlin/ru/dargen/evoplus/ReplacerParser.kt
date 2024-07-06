@@ -6,19 +6,18 @@ import java.net.URL
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-object PrefixParser {
+object ReplacerParser {
 
-    private const val PROPERTIES_URL =
-        "https://raw.githubusercontent.com/asyncdargen/evo-plus/kotlin/data/prefix.properties"
+    private const val PREFIX_PROPERTIES_URL = "https://raw.githubusercontent.com/asyncdargen/evo-plus/kotlin/data/prefix.properties"
 
-    val Prefixes = Properties()
+    val Replacer = Properties()
 
     init {
         scheduleEvery(0, 1, unit = TimeUnit.MINUTES) {
-            Prefixes.clear()
-            Prefixes.load(
+            Replacer.clear()
+            Replacer.load(
                 InputStreamReader(
-                    URL(PROPERTIES_URL).openConnection().apply { useCaches = false }.getInputStream(),
+                    URL(PREFIX_PROPERTIES_URL).openConnection().apply { useCaches = false }.getInputStream(),
                     Charsets.UTF_8
                 )
             )

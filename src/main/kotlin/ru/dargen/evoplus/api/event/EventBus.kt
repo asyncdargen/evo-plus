@@ -2,9 +2,7 @@ package ru.dargen.evoplus.api.event
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
-import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents
 import ru.dargen.evoplus.Logger
-import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.util.kotlin.cast
 import java.util.logging.Level
 
@@ -13,11 +11,6 @@ typealias EventHandler<E> = E.() -> Unit
 object EventBus {
 
     private val Handlers: MutableMap<Class<*>, MutableSet<EventHandler<*>>> = Object2ObjectOpenHashMap()
-
-    init {
-        ClientReceiveMessageEvents.ALLOW_CHAT.register { text, _, _, _, _ -> fireResult(ChatReceiveEvent(text)) }
-        ClientReceiveMessageEvents.ALLOW_GAME.register { text, _ -> fireResult(ChatReceiveEvent(text)) }
-    }
 
     fun <E : Event> register(type: Class<E>, handler: EventHandler<E>) =
         Handlers.getOrPut(type, ::ObjectOpenHashSet).add(handler.cast())

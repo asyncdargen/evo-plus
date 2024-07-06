@@ -78,12 +78,10 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
         }
 
         on<GameEventChangeEvent> {
-            if (old == MYTHICAL_EVENT || new == MYTHICAL_EVENT) Bosses.replaceAll { bossId, spawn ->
-                val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
+            if (old === MYTHICAL_EVENT || new === MYTHICAL_EVENT) Bosses.replaceAll { bossId, spawn ->
+                if (BossType.valueOf(bossId)?.isRaid == false) return@replaceAll spawn
 
-                if (!bossType.isRaid) return@replaceAll spawn
-
-                (if (old == MYTHICAL_EVENT) spawn * 1.5 else spawn / 1.5).toLong()
+                (if (old === MYTHICAL_EVENT) spawn * 1.5 else spawn / 1.5).toLong()
             }
         }
 

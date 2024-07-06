@@ -36,7 +36,7 @@ import ru.dargen.evoplus.api.event.inventory.InventoryOpenEvent;
 import ru.dargen.evoplus.api.event.inventory.InventorySlotUpdateEvent;
 import ru.dargen.evoplus.api.event.network.ChangeServerEvent;
 import ru.dargen.evoplus.api.event.network.CustomPayloadEvent;
-import ru.dargen.evoplus.api.event.world.ChunkDataEvent;
+import ru.dargen.evoplus.api.event.world.ChunkLoadEvent;
 import ru.dargen.evoplus.features.misc.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.Inventories;
 import ru.dargen.evoplus.util.minecraft.TextKt;
@@ -201,6 +201,6 @@ public abstract class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onChunkData", at = @At("TAIL"))
     private void onChunkData(ChunkDataS2CPacket packet, CallbackInfo info) {
         val chunk = client.world.getChunk(packet.getX(), packet.getZ());
-        EventBus.INSTANCE.fire(new ChunkDataEvent(chunk));
+        EventBus.INSTANCE.fire(new ChunkLoadEvent(chunk));
     }
 }

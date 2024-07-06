@@ -5,7 +5,7 @@ import ru.dargen.evoplus.api.event.CancellableEvent
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 
 @KotlinOpens
-data class ChatReceiveEvent(val message: Text) : CancellableEvent() {
+data class ChatReceiveEvent(var message: Text) : CancellableEvent() {
 
     val text get() = message.string
 

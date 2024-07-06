@@ -5,6 +5,7 @@ import net.minecraft.client.util.InputUtil
 object Keybinds {
 
     val MenuKey = keyBind("Открыть меню", InputUtil.GLFW_KEY_RIGHT_SHIFT, "EvoPlus")
+    val AutoClicker = keyBind("Включить авто-кликер", InputUtil.GLFW_KEY_Z, "EvoPlus")
     val FastSelector = keyBind("Окно быстрого доступа", InputUtil.GLFW_KEY_R, "EvoPlus")
     val FastBossTeleport = keyBind("Быстрый телепорт к боссу", InputUtil.GLFW_KEY_O, "EvoPlus")
 

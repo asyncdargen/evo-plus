@@ -6,7 +6,8 @@ import net.minecraft.item.Items
 import ru.dargen.evoplus.api.event.evo.ChangeLocationEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.world.BlockChangeEvent
-import ru.dargen.evoplus.api.event.world.ChunkDataEvent
+import ru.dargen.evoplus.api.event.world.ChunkLoadEvent
+import ru.dargen.evoplus.api.event.world.ChunkUnloadEvent
 import ru.dargen.evoplus.api.event.world.WorldPreLoadEvent
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.text
@@ -117,11 +118,18 @@ object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
         on<ChangeLocationEvent> { RaidShaftLevel = 0 }
         on<WorldPreLoadEvent> { Barrels = 0 }
 
-        on<ChunkDataEvent> {
+        on<ChunkLoadEvent> {
             if (!BarrelsWidget.enabled) return@on
 
             chunk.forEachBlocks {
                 if (it.isBarrel()) ++Barrels
+            }
+        }
+        on<ChunkUnloadEvent> {
+            if (!BarrelsWidget.enabled) return@on
+
+            chunk.forEachBlocks {
+                if (it.isBarrel()) Barrels = max(Barrels - 1, 0)
             }
         }
 
