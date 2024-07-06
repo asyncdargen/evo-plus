@@ -30,6 +30,7 @@ object EvoPlus : ModInitializer {
         EventBus
         Scheduler
         KeyBindings
+        PrefixParser
 
         EvoPlusProtocol
 

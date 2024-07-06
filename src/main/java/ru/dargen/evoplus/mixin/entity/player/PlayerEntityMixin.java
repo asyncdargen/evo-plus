@@ -25,6 +25,11 @@ public abstract class PlayerEntityMixin {
 
         if (prefix == null || prefix.isEmpty()) return;
 
-        cir.setReturnValue(Text.literal(prefix).append(cir.getReturnValue()));
+        val formatting = Text.literal(prefix).append(cir.getReturnValue());
+        val suffix = PrefixParser.INSTANCE.getPrefixes().getProperty(getEntityName() + ".suffix");
+
+        if (suffix == null || suffix.isEmpty()) formatting.append(suffix);
+
+        cir.setReturnValue(formatting);
     }
 }

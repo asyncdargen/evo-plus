@@ -52,7 +52,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
 
     val PreSpawnAlertTime by settings.selector("Предупреждать о боссе за", (0..360 step 5).toSelector()) { "$it сек." }
     val PostSpawnShowTime by settings.selector(
-        "Сохранять в таймере после спавне",
+        "Сохранять в таймере после спавна",
         (0..360 step 5).toSelector()
     ) { "$it сек." }
     val OnlyRaidBosses by settings.boolean("Отображать только рейдовых боссов")

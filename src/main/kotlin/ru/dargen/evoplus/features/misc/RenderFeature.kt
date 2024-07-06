@@ -15,7 +15,7 @@ object RenderFeature : Feature("render", "Визуализация", Items.REDST
     val NoFire by settings.boolean("Отключение огня")
     val NoStrikes by settings.boolean("Отключение молний")
     val NoFalling by settings.boolean("Отключение падающих блоков")
-    val NoDamageShake by settings.boolean("Отключение покачивания камеры, при ударе")
+    val NoDamageShake by settings.boolean("Отключение покачивания камеры при ударе")
     val NoHandShake by settings.boolean("Отключение покачивания руки")
     val NoExcessHud by settings.boolean("Отключение ненужных элементов HUD", true)
     val NoExpHud by settings.boolean("Отключение отрисовки опыта и его уровня", true)
