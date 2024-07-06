@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
@@ -25,6 +26,8 @@ import ru.dargen.evoplus.api.event.interact.InteractEvent;
 import ru.dargen.evoplus.api.event.screen.ScreenCloseEvent;
 import ru.dargen.evoplus.api.event.screen.ScreenOpenEvent;
 import ru.dargen.evoplus.api.event.window.WindowResizeEvent;
+import ru.dargen.evoplus.api.event.world.WorldPostLoadEvent;
+import ru.dargen.evoplus.api.event.world.WorldPreLoadEvent;
 import ru.dargen.evoplus.features.misc.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.MinecraftKt;
 
@@ -112,6 +115,16 @@ public abstract class MinecraftClientMixin implements MinecraftClientExtension {
         if (screen != null && !EventBus.INSTANCE.fireResult(new ScreenOpenEvent(screen, currentScreen))) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "joinWorld", at = @At("HEAD"))
+    private void joinWorldPre(ClientWorld world, CallbackInfo ci) {
+        EventBus.INSTANCE.fire(new WorldPreLoadEvent(world));
+    }
+
+    @Inject(method = "joinWorld", at = @At("TAIL"))
+    private void joinWorldPost(ClientWorld world, CallbackInfo ci) {
+        EventBus.INSTANCE.fire(new WorldPostLoadEvent(world));
     }
 
     @Override

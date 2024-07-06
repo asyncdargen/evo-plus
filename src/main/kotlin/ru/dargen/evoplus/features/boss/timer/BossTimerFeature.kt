@@ -5,7 +5,7 @@ import net.minecraft.item.Items
 import pro.diamondworld.protocol.packet.boss.BossTimers
 import pro.diamondworld.protocol.packet.game.GameEvent.EventType.MYTHICAL_EVENT
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
-import ru.dargen.evoplus.api.event.evo.GameChangeEvent
+import ru.dargen.evoplus.api.event.evo.GameEventChangeEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.leftClick
@@ -43,8 +43,8 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
     val WidgetTeleport by settings.boolean("Телепорт по клику в виджете")
     val PremiumTimers by settings.boolean("Покупной таймер")
 
-    val MinLevel by settings.selector("Мин. уровень босса", (0..450).toSelector())
-    val MaxLevel by settings.selector("Макс. уровень босса", (0..450).toSelector(-1))
+    val MinLevel by settings.selector("Мин. уровень босса", (0..520).toSelector())
+    val MaxLevel by settings.selector("Макс. уровень босса", (0..520).toSelector(-1))
     val BossesCount by settings.selector("Кол-во отображаемых боссов", (0..60).toSelector(-1))
 
     val ShortName by settings.boolean("Сокращение имени босса")
@@ -77,7 +77,7 @@ object BossTimerFeature : Feature("boss-timer", "Таймер боссов", ite
             if (AutoReset && text == "Перезагрузка сервера") Bosses.clear()
         }
 
-        on<GameChangeEvent> {
+        on<GameEventChangeEvent> {
             if (old == MYTHICAL_EVENT || new == MYTHICAL_EVENT) Bosses.replaceAll { bossId, spawn ->
                 val bossType = BossType.valueOf(bossId) ?: return@replaceAll spawn
 

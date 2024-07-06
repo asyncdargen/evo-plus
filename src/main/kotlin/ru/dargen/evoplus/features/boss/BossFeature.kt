@@ -38,7 +38,7 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
     private val BossCursedPattern = "Босс проклят! Особенность: ([а-яА-ЯёЁ ]+)".toRegex()
     private val BossCapturePattern = "^Босс (.*) захвачен кланом (.*)!\$".toRegex()
     private val BossHealthsPattern = "([а-яА-ЯёЁ ]+)\\s\\s(\\d+)".toRegex()
-    val BossMenuPattern = "[\uE910\uE911]".toRegex()
+    val BossMenuPattern = "[넼넽넾]".toRegex()
 
     val BossDamageText = text("???? [??]: ??\uE35E") { isShadowed = true }
     val BossDamageWidget by widgets.widget("Урон по боссу", "boss-damage") {

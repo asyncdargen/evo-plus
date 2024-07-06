@@ -7,7 +7,7 @@ import pro.diamondworld.protocol.packet.game.GameEvent
 import pro.diamondworld.protocol.packet.game.LevelInfo
 import pro.diamondworld.protocol.packet.statistic.StatisticInfo
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
-import ru.dargen.evoplus.api.event.evo.GameChangeEvent
+import ru.dargen.evoplus.api.event.evo.GameEventChangeEvent
 import ru.dargen.evoplus.api.event.fire
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.Relative
@@ -105,7 +105,7 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
         }
         listen<GameEvent> {
             if (StatisticHolder.Event != it.type) {
-                GameChangeEvent(StatisticHolder.Event, it.type).fire()
+                GameEventChangeEvent(StatisticHolder.Event, it.type).fire()
             }
             StatisticHolder.Event = it.type
         }
