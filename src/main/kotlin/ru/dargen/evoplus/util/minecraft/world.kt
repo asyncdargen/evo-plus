@@ -6,7 +6,7 @@ import net.minecraft.world.Heightmap
 import net.minecraft.world.chunk.Chunk
 
 
-fun Chunk.forEachBlocks(iter: (BlockState) -> Unit) {
+fun Chunk.forEachBlocks(iter: (BlockPos, BlockState) -> Unit) {
     val blockPos = BlockPos.Mutable()
     for (x in pos.startX..pos.endX) {
         for (z in pos.startZ..pos.endZ) {
@@ -15,7 +15,7 @@ fun Chunk.forEachBlocks(iter: (BlockState) -> Unit) {
 
             for (y in Client.world!!.bottomY until height) {
                 blockPos.set(x, y, z)
-                iter(getBlockState(blockPos))
+                iter(blockPos, getBlockState(blockPos))
             }
         }
     }
