@@ -1,9 +1,12 @@
 package ru.dargen.evoplus.features.misc
 
 import net.minecraft.item.Items
+import ru.dargen.evoplus.api.event.on
+import ru.dargen.evoplus.api.event.world.ChunkLoadEvent
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.render.HealthBars
 import ru.dargen.evoplus.util.format.fix
+import ru.dargen.evoplus.util.minecraft.forEachBlocks
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 

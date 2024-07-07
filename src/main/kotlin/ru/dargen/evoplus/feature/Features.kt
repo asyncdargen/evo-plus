@@ -15,6 +15,7 @@ import ru.dargen.evoplus.features.chat.TextFeature
 import ru.dargen.evoplus.features.clan.ClanFeature
 import ru.dargen.evoplus.features.clan.ShaftFeature
 import ru.dargen.evoplus.features.clicker.AutoClickerFeature
+import ru.dargen.evoplus.features.esp.ESPFeature
 import ru.dargen.evoplus.features.game.fishing.FishingFeature
 import ru.dargen.evoplus.features.game.GoldenRushFeature
 import ru.dargen.evoplus.features.misc.MiscFeature
@@ -76,6 +77,7 @@ data object Features {
         RenderFeature.register()
         MiscFeature.register()
         ShareFeature.register()
+        ESPFeature.register()
     }
 
     fun Feature.register() = List.add(this)

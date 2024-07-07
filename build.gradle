@@ -61,7 +61,7 @@ jar {
 
 runClient {
     jvmArgs "-Devo-plus.dev=true"
-    args "--username=${System.getenv("TEST_NAME")}"
+    args "--username=EvoPlusTest"
 }
 
 allOpen {

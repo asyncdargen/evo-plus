@@ -34,6 +34,9 @@ class SettingsGroup(id: String, name: String, val screen: FeatureScreenElements)
         nameMapper: Selector<T>.(T?) -> String = { it?.toString() ?: "null" }
     ) = setting(SwitcherSetting(id, name, selector, nameMapper))
 
+    fun string(name: String, value: String = "", id: String = "") =
+        setting(StringSetting(id, name, value))
+
     override fun load(element: JsonElement) {
         if (!element.isJsonObject) return
 
