@@ -28,12 +28,12 @@ public abstract class PlayerListHudMixin {
         if (PotionFeature.INSTANCE.getEnabledPotionsInTab()) {
             val potionTimers = PotionFeature.INSTANCE.getPotionTimers();
             if (!potionTimers.isEmpty()) {
-                stringBuilder.append("\nßeßl¿ÍÚË‚Ì˚Â ›ÙÙÂÍÚ˚ ßrß8(%s)".formatted(potionTimers.size()));
+                stringBuilder.append("\n¬ße¬ßl–ê–∫—Ç–∏–≤–Ω—ã–µ —ç—Ñ—Ñ–µ–∫—Ç—ã ¬ßr¬ß8(%s)".formatted(potionTimers.size()));
                 potionTimers.forEach((potionId, potionState) -> {
                     var type = PotionType.Companion.byOrdinal(potionId);
                     if (type == null) return;
 
-                    stringBuilder.append("\n%s (%s%%) ßf%s".formatted(
+                    stringBuilder.append("\n%s (%s%%) ¬ßf%s".formatted(
                             type.getDisplayName(),
                             potionState.getQuality(),
                             TimeKt.getAsShortTextTime(potionState.getEndTime() - System.currentTimeMillis()))
@@ -45,7 +45,7 @@ public abstract class PlayerListHudMixin {
 
         if (showServerInTab)
             stringBuilder.append(text.getString())
-                    .append("\n“ÂÍÛ˘ËÈ ÒÂ‚Â: ße%s".formatted(EvoPlusProtocol.INSTANCE.getServer().toString()));
+                    .append("\n–¢–µ–∫—É—â–∏–π —Å–µ—Ä–≤–µ—Ä: ¬ße%s".formatted(EvoPlusProtocol.INSTANCE.getServer().toString()));
 
         text = Text.of(stringBuilder.toString());
         return instance.wrapLines(text, width);
