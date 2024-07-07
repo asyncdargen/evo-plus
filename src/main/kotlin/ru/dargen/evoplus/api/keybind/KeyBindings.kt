@@ -1,7 +1,9 @@
 package ru.dargen.evoplus.api.keybind
 
 import net.minecraft.client.option.KeyBinding
+import net.minecraft.client.util.InputUtil
 import ru.dargen.evoplus.api.event.input.KeyTypeEvent
+import ru.dargen.evoplus.api.event.input.MouseClickEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.mixin.input.keybind.KeyBindingAccessor
 import ru.dargen.evoplus.util.kotlin.cast
@@ -14,11 +16,22 @@ object KeyBindings {
 
     init {
         on<KeyTypeEvent> {
-            PressHandlers.forEach { (key, handler) ->
-                runCatching {
-                    if (key.isPressed) handler()
-                }.exceptionOrNull()?.log("Error while processing key handler ${key.translationKey}")
-            }
+            PressHandlers
+                .filterKeys { it.boundKey.category !== InputUtil.Type.MOUSE }
+                .forEach { (key, handler) ->
+                    runCatching {
+                        if (key.isPressed) handler()
+                    }.exceptionOrNull()?.log("Error while processing key handler ${key.translationKey}")
+                }
+        }
+        on<MouseClickEvent> {
+            PressHandlers
+                .filterKeys { it.boundKey.category === InputUtil.Type.MOUSE }
+                .forEach { (key, handler) ->
+                    runCatching {
+                        if (key.isPressed) handler()
+                    }.exceptionOrNull()?.log("Error while processing key handler ${key.translationKey}")
+                }
         }
     }
 

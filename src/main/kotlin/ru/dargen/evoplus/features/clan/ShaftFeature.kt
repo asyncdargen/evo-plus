@@ -17,6 +17,7 @@ import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.features.stats.info.holder.StatisticHolder
 import ru.dargen.evoplus.protocol.EvoPlusProtocol
 import ru.dargen.evoplus.util.evo.isBarrel
+import ru.dargen.evoplus.util.evo.isDetonatingBarrel
 import ru.dargen.evoplus.util.format.nounEndings
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
@@ -141,7 +142,7 @@ object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
                 return@on
             }
 
-            if (oldState?.isBarrel() == true && !newState.isBarrel()) Barrels = max(Barrels - 1, 0)
+            if ((oldState?.isBarrel() == true || oldState?.isDetonatingBarrel() == true) && (!newState.isBarrel() && !newState.isDetonatingBarrel())) Barrels = max(Barrels - 1, 0)
         }
     }
 }
