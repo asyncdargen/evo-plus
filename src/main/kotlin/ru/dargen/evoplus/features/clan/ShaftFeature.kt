@@ -122,15 +122,15 @@ object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
         on<ChunkLoadEvent> {
             if (!BarrelsWidget.enabled) return@on
 
-            chunk.forEachBlocks {
-                if (it.isBarrel() || it.isDetonatingBarrel()) ++Barrels
+            chunk.forEachBlocks { _, blockState ->
+                if (blockState.isBarrel() || blockState.isDetonatingBarrel()) ++Barrels
             }
         }
         on<ChunkUnloadEvent> {
             if (!BarrelsWidget.enabled) return@on
 
-            chunk.forEachBlocks {
-                if (it.isBarrel() || it.isDetonatingBarrel()) Barrels = max(Barrels - 1, 0)
+            chunk.forEachBlocks { _, blockState ->
+                if (blockState.isBarrel() || blockState.isDetonatingBarrel()) Barrels = max(Barrels - 1, 0)
             }
         }
 
