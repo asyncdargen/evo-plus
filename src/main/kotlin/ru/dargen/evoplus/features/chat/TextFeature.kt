@@ -15,7 +15,6 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
     var NoSpam by settings.boolean("Отключение спам-сообщений")
     var CopyMessages by settings.boolean("Копировать сообщение из чата (ПКМ)", true)
     var EmojiMenu by settings.boolean("Меню эмодзи", true)
-    var ReplaceUniqueUsers by settings.boolean("Заменять ники уникальных пользователей EvoPlus", true)
 
     init {
         Emojis
@@ -27,8 +26,6 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
         }
 
         on<StringRenderEvent> {
-            if (!ReplaceUniqueUsers) return@on
-
             val text = text ?: return@on
 
             this.text = Replacer
