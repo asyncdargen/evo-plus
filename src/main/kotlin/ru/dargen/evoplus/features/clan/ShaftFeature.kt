@@ -123,26 +123,26 @@ object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
             if (!BarrelsWidget.enabled) return@on
 
             chunk.forEachBlocks {
-                if (it.isBarrel()) ++Barrels
+                if (it.isBarrel() || it.isDetonatingBarrel()) ++Barrels
             }
         }
         on<ChunkUnloadEvent> {
             if (!BarrelsWidget.enabled) return@on
 
             chunk.forEachBlocks {
-                if (it.isBarrel()) Barrels = max(Barrels - 1, 0)
+                if (it.isBarrel() || it.isDetonatingBarrel()) Barrels = max(Barrels - 1, 0)
             }
         }
 
         on<BlockChangeEvent> {
             if (!BarrelsWidget.enabled) return@on
 
-            if (newState.isBarrel()) {
+            if (oldState?.isDetonatingBarrel() == false && newState.isBarrel()) {
                 ++Barrels
                 return@on
             }
 
-            if ((oldState?.isBarrel() == true || oldState?.isDetonatingBarrel() == true) && (!newState.isBarrel() && !newState.isDetonatingBarrel())) Barrels = max(Barrels - 1, 0)
+            if ((oldState?.isBarrel() == true) && (!newState.isBarrel() && !newState.isDetonatingBarrel())) Barrels = max(Barrels - 1, 0)
         }
     }
 }
