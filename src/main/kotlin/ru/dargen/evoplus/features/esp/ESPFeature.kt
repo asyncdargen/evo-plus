@@ -8,8 +8,6 @@ import ru.dargen.evoplus.api.event.world.ChunkLoadEvent
 import ru.dargen.evoplus.api.event.world.ChunkUnloadEvent
 import ru.dargen.evoplus.api.render.context.World
 import ru.dargen.evoplus.api.render.node.Node
-import ru.dargen.evoplus.api.render.node.box.box
-import ru.dargen.evoplus.api.render.node.world.cube
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.util.evo.isHead
 import ru.dargen.evoplus.util.evo.isWallHead
@@ -45,8 +43,8 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
 
                 printMessage(blockPos.toString())
                 when {
-                    blockState.isHead() -> shards[blockPos] = blockPos.mutableCopy().renderShard()
-                    blockState.isWallHead() -> shards[blockPos] =  blockPos.mutableCopy().renderWallShard()
+                    blockState.isHead() -> shards[blockPos.mutableCopy()] = blockPos.mutableCopy().renderShard()
+                    blockState.isWallHead() -> shards[blockPos.mutableCopy()] =  blockPos.mutableCopy().renderWallShard()
                 }
             }
         }
