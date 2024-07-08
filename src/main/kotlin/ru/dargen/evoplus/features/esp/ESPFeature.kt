@@ -1,50 +1,48 @@
 package ru.dargen.evoplus.features.esp
 
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.Items
 import net.minecraft.util.math.BlockPos
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.world.ChunkLoadEvent
 import ru.dargen.evoplus.api.event.world.ChunkUnloadEvent
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.context.World
 import ru.dargen.evoplus.api.render.node.Node
+import ru.dargen.evoplus.api.render.node.plus
+import ru.dargen.evoplus.api.render.node.world.cube
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.util.evo.isDiamondShardHead
+import ru.dargen.evoplus.util.evo.isGoldenShardHead
 import ru.dargen.evoplus.util.evo.isHead
 import ru.dargen.evoplus.util.evo.isWallHead
-import ru.dargen.evoplus.util.evo.renderShard
-import ru.dargen.evoplus.util.evo.renderWallShard
+import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.forEachBlocks
-import ru.dargen.evoplus.util.minecraft.printMessage
+import java.awt.Color
 
 object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
 
-    const val goldShardHead =
-        "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZjg5M2ZjNmRlZmFkMjE4Zjc4MzZlZmVmYmU2MzZmMWMyY2MxYmI2NTBjODJmY2NkOTlmMmMxZWU2In19fQ=="
-    const val diamondShardHead =
-        "ewogICJ0aW1lc3RhbXAiIDogMTU5ODUyMjU3OTk4MiwKICAicHJvZmlsZUlkIiA6ICJmMDk3N2NmZWZlZmY0ZGM1OGUyMGIzOTVlMjBiYWJkYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJkaWFtb25kZHVkZTMiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjE3NjdmYWEzNjZjODA1Nzc5NTJmNWUwMDc4MTU5ZDU5NzdmMzcyMDJmMzhkNDgxN2Q0YTkyNDVhZDQ4YTkwZCIKICAgIH0KICB9Cn0="
+    private val Shards = mutableMapOf<BlockPos, Node>()
 
-    val shards = mutableMapOf<BlockPos, Node>()
-
-    val ShardEsp by settings.boolean("Подсвечивание осколков", false)
+    val ShardEsp by settings.boolean("Подсвечивание осколков", false) on { state ->
+        Shards.values.forEach { it.enabled = state }
+    }
 
     init {
-
         on<ChunkLoadEvent> {
             if (!ShardEsp) return@on
 
             chunk.forEachBlocks { blockPos, blockState ->
-                if (!blockState.isHead() && !blockState.isWallHead()) return@forEachBlocks
+                val isGoldenShardHead = blockState.isGoldenShardHead(blockPos, chunk)
 
-                val owner = chunk.getBlockEntity(blockPos, BlockEntityType.SKULL)?.get()?.owner ?: return@forEachBlocks
-                val property = owner.properties.asMap()["textures"]?.firstOrNull() ?: return@forEachBlocks
-                val value = property.value
+                if (!isGoldenShardHead && !blockState.isDiamondShardHead(blockPos, chunk)) return@forEachBlocks
 
-                if (value != goldShardHead && value != diamondShardHead) return@forEachBlocks
-
-                printMessage(blockPos.toString())
                 when {
-                    blockState.isHead() -> shards[blockPos.mutableCopy()] = blockPos.mutableCopy().renderShard()
-                    blockState.isWallHead() -> shards[blockPos.mutableCopy()] =  blockPos.mutableCopy().renderWallShard()
+                    blockState.isHead() -> Shards[blockPos.mutableCopy()] = blockPos.mutableCopy().renderShard(
+                        if (isGoldenShardHead) Colors.Gold else Colors.Diamond
+                    )
+                    blockState.isWallHead() -> Shards[blockPos.mutableCopy()] =  blockPos.mutableCopy().renderWallShard(
+                        if (isGoldenShardHead) Colors.Gold else Colors.Diamond
+                    )
                 }
             }
         }
@@ -53,18 +51,26 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
             if (!ShardEsp) return@on
 
             chunk.forEachBlocks { blockPos, blockState ->
-                if (!blockState.isHead() && !blockState.isWallHead()) return@forEachBlocks
+                if (!blockState.isGoldenShardHead(blockPos, chunk) && !blockState.isDiamondShardHead(blockPos, chunk)) return@forEachBlocks
 
-                val owner = chunk.getBlockEntity(blockPos, BlockEntityType.SKULL)?.get()?.owner ?: return@forEachBlocks
-                val property = owner.properties.asMap()["textures"]?.firstOrNull() ?: return@forEachBlocks
-                val value = property.value
-
-                if (value != goldShardHead && value != diamondShardHead) return@forEachBlocks
-
-                printMessage(shards.toString())
-                printMessage(blockPos.toString())
-                World.removeChildren(shards.remove(blockPos) ?: return@forEachBlocks)
+                World.removeChildren(Shards.remove(blockPos) ?: return@forEachBlocks)
             }
         }
     }
+
+    private fun BlockPos.renderShard(color: Color) =
+        World + cube {
+            position = v3(x.toDouble() + .75, y.toDouble() + .5, z.toDouble() + 0.25)
+            this.color = color
+            isSeeThrough = true
+            size = v3(20.0, 20.0, 20.0)
+        }
+
+    private fun BlockPos.renderWallShard(color: Color) =
+        World + cube {
+            position = v3(x.toDouble() + .3, y.toDouble() + .65, z.toDouble() + 0.2)
+            this.color = color
+            isSeeThrough = true
+            size = v3(20.0, 20.0, 20.0)
+        }
 }

@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.feature.type
+package ru.dargen.evoplus.feature.settings
 
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
@@ -9,7 +9,6 @@ import ru.dargen.evoplus.api.render.node.input.input
 import ru.dargen.evoplus.api.render.node.rectangle
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.screen.FeatureScreenElement
-import ru.dargen.evoplus.feature.settings.*
 import ru.dargen.evoplus.features.chat.TextFeature.settings
 import ru.dargen.evoplus.util.math.v3
 import java.awt.Color

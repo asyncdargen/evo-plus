@@ -19,7 +19,7 @@ object Colors {
     data object Negative : Color(255, 0, 0)
     data object Gray : Color(177, 177, 177)
 
-    data object Gold : Color(254, 151, 14)
+    data object Gold : Color(255, 215, 0)
     data object Diamond : Color(0, 255, 255)
     data object Green : Color(59, 243, 79)
     data object Red : Color(255, 0,0)

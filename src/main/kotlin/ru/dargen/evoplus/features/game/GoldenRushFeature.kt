@@ -1,6 +1,7 @@
 package ru.dargen.evoplus.features.game
 
 import net.minecraft.client.render.DiffuseLighting
+import net.minecraft.entity.Entity
 import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.render.node.box.hbox
@@ -23,6 +24,11 @@ private val GoldenCristalItem = customItem(Items.PAPER, 271)
 
 object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорадка", Items.GOLD_INGOT) {
 
+    var GoldenCrystalEntity: Entity? = null
+        set(value) {
+            field = value
+            field?.isGlowing = GoldenCrystalGlowing
+        }
     var GoldenCrystalAround = false
         set(value) {
             field = value
@@ -52,6 +58,9 @@ object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорад
 
     val GoldenCrystalNotify by settings.boolean("Уведомление о появлении золотого кристалла")
     val GoldenCrystalMessage by settings.boolean("Сообщение о появлении золотого кристалла", true)
+    val GoldenCrystalGlowing by settings.boolean("Подстветка золотого кристалла") on {
+        GoldenCrystalEntity?.isGlowing = it
+    }
 
     init {
         scheduleEvery(period = 10) {
@@ -59,6 +68,7 @@ object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорад
                 .filterIsInstance<ArmorStandEntity>()
                 .find { stand -> stand.armorItems.any { it.equalCustomModel(GoldenCristalItem) } }
                 .also {
+                    GoldenCrystalEntity = it
                     val previousGoldenCrystalAround = GoldenCrystalAround
                     GoldenCrystalAround = it != null
 

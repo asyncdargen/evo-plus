@@ -7,7 +7,7 @@ import ru.dargen.evoplus.api.event.chat.ChatSendEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.StringRenderEvent
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.feature.type.ColorInputSetting
+import ru.dargen.evoplus.feature.settings.ColorInputSetting
 import ru.dargen.evoplus.protocol.EvoPlusProtocol
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.minecraft.uncolored
