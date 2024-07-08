@@ -62,6 +62,7 @@ data object Features {
 
     fun load() {
         AutoClickerFeature.register()
+        ESPFeature.register()
         BossTimerFeature.register()
         BossFeature.register()
         StaffFeature.register()
@@ -77,7 +78,6 @@ data object Features {
         RenderFeature.register()
         MiscFeature.register()
         ShareFeature.register()
-        ESPFeature.register()
     }
 
     fun Feature.register() = List.add(this)

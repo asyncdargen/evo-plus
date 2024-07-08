@@ -10,6 +10,7 @@ import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.state.hbar
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.widget.WidgetBase
+import ru.dargen.evoplus.features.stats.level.LevelWidget
 import ru.dargen.evoplus.util.format.color
 import ru.dargen.evoplus.util.format.fix
 import ru.dargen.evoplus.util.math.v3
@@ -19,32 +20,33 @@ import ru.dargen.evoplus.util.render.alpha
 object ComboWidget : WidgetBase {
 
     val ProgressBar = hbar {
-        size = v3(16.0, 1.0)
+        size = v3(125.0, 1.0)
 
         align = Relative.RightBottom
         origin = Relative.RightTop
 
         interpolationTime = .51
 
-        backgroundColor = Colors.Transparent
-        progressColor = Colors.Green.alpha(.4)
+        backgroundColor = Colors.Gray
+        progressColor = Colors.Green.alpha(.8)
     }
     val Text = text("????") { isShadowed = true }
+    val MainBox = hbox {
+        space = 1.0
+        indent = v3()
+
+        +item(itemStack(Items.GOLDEN_PICKAXE)) {
+            scale = v3(1.2, 1.2, 1.2)
+        }
+        +Text
+    }
 
     override val node = vbox {
         space = 1.0
         indent = v3()
 
-        +hbox {
-            space = 1.0
-            indent = v3()
-
-            +item(itemStack(Items.GOLDEN_PICKAXE)) {
-                scale = v3(1.2, 1.2, 1.2)
-                +ProgressBar
-            }
-            +Text
-        }
+        +MainBox
+        +ProgressBar
     }
 
     fun update(data: ComboData) {
