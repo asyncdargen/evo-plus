@@ -45,11 +45,23 @@ fun BlockState.isEndDetonatingBarrel() = block == Blocks.NOTE_BLOCK
         && get(NoteBlock.NOTE) == 17
         && get(NoteBlock.POWERED) == false
 
-fun BlockPos.renderShard() {
+fun BlockState.isHead() = block == Blocks.PLAYER_HEAD
+fun BlockState.isWallHead() = block == Blocks.PLAYER_WALL_HEAD
+
+fun BlockPos.renderShard() =
     World+ cube {
-        position = v3(x.toDouble() + 1.0, y.toDouble() + .5, z.toDouble() - .25)
+        position = v3(x.toDouble() + .75, y.toDouble() + .5, z.toDouble() + 0.25)
         color = Color(0, 255, 255)
         isSeeThrough = true
         size = v3(20.0, 20.0, 20.0)
     }
-}
+
+
+fun BlockPos.renderWallShard() =
+    World+ cube {
+        position = v3(x.toDouble() + .3, y.toDouble() + .65, z.toDouble() + 0.2)
+        color = Color(0, 255, 255)
+        isSeeThrough = true
+        size = v3(20.0, 20.0, 20.0)
+    }
+
