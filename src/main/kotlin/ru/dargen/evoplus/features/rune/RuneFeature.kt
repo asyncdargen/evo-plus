@@ -22,13 +22,13 @@ object RuneFeature : Feature("rune", "Руны", customItem(Items.PAPER, 445)) {
     val Abilities = concurrentHashMapOf<String, Long>()
 
     val ActiveRunesText = text(
-        "§fНадетые руны:", " §e??? ???", " §6??? ???",
+        " §e??? ???", " §6??? ???",
         " §6??? ???", " §a??? ???", " §a??? ???"
     ) {
         isShadowed = true
     }
     val ActiveAbilitiesWidget by widgets.widget(
-        "",
+        "Надетые руны",
         "active-abilities",
         enabled = false,
         widget = AbilityTimerWidget
@@ -56,7 +56,7 @@ object RuneFeature : Feature("rune", "Руны", customItem(Items.PAPER, 445)) {
         RunesBag
 
         listen<ActiveRunes> { activeRunes ->
-            ActiveRunesText.text = "§fНадетые руны:\n" + activeRunes.data.joinToString("\n") { " $it" }
+            ActiveRunesText.text = activeRunes.data.joinToString("\n") { " $it" }
         }
 
         listen<AbilityTimers> {
