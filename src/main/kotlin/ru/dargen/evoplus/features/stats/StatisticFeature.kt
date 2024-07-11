@@ -41,6 +41,12 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
     val LevelRequireWidget by widgets.widget("Требования на уровень", "level-require", widget = LevelWidget)
 
     val NotifyCompleteLevelRequire by settings.boolean("Уведомлять при выполнении требований", true)
+    val ComboProgressBarEnabled by settings.boolean("Шкала прогресса комбо") on {
+        ComboWidget.ProgressBar.enabled = it
+    }
+    val LevelProgressBarEnabled by settings.boolean("Шкала прогресса уровня") on {
+        LevelWidget.ProgressBar.enabled = it
+    }
 
     var BlocksCount = 0
         set(value) {
@@ -63,6 +69,9 @@ object StatisticFeature : Feature("statistic", "Статистика", Items.PAP
     }
 
     init {
+        ComboWidget.ProgressBar.enabled = ComboProgressBarEnabled
+        LevelWidget.ProgressBar.enabled = LevelProgressBarEnabled
+
         screen.baseElement("Сбросить счетчик блоков") { button("Сбросить") { on { BlocksCount = Data.blocks } } }
         StatisticHolder
 

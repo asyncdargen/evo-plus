@@ -10,7 +10,6 @@ import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.state.hbar
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.widget.WidgetBase
-import ru.dargen.evoplus.features.stats.level.LevelWidget
 import ru.dargen.evoplus.util.format.color
 import ru.dargen.evoplus.util.format.fix
 import ru.dargen.evoplus.util.math.v3
