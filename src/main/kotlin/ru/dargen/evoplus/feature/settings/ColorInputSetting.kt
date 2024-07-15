@@ -20,7 +20,7 @@ class ColorInputSetting(
 
     val colors = buildList {
         repeat(2) {
-            add(settings.setting(StringSetting("chatcolor_$it", "Градиент сообщения", "ffffff")))
+            add(settings.string("Градиент сообщения", "ffffff", "chatcolor_$it"))
         }
     }.onEach {
         inputs.add(
@@ -33,9 +33,9 @@ class ColorInputSetting(
         )
     }
 
-    final var mirroring = settings.setting(BooleanSetting("colorMirroring", "Отзеркаливание цвета", false))
+    var Mirroring by settings.boolean("Отзеркаливание цвета", false)
 
-    private val mirrorButton = mirroring.run {
+    private val mirrorButton = Mirroring.run {
         fun Boolean.stringify() = if (this) "Зеркальность" else "Градация"
         button(value.stringify()) {
             on {

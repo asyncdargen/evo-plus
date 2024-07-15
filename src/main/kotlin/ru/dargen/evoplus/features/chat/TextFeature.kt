@@ -7,7 +7,6 @@ import ru.dargen.evoplus.api.event.chat.ChatSendEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.StringRenderEvent
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.feature.settings.ColorInputSetting
 import ru.dargen.evoplus.protocol.EvoPlusProtocol
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.minecraft.uncolored
@@ -20,7 +19,7 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
     var CopyMessages by settings.boolean("Копировать сообщение из чата (ПКМ)", true)
     var EmojiMenu by settings.boolean("Меню эмодзи", true)
     var ReplaceUniqueUsers by settings.boolean("Заменять ники уникальных пользователей EvoPlus", true)
-    var Colors = settings.setting(ColorInputSetting("colorInputs", "Градиент сообщения в чате"))
+    var ColorInputs = settings.colorInput("Градиент сообщения в чате", "colorInputs")
 
     init {
         Emojis
@@ -34,12 +33,12 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
         val formatters = listOf("!", "@")
 
         on<ChatSendEvent> {
-            if (!Colors.value || "PRISONEVO" !in EvoPlusProtocol.Server.serverName) return@on
+            if (!ColorInputs.value || "PRISONEVO" !in EvoPlusProtocol.Server.serverName) return@on
 
             val message = text
             val hasSelector = formatters.any { message.startsWith(it, true) }
             val prefix = if (hasSelector) message.take(1) else ""
-            val colors = buildColorSetting(Colors.mirroring.value)
+            val colors = buildColorSetting(ColorInputs.value)
             val formattedMessage = message.replace(prefix, "").buildMessage(prefix, colors)
 
             text = formattedMessage
@@ -70,7 +69,7 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
     }
 
     private fun buildColorSetting(withMirroring: Boolean) = buildList{
-        Colors.colors.map { it.value }.let {
+        ColorInputs.colors.map { it.value }.let {
             add("[#${it[0]}-#${it[1]}]")
             if (withMirroring) add("[#${it[1]}-#${it[0]}]")
         }

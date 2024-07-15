@@ -28,7 +28,8 @@ import kotlin.math.max
 object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) {
 
     val BackpackTitle = "\uE974"
-    val PetExpPattern = "^Опыта дает питомцу: (\\d+)\$".toRegex()
+    val FishExpPattern = "^Опыта дает питомцу: (\\d+)\$".toRegex()
+    val FishCaloriesPattern = "^Калорийность: (\\d+)\$".toRegex()
     val HigherBitingPattern = "^На локации \"([\\S\\s]+)\" повышенный клёв!\$".toRegex()
 
     val Nibbles = mutableMapOf<String, Double>()
@@ -65,6 +66,33 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
             )
 
             fishExpText.text = "Опыт питомцам: $exp"
+        }
+    }
+    val FishCaloriesWidget by widgets.widget("Счёт общей калорийности рыбы", "fish-calories") {
+        val fishExpText = +text("Общая калорийность: 0") {
+            isShadowed = true
+        }
+
+        tick {
+            val currentScreen = CurrentScreen
+            val isCraftingInventory = (currentScreen is InventoryScreen)
+            val isBackpackInventory =
+                (currentScreen is GenericContainerScreen && BackpackTitle in currentScreen.title.string)
+
+            render = isWidgetEditor || isCraftingInventory || isBackpackInventory
+
+            if (!isCraftingInventory && !isBackpackInventory) return@tick
+
+            val calories = max(
+                currentScreen
+                    .safeCast<GenericContainerScreen>()
+                    ?.screenHandler
+                    ?.stacks
+                    ?.findCalories() ?: 0,
+                Player!!.inventory.items.findCalories()
+            )
+
+            fishExpText.text = "Общая калорийность: $calories"
         }
     }
     val NormalQuestsProgressWidget by widgets.widget(
@@ -122,6 +150,12 @@ object FishingFeature : Feature("fishing", "Рыбалка", Items.FISHING_ROD) 
     private fun Collection<ItemStack>.findExp() = mapNotNull { item ->
         item.lore.getOrNull(2)
             ?.string
-            ?.let { PetExpPattern.find(it.trim())?.groupValues?.getOrNull(1)?.toIntOrNull()?.times(item.count) }
+            ?.let { FishExpPattern.find(it.trim())?.groupValues?.getOrNull(1)?.toIntOrNull()?.times(item.count) }
+    }.sum().takeIf { it > 0 } ?: 0
+
+    private fun Collection<ItemStack>.findCalories() = mapNotNull { item ->
+        item.lore.getOrNull(2)
+            ?.string
+            ?.let { FishCaloriesPattern.find(it.trim())?.groupValues?.getOrNull(1)?.toIntOrNull()?.times(item.count) }
     }.sum().takeIf { it > 0 } ?: 0
 }

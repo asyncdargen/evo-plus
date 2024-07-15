@@ -11,7 +11,7 @@ import ru.dargen.evoplus.util.selector.Selector
 class SettingsGroup(id: String, name: String, val screen: FeatureScreenElements) :
     Setting<List<Setting<*>>>(id, name) {
 
-    val settings = mutableListOf<Setting<*>>()
+    final val settings = mutableListOf<Setting<*>>()
     override var value: List<Setting<*>> = settings
 
     fun <S : Setting<*>> setting(setting: S) = setting.apply {
@@ -21,6 +21,12 @@ class SettingsGroup(id: String, name: String, val screen: FeatureScreenElements)
 
     fun boolean(name: String, value: Boolean = false, id: String = "") =
         setting(BooleanSetting(id, name, value))
+
+    fun string(name: String, value: String = "", id: String = "") =
+        setting(StringSetting(id, name, value))
+
+    fun colorInput(name: String, value: String = "", id: String = "") =
+        setting(ColorInputSetting(id, name))
 
     fun <T> selector(
         name: String, selector: Selector<T>,
@@ -33,9 +39,6 @@ class SettingsGroup(id: String, name: String, val screen: FeatureScreenElements)
         id: String = "",
         nameMapper: Selector<T>.(T?) -> String = { it?.toString() ?: "null" }
     ) = setting(SwitcherSetting(id, name, selector, nameMapper))
-
-    fun string(name: String, value: String = "", id: String = "") =
-        setting(StringSetting(id, name, value))
 
     override fun load(element: JsonElement) {
         if (!element.isJsonObject) return
