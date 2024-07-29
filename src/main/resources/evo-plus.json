@@ -24,6 +24,7 @@
     "render.TextVisitFactoryMixin",
     "render.InGameOverlayRendererMixin",
     "render.GameRendererMixin",
+    "render.entity.EntityRendererMixin",
     "render.hud.ChatHudMixin",
     "render.hud.InGameHudMixin",
     "render.hud.ChatHudAccessor",
