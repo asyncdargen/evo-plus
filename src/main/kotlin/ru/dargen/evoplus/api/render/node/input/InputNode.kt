@@ -70,10 +70,11 @@ class InputNode : RectangleNode() {
         }
         type { char, _ -> if (focused) put(char.toString()) }
 
+        typeKey(InputUtil.GLFW_KEY_ENTER) { if (focused) focused = false }
         typeKey(InputUtil.GLFW_KEY_RIGHT) { if (focused) cursor++ }
         typeKey(InputUtil.GLFW_KEY_LEFT) { if (focused) cursor-- }
         typeKey(InputUtil.GLFW_KEY_DELETE) { if (focused) remove(1) }
-        typeKey(InputUtil.GLFW_KEY_BACKSPACE) { if (focused) remove(-1) }
+        typeKey(InputUtil.GLFW_KEY_BACKSPACE) { if (focused) remove(-(if (Screen.hasControlDown()) content.length else 1)) }
 
         typeKey { if (focused && Screen.isPaste(it)) paste() }
 
@@ -85,11 +86,11 @@ class InputNode : RectangleNode() {
                     .coerceAtLeast(.0)
         }
         text.postRender { matrices, tickDelta ->
-            if (!focused || (currentMillis / 100) % 2 == 0L) return@postRender
+            if (!focused || (currentMillis / 500) % 2 == 0L) return@postRender
             val preCursorSize = TextRenderer.getWidth(contentBefore) * scale.x
             matrices.fill(
                 preCursorSize, -this@InputNode.size.y / 2,
-                preCursorSize + 2.0, this@InputNode.size.y / 2,
+                preCursorSize + 1.0, this@InputNode.size.y / 2,
                 color.rgb
             )
         }
@@ -108,6 +109,8 @@ class InputNode : RectangleNode() {
     }
 
     fun remove(shift: Int) {
+        if (shift < 0 && content.isEmpty()) return
+
         val oldCursor = cursor
         cursor += shift
         content =
