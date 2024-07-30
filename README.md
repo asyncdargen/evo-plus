@@ -16,9 +16,9 @@ EvoPlus - утилитарная модификация, сделанная по
 ---
 
 # Feedback
-* [Группа ВК](https://vk.com/evo_pluss): информация об обновлениях и обратная связь.
-* [ВК](https://vk.com/evo_pluss)\\[Телеграм](https://asyncdargen.t.me/) (asyncdargen): разработчик.
-* [ВК](https://vk.com/smole17)\\[Телеграм](https://chmol17.t.me/) (Smole17): разработчик.
+* [Дискорд](https://discord.gg/tkuVE3fdKt): информация об обновлениях и обратная связь.
+* [Телеграм](https://asyncdargen.t.me/) (asyncdargen): разработчик.
+* [Телеграм](https://chmol17.t.me/) (Smole17): разработчик.
 
 ---
 
