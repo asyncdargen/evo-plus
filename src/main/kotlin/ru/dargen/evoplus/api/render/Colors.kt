@@ -22,6 +22,9 @@ object Colors {
     data object Gold : Color(255, 215, 0)
     data object Diamond : Color(0, 255, 255)
     data object Green : Color(59, 243, 79)
-    data object Red : Color(255, 0,0)
+    data object Red : Color(255, 0, 0)
+    data object Yellow : Color(255, 207, 36)
+    data object Deepskyblue : Color(0, 199, 220)
+    data object Purple : Color(158, 0, 220)
 
 }

@@ -1,6 +1,6 @@
 package ru.dargen.evoplus
 
-import net.fabricmc.api.ModInitializer
+import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.loader.api.FabricLoader
 import ru.dargen.evoplus.api.event.EventBus
 import ru.dargen.evoplus.api.keybind.KeyBindings
@@ -22,11 +22,11 @@ val ModLabel = "§f§lEvo§6§lPlus"
 
 val Logger = java.util.logging.Logger.getLogger("EvoPlus")
 
-object EvoPlus : ModInitializer {
+object EvoPlus : ClientModInitializer {
 
     val ModContainer by lazy { FabricLoader.getInstance().getModContainer("evo-plus").get() }
-
-    override fun onInitialize() {
+    
+    override fun onInitializeClient() {
         EventBus
         Scheduler
         KeyBindings

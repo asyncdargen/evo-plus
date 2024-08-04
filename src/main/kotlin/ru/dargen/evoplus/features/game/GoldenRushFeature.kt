@@ -20,7 +20,7 @@ import ru.dargen.evoplus.util.minecraft.equalCustomModel
 import ru.dargen.evoplus.util.minecraft.printMessage
 
 
-private val GoldenCristalItem = customItem(Items.PAPER, 271)
+private val GoldenCrystalItem = customItem(Items.PAPER, 271)
 
 object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорадка", Items.GOLD_INGOT) {
 
@@ -43,8 +43,8 @@ object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорад
         +hbox {
             indent = v3()
             space = 3.0
-
-            +item(GoldenCristalItem) {
+            
+            +item(GoldenCrystalItem) {
                 scale = scale(.5, .5, .5)
                 rotation = v3(y = 50.0)
                 translation = v3(x = 12.0)
@@ -66,7 +66,7 @@ object GoldenRushFeature : Feature("golden-rush", "Золотая Лихорад
         scheduleEvery(period = 10) {
             WorldEntities
                 .filterIsInstance<ArmorStandEntity>()
-                .find { stand -> stand.armorItems.any { it.equalCustomModel(GoldenCristalItem) } }
+                .find { stand -> stand.armorItems.any { it.equalCustomModel(GoldenCrystalItem) } }
                 .also {
                     GoldenCrystalEntity = it
                     val previousGoldenCrystalAround = GoldenCrystalAround

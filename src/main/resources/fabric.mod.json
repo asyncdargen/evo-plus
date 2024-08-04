@@ -2,17 +2,22 @@
   "schemaVersion": 1,
   "id": "evo-plus",
   "version": "${version}",
-  "name": "Evo Plus",
-  "description": "Open-Source мод, для улучшения качества игры на PrisonEvo (DiamondWorld)",
+  "name": "EvoPlus",
+  "description": "Вспомогательный мод, созданный для улучшения качества игры на PrisonEvo сервера DiamondWorld",
   "authors": ["dargen", "smole17"],
+  "contributors": ["2Terra_Miner", "GoDL1ghT"],
   "contact": {
-    "website": "https://vk.com/evo_pluss"
+    "website": "https://modrinth.com/mod/evoplus",
+    "homepage": "https://discord.gg/tkuVE3fdKt",
+    "repo": "https://github.com/asyncdargen/evo-plus",
+    "issues": "https://github.com/asyncdargen/evo-plus",
+    "sources": "https://github.com/asyncdargen/evo-plus"
   },
   "license": "MIT",
   "icon": "assets/evo-plus/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       {
         "adapter": "kotlin",
         "value": "ru.dargen.evoplus.EvoPlus"

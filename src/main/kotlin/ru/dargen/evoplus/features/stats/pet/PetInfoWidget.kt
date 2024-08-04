@@ -23,7 +23,7 @@ object PetInfoWidget : WidgetBase {
 
     fun update() {
         node._children = StatisticHolder.ActivePets
-            .ifEmpty { if (isWidgetEditor) listOf(PetData.random(), PetData.random()) else emptyList() }
+            .ifEmpty { if (isWidgetEditor) listOf(PetData.random() ?: return, PetData.random() ?: return) else emptyList() }
             .map {
                 val type = it.type
 

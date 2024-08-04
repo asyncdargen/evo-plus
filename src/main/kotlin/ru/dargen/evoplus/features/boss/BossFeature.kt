@@ -53,11 +53,11 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
     val BossLowHealthsMessage by settings.boolean("Сообщение об определённом проценте здоровья босса в клановый чат")
     val BossHealthsPercent by settings.selector(
         "Оповещать о здоровье босса при меньше, чем",
-        (5..90).toSelector()
+        (5..100).toSelector()
     ) { "$it%" }
     val BossHealthsCooldown by settings.selector(
         "Оповещать о здоровье босса раз в",
-        (5..25).toSelector()
+        (5..60).toSelector()
     ) { "$it сек." }
 
     init {
@@ -93,8 +93,8 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
                 BossHealthsPattern.find(text)?.run {
                     val percent = it.percent.toDouble() * 100.0
-
-                    if (percent > BossHealthsPercent) return@run
+                    
+                    if (percent >= BossHealthsPercent) return@run
 
                     val isCursed = it.name.siblings.any { it.style.color?.name == "#25D192" }
                     val type = BossType.valueOfName(groupValues[1]) ?: return@run

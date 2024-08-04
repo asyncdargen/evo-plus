@@ -17,7 +17,13 @@ import ru.dargen.evoplus.api.event.network.ChangeServerEvent
 import ru.dargen.evoplus.api.event.network.CustomPayloadEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.scheduler.scheduleEvery
-import ru.dargen.evoplus.protocol.registry.*
+import ru.dargen.evoplus.protocol.registry.AbilityType
+import ru.dargen.evoplus.protocol.registry.BossType
+import ru.dargen.evoplus.protocol.registry.FishingSpot
+import ru.dargen.evoplus.protocol.registry.HourlyQuestType
+import ru.dargen.evoplus.protocol.registry.PetType
+import ru.dargen.evoplus.protocol.registry.PotionType
+import ru.dargen.evoplus.protocol.registry.StaffType
 import ru.dargen.evoplus.util.minecraft.Client
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -73,7 +79,8 @@ object EvoPlusProtocol {
         AbilityType
         HourlyQuestType
     }
-
+    
+    fun isOnPrisonEvo() = "PRISONEVO" in EvoPlusProtocol.Server.serverName
 }
 
 //listen

@@ -7,19 +7,24 @@ import ru.dargen.evoplus.api.event.chat.ChatSendEvent
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.StringRenderEvent
 import ru.dargen.evoplus.feature.Feature
+import ru.dargen.evoplus.features.chat.market.MarketChatTimerWidget
 import ru.dargen.evoplus.protocol.EvoPlusProtocol
+import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.minecraft.uncolored
 import kotlin.math.ceil
 
+private val MarketChatDelay = 4 * 60 * 1000
 
 object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
-
-    var NoSpam by settings.boolean("Отключение спам-сообщений")
-    var CopyMessages by settings.boolean("Копировать сообщение из чата (ПКМ)", true)
-    var EmojiMenu by settings.boolean("Меню эмодзи", true)
-    var ReplaceUniqueUsers by settings.boolean("Заменять ники уникальных пользователей EvoPlus", true)
-    var ColorInputs = settings.colorInput("Градиент сообщения в чате", "colorInputs")
+    
+    val MarketChatTimer by widgets.widget("Таймер торгового чата", "market-chat-timer", widget = MarketChatTimerWidget, enabled = false)
+    
+    val NoSpam by settings.boolean("Отключение спам-сообщений")
+    val CopyMessages by settings.boolean("Копировать сообщение из чата (ПКМ)", true)
+    val EmojiMenu by settings.boolean("Меню эмодзи", true)
+    val ReplaceUniqueUsers by settings.boolean("Заменять ники уникальных пользователей EvoPlus", true)
+    val ColorInputs = settings.colorInput("Градиент сообщения в чате", "colorInputs")
 
     init {
         Emojis
@@ -33,7 +38,7 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
         val formatters = listOf("!", "@")
 
         on<ChatSendEvent> {
-            if (!ColorInputs.value || "PRISONEVO" !in EvoPlusProtocol.Server.serverName) return@on
+            if (!ColorInputs.value || !EvoPlusProtocol.isOnPrisonEvo()) return@on
 
             val message = text
             val hasSelector = formatters.any { message.startsWith(it, true) }
@@ -42,6 +47,12 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
             val formattedMessage = message.replace(prefix, "").buildMessage(prefix, colors)
 
             text = formattedMessage
+        }
+        
+        on<ChatSendEvent> {
+            if (!text.startsWith("$") || !EvoPlusProtocol.isOnPrisonEvo()) return@on
+            
+            MarketChatTimerWidget.RemainingTime = currentMillis + MarketChatDelay
         }
 
         on<StringRenderEvent> {

@@ -26,7 +26,6 @@ object StaffTimerWidget : WidgetBase {
                 val remainTime = (timestamp - currentMillis).coerceAtLeast(0L)
 
                 item(type.displayItem) {
-                    translation = v3(y = 8.0)
                     +text("§e${remainTime / 1000}") {
                         translation = v3(1.0, 1.0, 200.0)
                         scale = v3(.9, .9, .9)
@@ -39,7 +38,7 @@ object StaffTimerWidget : WidgetBase {
 
     override fun Node.prepare() {
         origin = Relative.LeftBottom
-        align = v3(.005, .99)
+        align = v3(.005, 1.0)
     }
 
 }

@@ -7,63 +7,72 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.block.enums.Instrument
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.chunk.Chunk
-import ru.dargen.evoplus.api.render.context.World
-import ru.dargen.evoplus.api.render.node.plus
-import ru.dargen.evoplus.api.render.node.world.cube
-import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.api.render.Colors
 import java.awt.Color
 
-private const val GOLDEN_SHARD_HEAD_VALUE =
-    "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZjg5M2ZjNmRlZmFkMjE4Zjc4MzZlZmVmYmU2MzZmMWMyY2MxYmI2NTBjODJmY2NkOTlmMmMxZWU2In19fQ=="
-private const val DIAMOND_SHARD_HEAD_VALUE =
-    "ewogICJ0aW1lc3RhbXAiIDogMTU5ODUyMjU3OTk4MiwKICAicHJvZmlsZUlkIiA6ICJmMDk3N2NmZWZlZmY0ZGM1OGUyMGIzOTVlMjBiYWJkYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJkaWFtb25kZHVkZTMiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjE3NjdmYWEzNjZjODA1Nzc5NTJmNWUwMDc4MTU5ZDU5NzdmMzcyMDJmMzhkNDgxN2Q0YTkyNDVhZDQ4YTkwZCIKICAgIH0KICB9Cn0="
+fun BlockState.isBarrel() = Barrel.isBarrel(this)
+fun BlockState.isDetonatingBarrel() = Barrel.isDetonatingBarrel(this)
 
-
-fun BlockState.isBarrel() = isNormalBarrel() || isNetherBarrel() || isEndBarrel()
-fun BlockState.isDetonatingBarrel() =
-    isNormalDetonatingBarrel() || isNetherDetonatingBarrel() || isEndDetonatingBarrel()
-
-fun BlockState.isNormalBarrel() = block == Blocks.NOTE_BLOCK
-        && get(NoteBlock.INSTRUMENT) === Instrument.FLUTE
-        && get(NoteBlock.NOTE) == 21
-        && get(NoteBlock.POWERED) == false
-
-fun BlockState.isNetherBarrel() = block == Blocks.NOTE_BLOCK
-        && get(NoteBlock.INSTRUMENT) === Instrument.FLUTE
-        && get(NoteBlock.NOTE) == 18
-        && get(NoteBlock.POWERED) == false
-
-fun BlockState.isEndBarrel() = block == Blocks.NOTE_BLOCK
-        && get(NoteBlock.INSTRUMENT) === Instrument.FLUTE
-        && get(NoteBlock.NOTE) == 16
-        && get(NoteBlock.POWERED) == false
-
-fun BlockState.isNormalDetonatingBarrel() = block == Blocks.NOTE_BLOCK
-        && get(NoteBlock.INSTRUMENT) === Instrument.FLUTE
-        && get(NoteBlock.NOTE) == 22
-        && get(NoteBlock.POWERED) == false
-
-fun BlockState.isNetherDetonatingBarrel() = block == Blocks.NOTE_BLOCK
-        && get(NoteBlock.INSTRUMENT) === Instrument.FLUTE
-        && get(NoteBlock.NOTE) == 19
-        && get(NoteBlock.POWERED) == false
-
-fun BlockState.isEndDetonatingBarrel() = block == Blocks.NOTE_BLOCK
-        && get(NoteBlock.INSTRUMENT) === Instrument.FLUTE
-        && get(NoteBlock.NOTE) == 17
-        && get(NoteBlock.POWERED) == false
-
-fun BlockState.isHead() = block == Blocks.PLAYER_HEAD
-fun BlockState.isWallHead() = block == Blocks.PLAYER_WALL_HEAD
-
-fun BlockState.isGoldenShardHead(pos: BlockPos, chunk: Chunk) = (isHead() || isWallHead())
-        && pos.getPlayerSkullTextureValue(chunk) == GOLDEN_SHARD_HEAD_VALUE
-
-fun BlockState.isDiamondShardHead(pos: BlockPos, chunk: Chunk) = (isHead() || isWallHead())
-        && pos.getPlayerSkullTextureValue(chunk) == DIAMOND_SHARD_HEAD_VALUE
+fun BlockState.isHead() = block === Blocks.PLAYER_HEAD
+fun BlockState.isWallHead() = block === Blocks.PLAYER_WALL_HEAD
 
 fun BlockPos.getPlayerSkullTextureValue(chunk: Chunk) =
     chunk.getBlockEntity(this, BlockEntityType.SKULL)
         ?.get()?.owner?.properties?.asMap()
         ?.get("textures")?.firstOrNull()?.value
+
+fun BlockState.getShard(pos: BlockPos, chunk: Chunk) = Shard.entries.firstOrNull {
+    it.isThis(this, pos, chunk)
+}
+
+fun BlockState.getLuckyBlock(pos: BlockPos, chunk: Chunk) = LuckyBlock.entries.firstOrNull {
+    it.isThis(this, pos, chunk)
+}
+
+fun BlockState.getBarrel() = Barrel.entries.firstOrNull {
+    it.isThis(this)
+}
+
+enum class Barrel(val color: Color, val instrument: Instrument, val note: Int, val powered: Boolean) {
+    NORMAL(Colors.Green, Instrument.FLUTE, 21, false),
+    NORMAL_DETONATING(Colors.Green, Instrument.FLUTE, 22, false),
+    NETHER(Colors.Green, Instrument.FLUTE, 18, false),
+    NETHER_DETONATING(Colors.Green, Instrument.FLUTE, 19, false),
+    END(Colors.Green, Instrument.FLUTE, 16, false),
+    END_DETONATING(Colors.Green, Instrument.FLUTE, 17, false),
+    ;
+    
+    fun isThis(blockState: BlockState) = blockState.run {
+        block === Blocks.NOTE_BLOCK
+            && get(NoteBlock.INSTRUMENT) === instrument
+            && get(NoteBlock.NOTE) == note
+            && get(NoteBlock.POWERED) == powered
+    }
+    
+    companion object {
+        fun isBarrel(blockState: BlockState) = NORMAL.isThis(blockState) || NETHER.isThis(blockState) || END.isThis(blockState)
+        fun isDetonatingBarrel(blockState: BlockState) = NORMAL_DETONATING.isThis(blockState) || NETHER_DETONATING.isThis(blockState) || END_DETONATING.isThis(blockState)
+    }
+}
+
+enum class Shard(val color: Color, val value: String) {
+    
+    GOLDEN(Colors.Gold, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTRiZjg5M2ZjNmRlZmFkMjE4Zjc4MzZlZmVmYmU2MzZmMWMyY2MxYmI2NTBjODJmY2NkOTlmMmMxZWU2In19fQ=="),
+    DIAMOND(Colors.Diamond, "ewogICJ0aW1lc3RhbXAiIDogMTU5ODUyMjU3OTk4MiwKICAicHJvZmlsZUlkIiA6ICJmMDk3N2NmZWZlZmY0ZGM1OGUyMGIzOTVlMjBiYWJkYyIsCiAgInByb2ZpbGVOYW1lIiA6ICJkaWFtb25kZHVkZTMiLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjE3NjdmYWEzNjZjODA1Nzc5NTJmNWUwMDc4MTU5ZDU5NzdmMzcyMDJmMzhkNDgxN2Q0YTkyNDVhZDQ4YTkwZCIKICAgIH0KICB9Cn0="),
+    ;
+    
+    fun isThis(blockState: BlockState, pos: BlockPos, chunk: Chunk) =
+        (blockState.isHead() || blockState.isWallHead()) && pos.getPlayerSkullTextureValue(chunk) == value
+}
+
+enum class LuckyBlock(val color: Color, val value: String) {
+    
+    BASE(Colors.Yellow, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjM4YzBkMmYxZWMyNjc1NGRjYTNjN2NkYWUzMWYxZjE2NDg4M2Q0NTNlNjg4NjQzZGEwNDc1NjhlN2ZhNWNjOSJ9fX0="),
+    RARE(Colors.Deepskyblue, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmUwMDJkOTc3MjNiOGNjOTgwMmQzMGZlOGU0Y2VmMzYxZTU2Y2YyZTQ5YWU5MWYyNzRkYTcyZjQ3ODEzNDExOCJ9fX0="),
+    LEGENDARY(Colors.Purple, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTA2ZWExMDRjYjliZTcwM2NjZWQxYjFmNTY1Mjg2NzUyZTI3MTc1MmM1YWM4NWU4MTEzYjNlMmRjNDM1MmMyMCJ9fX0="),
+    ;
+    
+    fun isThis(blockState: BlockState, pos: BlockPos, chunk: Chunk) =
+        (blockState.isHead() || blockState.isWallHead()) && pos.getPlayerSkullTextureValue(chunk) == value
+}
 

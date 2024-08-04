@@ -25,7 +25,7 @@ class TextureNode : Node() {
         if (!this::identifier.isInitialized) return
 
         identifier.bindTexture()
-
+        
         if (repeating) DrawableHelper.drawRepeatingTexture(
             matrices, 0, 0,
             size.x.toInt(), size.y.toInt(),

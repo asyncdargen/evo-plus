@@ -20,7 +20,11 @@ import ru.dargen.evoplus.util.evo.isBarrel
 import ru.dargen.evoplus.util.evo.isDetonatingBarrel
 import ru.dargen.evoplus.util.format.nounEndings
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.minecraft.*
+import ru.dargen.evoplus.util.minecraft.WorldEntities
+import ru.dargen.evoplus.util.minecraft.customModelData
+import ru.dargen.evoplus.util.minecraft.forEachBlocks
+import ru.dargen.evoplus.util.minecraft.printMessage
+import ru.dargen.evoplus.util.minecraft.sendClanMessage
 import kotlin.math.max
 
 object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
@@ -120,23 +124,17 @@ object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
         on<WorldPreLoadEvent> { Barrels = 0 }
 
         on<ChunkLoadEvent> {
-            if (!BarrelsWidget.enabled) return@on
-
             chunk.forEachBlocks { _, blockState ->
                 if (blockState.isBarrel() || blockState.isDetonatingBarrel()) ++Barrels
             }
         }
         on<ChunkUnloadEvent> {
-            if (!BarrelsWidget.enabled) return@on
-
             chunk.forEachBlocks { _, blockState ->
                 if (blockState.isBarrel() || blockState.isDetonatingBarrel()) Barrels = max(Barrels - 1, 0)
             }
         }
 
         on<BlockChangeEvent> {
-            if (!BarrelsWidget.enabled) return@on
-
             if (oldState?.isDetonatingBarrel() == false && newState.isBarrel()) {
                 ++Barrels
                 return@on
