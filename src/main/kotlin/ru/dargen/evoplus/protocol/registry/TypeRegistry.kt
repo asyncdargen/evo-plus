@@ -1,6 +1,9 @@
 package ru.dargen.evoplus.protocol.registry
 
+import pro.diamondworld.protocol.packet.boss.BossTypes
 import pro.diamondworld.protocol.util.ProtocolSerializable
+import ru.dargen.evoplus.api.event.boss.BossTypesInitEvent
+import ru.dargen.evoplus.api.event.fire
 import ru.dargen.evoplus.protocol.listen
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import java.util.concurrent.ConcurrentHashMap
@@ -18,6 +21,8 @@ class TypeRegistry<K, V, E : TypeRegistry.TypeRegistryEntry<K>, P : ProtocolSeri
             val received = extractor(it).mapValues { (key, value) -> converter(value) }
             putAll(received)
             update(received)
+            
+            if (packetType === BossTypes::class) BossTypesInitEvent.fire()
         }
     }
 

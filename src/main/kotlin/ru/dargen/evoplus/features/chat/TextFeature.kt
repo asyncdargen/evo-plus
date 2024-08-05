@@ -12,19 +12,18 @@ import ru.dargen.evoplus.protocol.EvoPlusProtocol
 import ru.dargen.evoplus.util.currentMillis
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.minecraft.uncolored
+import ru.dargen.evoplus.util.selector.toSelector
 import kotlin.math.ceil
-
-private val MarketChatDelay = 4 * 60 * 1000
 
 object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
     
     val MarketChatTimer by widgets.widget("Таймер торгового чата", "market-chat-timer", widget = MarketChatTimerWidget, enabled = false)
-    
+    val MarketChatTimerDelay by settings.selector("Задержка торгового чата", (3..5).toSelector()) { "$it мин." }
     val NoSpam by settings.boolean("Отключение спам-сообщений")
     val CopyMessages by settings.boolean("Копировать сообщение из чата (ПКМ)", true)
     val EmojiMenu by settings.boolean("Меню эмодзи", true)
     val ReplaceUniqueUsers by settings.boolean("Заменять ники уникальных пользователей EvoPlus", true)
-    val ColorInputs = settings.colorInput("Градиент сообщения в чате", "colorInputs")
+    val ColorInputs = settings.colorInput("Градиент сообщения в чате")
 
     init {
         Emojis
@@ -50,9 +49,11 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
         }
         
         on<ChatSendEvent> {
-            if (!text.startsWith("$") || !EvoPlusProtocol.isOnPrisonEvo()) return@on
+            if (!text.startsWith("$") || !EvoPlusProtocol.isOnPrisonEvo() || MarketChatTimerWidget.RemainingTime >= currentMillis) return@on
             
-            MarketChatTimerWidget.RemainingTime = currentMillis + MarketChatDelay
+            val isExceededLimit = text.length - 1 >= 256
+            val timerMultiplier = if (isExceededLimit) 2 else 1
+            MarketChatTimerWidget.RemainingTime = currentMillis + MarketChatTimerDelay * 1000 * timerMultiplier
         }
 
         on<StringRenderEvent> {
@@ -74,13 +75,12 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
 
     private fun String.buildMessage(prefix: String, colors: List<String>): String {
         val mirroring = colors.size == 2
-        return if (mirroring)
-            "$prefix${colors[0]}${takeFirstHalf()}${colors[1]}${takeSecondHalf()}"
+        return if (mirroring) "$prefix${colors[0]}${takeFirstHalf()}${colors[1]}${takeSecondHalf()}"
         else "$prefix${colors[0]}$this"
     }
 
     private fun buildColorSetting(withMirroring: Boolean) = buildList{
-        ColorInputs.colors.map { it.value }.let {
+        ColorInputs.inputs.map { it.content }.let {
             add("[#${it[0]}-#${it[1]}]")
             if (withMirroring) add("[#${it[1]}-#${it[0]}]")
         }

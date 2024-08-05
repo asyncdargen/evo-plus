@@ -12,14 +12,12 @@ import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 
 
-fun identifier(name: String) = Identifier(EvoPlus.ModContainer.metadata.id, name)
+fun identifier(name: String) = Identifier(EvoPlus.ModContainer.metadata.id, name).apply {
+    val file = ImageIO.read(EvoPlus::class.java.getResourceAsStream("/assets/evo-plus/$path"))
+    file.uploadTexture(this)
+}
 
 fun Identifier.bindTexture() {
-    if (namespace == "evo-plus") {
-        val file = ImageIO.read(EvoPlus::class.java.getResourceAsStream("/assets/evo-plus/$path"))
-        file.uploadTexture(this)
-    }
-    
     RenderSystem.setShaderTexture(0, this)
 }
 

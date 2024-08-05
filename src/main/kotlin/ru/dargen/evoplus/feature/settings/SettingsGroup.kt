@@ -24,9 +24,9 @@ class SettingsGroup(id: String, name: String, val screen: FeatureScreenElements)
 
     fun string(name: String, value: String = "", id: String = "") =
         setting(StringSetting(id, name, value))
-
-    fun colorInput(name: String, value: String = "", id: String = "") =
-        setting(ColorInputSetting(id, name))
+    
+    fun colorInput(name: String, value: Boolean = false, id: String = "") =
+        setting(ColorInputSetting(id, name, value))
 
     fun <T> selector(
         name: String, selector: Selector<T>,

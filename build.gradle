@@ -55,13 +55,9 @@ processResources {
     }
 }
 
+
 jar {
     from('LICENSE')
-}
-
-runClient {
-    jvmArgs "-Devo-plus.dev=true"
-    args "--username=EvoPlusTest"
 }
 
 allOpen {

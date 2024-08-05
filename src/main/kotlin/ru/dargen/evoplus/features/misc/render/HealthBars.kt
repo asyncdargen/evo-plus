@@ -11,9 +11,14 @@ import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.context.World
-import ru.dargen.evoplus.api.render.node.*
+import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.box.vbox
+import ru.dargen.evoplus.api.render.node.minus
+import ru.dargen.evoplus.api.render.node.plus
+import ru.dargen.evoplus.api.render.node.preTransform
 import ru.dargen.evoplus.api.render.node.state.hbar
+import ru.dargen.evoplus.api.render.node.text
+import ru.dargen.evoplus.api.render.node.tick
 import ru.dargen.evoplus.features.misc.RenderFeature
 import ru.dargen.evoplus.util.collection.concurrentHashMapOf
 import ru.dargen.evoplus.util.math.v3
@@ -94,8 +99,8 @@ object HealthBars {
                 }
 
             }
-
-            tick { render = !isDead && !isSpectator }
+            
+            tick { render = RenderFeature.HealthBarsRender && !isDead && !isSpectator }
 
             renderedHealthBars[uuid] = this
         }

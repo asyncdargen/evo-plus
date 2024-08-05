@@ -14,7 +14,7 @@
     "world.ClientWorldMixin",
     "world.ClientChunkManagerMixin",
     "world.LightmapTextureManagerMixin",
-    "world.chunk.WorldChunkMixin",
+    "world.WorldMixin",
     "world.particle.ParticleManagerMixin",
     "world.particle.ParticleManagerAccessor",
     "world.particle.ParticleAccessor",

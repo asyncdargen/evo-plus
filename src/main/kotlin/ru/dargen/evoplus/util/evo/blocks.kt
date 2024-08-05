@@ -36,10 +36,10 @@ fun BlockState.getBarrel() = Barrel.entries.firstOrNull {
 enum class Barrel(val color: Color, val instrument: Instrument, val note: Int, val powered: Boolean) {
     NORMAL(Colors.Green, Instrument.FLUTE, 21, false),
     NORMAL_DETONATING(Colors.Green, Instrument.FLUTE, 22, false),
-    NETHER(Colors.Green, Instrument.FLUTE, 18, false),
-    NETHER_DETONATING(Colors.Green, Instrument.FLUTE, 19, false),
-    END(Colors.Green, Instrument.FLUTE, 16, false),
-    END_DETONATING(Colors.Green, Instrument.FLUTE, 17, false),
+    NETHER(Colors.Red, Instrument.FLUTE, 18, false),
+    NETHER_DETONATING(Colors.Red, Instrument.FLUTE, 19, false),
+    END(Colors.Purple, Instrument.FLUTE, 16, false),
+    END_DETONATING(Colors.Purple, Instrument.FLUTE, 17, false),
     ;
     
     fun isThis(blockState: BlockState) = blockState.run {

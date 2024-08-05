@@ -54,6 +54,7 @@ object LevelWidget : WidgetBase {
     fun update(statistic: StatisticData) {
         if (statistic.nextLevel.isMaxLevel) {
             Text.text = "§aMAX"
+            ProgressBar.enabled = false
             ProgressBar.progress = .0
         }
         else {
@@ -66,6 +67,7 @@ object LevelWidget : WidgetBase {
                 "Блоки: ${(blocks >= nextBlocks).color}$blocks/$nextBlocks",
                 "Деньги: ${(money >= nextMoney).color}${money.format()}/${nextMoney.format()}"
             )
+            ProgressBar.enabled = true
             ProgressBar.progress = (min(blocks / nextBlocks.toDouble(), 1.0) + min(money / nextMoney, 1.0)) / 2.0
         }
     }

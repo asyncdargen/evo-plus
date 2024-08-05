@@ -51,6 +51,7 @@ object ComboWidget : WidgetBase {
     fun update(data: ComboData) {
         if (data.isMaxed) {
             Text.text = "Бустер: §ax${data.booster.fix(1)}"
+            ProgressBar.enabled = false
             ProgressBar.progress = .0
         } else {
             Text.lines = listOf(
@@ -58,6 +59,7 @@ object ComboWidget : WidgetBase {
                 "Бустер: §ax${data.booster.fix(2)} §8-> §7x${data.nextBooster.fix(2)}",
                 *(if (data.isExpiring) arrayOf("§cИстекает через ${data.remain} сек.") else emptyArray())
             )
+            ProgressBar.enabled = true
             ProgressBar.progress = data.progress
         }
     }

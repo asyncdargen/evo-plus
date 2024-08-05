@@ -2,6 +2,7 @@ package ru.dargen.evoplus.feature
 
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.util.InputUtil
+import ru.dargen.evoplus.EvoPlus
 import ru.dargen.evoplus.ModLabel
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
@@ -41,7 +42,7 @@ object FeaturesScreen {
     var SelectedFeature = Features.List.first()
     
     fun open() = screen("features") features@{
-        val label = +text(ModLabel) {
+        val label = +text("$ModLabel §fv${EvoPlus.ModContainer.metadata.version.friendlyString}") {
             scale = v3(1.7, 1.7, 1.7)
             position = v3(-5.0, 5.0)
             

@@ -2,14 +2,14 @@ package ru.dargen.evoplus.feature.type.clicker
 
 import ru.dargen.evoplus.util.minecraft.ClientExtension
 
-enum class ClickerState(val display: String) {
-
-    LEFT("À Ã") {
+enum class ClickerMouse(val display: String) {
+    
+    LEFT("–õ–ö–ú") {
         override fun invoke() {
             ClientExtension.leftClick()
         }
     },
-    RIGHT("œ Ã") {
+    RIGHT("–ü–ö–ú") {
         override fun invoke() {
             ClientExtension.rightClick()
         }

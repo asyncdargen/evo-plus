@@ -21,21 +21,21 @@ import java.util.concurrent.TimeUnit
 object MiscFeature : Feature("misc", "Прочее", Items.REPEATER) {
 
     private val BoosterMessagePattern = "^[\\w\\s]+ активировал глобальный бустер".toRegex()
-
-    val NotifiesWidget by widgets.widget("Уведомления", "notifies-widget", widget = Notifies)
-
-    val AutoSprint by settings.boolean("Авто-спринт", true) on { if (!it) Player?.isSprinting = false }
-    val AutoThanks by settings.boolean("Авто /thx", true)
-
-    val CaseNotify by settings.boolean("Уведомления о кейсах", true)
-
-    val LuckyBlockNotify by settings.boolean("Уведомления о лаки-блоках", true)
-    val CollectionNotify by settings.boolean("Уведомления о коллекционках", true)
-
-    val ShowServerInTab by settings.boolean("Показывать текущий сервер в табе", true)
+    
     val FastSelector by settings.boolean("Fast-селектор", true)
     val FastSelectorItems by settings.setting(FastSelectorSetting)
 
+    val AutoSprint by settings.boolean("Авто-спринт", true) on { if (!it) Player?.isSprinting = false }
+    val AutoThanks by settings.boolean("Авто /thx", true)
+    
+    val ShowServerInTab by settings.boolean("Показывать текущий сервер в табе", true)
+    
+    val NotifiesWidget by widgets.widget("Уведомления", "notifies-widget", widget = Notifies)
+    val CaseNotify by settings.boolean("Уведомления о кейсах", true)
+    val LuckyBlockNotify by settings.boolean("Уведомления о лаки-блоках", true)
+    val CollectionNotify by settings.boolean("Уведомления о коллекционках", true)
+    
+    
     init {
         Keybinds.FastSelector.on { if (CurrentScreen == null && FastSelector) FastSelectorScreen.open() }
 

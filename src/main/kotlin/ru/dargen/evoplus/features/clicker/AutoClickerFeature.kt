@@ -1,21 +1,27 @@
 package ru.dargen.evoplus.features.clicker
 
 import net.minecraft.item.Items
+import ru.dargen.evoplus.api.event.input.KeyEvent
+import ru.dargen.evoplus.api.event.input.MouseClickEvent
+import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.keybind.Keybinds
+import ru.dargen.evoplus.api.keybind.boundKey
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.feature.type.clicker.ClickerState
+import ru.dargen.evoplus.feature.type.clicker.ClickerMode
+import ru.dargen.evoplus.feature.type.clicker.ClickerMouse
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 import java.util.concurrent.TimeUnit
 import kotlin.math.max
 
-object AutoClickerFeature : Feature("clicker", "Кликер", Items.WOODEN_SWORD) {
-
-    val BindEnabled by settings.boolean("Статус бинда")
-    val State by settings.switcher("Режим работы", enumSelector<ClickerState>())
-    val CPS by settings.selector("КПС", (1..20).toSelector()) { "$it" }
+object AutoClickerFeature : Feature("clicker", "РљР»РёРєРµСЂ", Items.WOODEN_SWORD) {
+    
+    val BindEnabled by settings.boolean("РЎС‚Р°С‚СѓСЃ Р±РёРЅРґР°")
+    val Mode by settings.switcher("Р РµР¶РёРј СЂР°Р±РѕС‚С‹", enumSelector<ClickerMode>())
+    val Mouse by settings.switcher("РљРЅРѕРїРєР° РјС‹С€Рё", enumSelector<ClickerMouse>())
+    val CPS by settings.selector("РљР»РёРєРѕРІ РІ СЃРµРєСѓРЅРґСѓ", (1..20).toSelector()) { "$it" }
 
     private var enabled = false
     private var remainToClick = 0
@@ -25,8 +31,17 @@ object AutoClickerFeature : Feature("clicker", "Кликер", Items.WOODEN_SWORD) {
 
     init {
         Keybinds.AutoClicker.on {
-            if (!BindEnabled) return@on
+            if (!BindEnabled || Mode !== ClickerMode.CLICK) return@on
             enabled = !enabled
+        }
+        
+        on<KeyEvent> {
+            if (key != Keybinds.AutoClicker.boundKey.code || !BindEnabled || Mode !== ClickerMode.HOLD) return@on
+            enabled = state
+        }
+        on<MouseClickEvent> {
+            if (button != Keybinds.AutoClicker.boundKey.code || !BindEnabled || Mode !== ClickerMode.HOLD) return@on
+            enabled = state
         }
 
         scheduleEvery(0, 50, unit = TimeUnit.MILLISECONDS) {
@@ -37,7 +52,7 @@ object AutoClickerFeature : Feature("clicker", "Кликер", Items.WOODEN_SWORD) {
             if (remainToClick > 0) return@scheduleEvery
 
             remainToClick = 1000 / CPS
-            State()
+            Mouse()
         }
     }
 }

@@ -5,14 +5,21 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import net.minecraft.item.Item
 import net.minecraft.item.Items
+import ru.dargen.evoplus.api.render.node.input.button
+import ru.dargen.evoplus.feature.screen.FeatureBaseElement
 import ru.dargen.evoplus.feature.settings.Setting
 import ru.dargen.evoplus.util.collection.insertAt
 
 object FastSelectorSetting :
     Setting<MutableList<MutableList<SelectorItem>>>("fast-selector-buttons", "Настройка fast-селектора") {
 
-    val lines get() = value.size
     val items get() = value.sumOf { it.size }
+    
+    override val settingElement = FeatureBaseElement(name) {
+        button("Открыть") {
+            on { FastSelectorScreen.open(true) }
+        }
+    }
 
     override var value = mutableListOf(
         mutableListOf(

@@ -17,6 +17,7 @@ import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.kotlin.safeCast
 import ru.dargen.evoplus.util.math.Vector3
 
+
 val Client get() = MinecraftClient.getInstance()
 val ClientExtension get() = Client.cast<MinecraftClientExtension>()
 val ClientAccessor get() = Client.cast<MinecraftClientAccessor>()
@@ -29,6 +30,24 @@ val InteractionManager get() = Client?.interactionManager
 val WorldEntities get() = World?.entities?.filterNotNull() ?: emptyList()
 val TargetEntity get() = Client?.crosshairTarget?.safeCast<EntityHitResult>()?.entity
 val TargetBlock get() = Client?.crosshairTarget?.safeCast<BlockHitResult>()?.blockPos
+val LoadedChunks
+    get() = buildList {
+        val viewDist = Client?.options?.viewDistance?.value ?: return@buildList
+        
+        for (x in -viewDist..viewDist) {
+            for (z in -viewDist..viewDist) {
+                val chunk = World?.chunkManager
+                    ?.getWorldChunk(Player!!.x.toInt() / 16 + x, Player!!.z.toInt() / 16 + z) ?: continue
+                
+                add(chunk)
+            }
+        }
+    }
+val BlockEntities
+    get() = LoadedChunks
+        .map { it.blockEntities.values }
+        .flatten()
+
 
 val CurrentScreenHandler get() = Player?.currentScreenHandler
 val CurrentScreen get() = Client?.currentScreen

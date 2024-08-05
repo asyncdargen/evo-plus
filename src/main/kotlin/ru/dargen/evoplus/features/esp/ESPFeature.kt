@@ -5,6 +5,7 @@ import net.minecraft.item.Items
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.chunk.Chunk
 import ru.dargen.evoplus.api.event.on
+import ru.dargen.evoplus.api.event.render.WorldRenderEvent
 import ru.dargen.evoplus.api.event.world.BlockChangeEvent
 import ru.dargen.evoplus.api.event.world.ChunkLoadEvent
 import ru.dargen.evoplus.api.event.world.ChunkUnloadEvent
@@ -19,6 +20,7 @@ import ru.dargen.evoplus.util.evo.getShard
 import ru.dargen.evoplus.util.evo.isHead
 import ru.dargen.evoplus.util.evo.isWallHead
 import ru.dargen.evoplus.util.math.v3
+import ru.dargen.evoplus.util.minecraft.BlockEntities
 import ru.dargen.evoplus.util.minecraft.forEachBlocks
 import java.awt.Color
 
@@ -28,13 +30,13 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
     private val Shards = mutableMapOf<BlockPos, Node>()
     private val Barrels = mutableMapOf<BlockPos, Node>()
     
-    val LuckyBlocksEsp by settings.boolean("Подсвечивание лаки-блоков", false) on { state ->
+    val LuckyBlocksEsp by settings.boolean("Подсвечивание лаки-блоков") on { state ->
         LuckyBlocks.values.forEach { it.enabled = state }
     }
-    val ShardsEsp by settings.boolean("Подсвечивание осколков", false) on { state ->
+    val ShardsEsp by settings.boolean("Подсвечивание осколков") on { state ->
         Shards.values.forEach { it.enabled = state }
     }
-    val BarrelsEsp by settings.boolean("Подсвечивание бочек", false) on { state ->
+    val BarrelsEsp by settings.boolean("Подсвечивание бочек") on { state ->
         Barrels.values.forEach { it.enabled = state }
     }
     
@@ -47,21 +49,22 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         
         on<ChunkUnloadEvent> {
             chunk.forEachBlocks { blockPos, blockState ->
-                tryToRemoveBlock(blockPos,
-                    blockState.getShard(blockPos, chunk) != null,
-                    blockState.getLuckyBlock(blockPos, chunk) != null,
-                    blockState.getShard(blockPos, chunk) != null
-                )
+                tryToRemoveBlock(blockPos)
             }
         }
         
         on<BlockChangeEvent> {
-            tryToRemoveBlock(blockPos,
-                oldState?.getShard(blockPos, chunk) != null,
-                oldState?.getLuckyBlock(blockPos, chunk) != null,
-                oldState?.getBarrel() != null
-            )
+            tryToRemoveBlock(blockPos)
             recognizeBlock(chunk, blockPos, newState)
+        }
+        
+        on<WorldRenderEvent> {
+            BlockEntities.forEach {
+                val pos = it.pos
+                if (pos in Shards || pos in LuckyBlocks || pos in Barrels) return@forEach
+                
+                recognizeBlock(it.world!!.getWorldChunk(pos), pos, it.cachedState)
+            }
         }
     }
     
@@ -85,7 +88,7 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         }
     }
     
-    fun tryToRemoveBlock(blockPos: BlockPos, isShard: Boolean, isLuckyBlock: Boolean, isBarrel: Boolean) {
+    fun tryToRemoveBlock(blockPos: BlockPos, isShard: Boolean = true, isLuckyBlock: Boolean = true, isBarrel: Boolean = true) {
         if (isShard) Shards.remove(blockPos)?.let { World.removeChildren(it) }
         if (isLuckyBlock) LuckyBlocks.remove(blockPos)?.let { World.removeChildren(it) }
         if (isBarrel) Barrels.remove(blockPos)?.let { World.removeChildren(it) }
