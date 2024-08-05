@@ -53,7 +53,7 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
             
             val isExceededLimit = text.length - 1 >= 256
             val timerMultiplier = if (isExceededLimit) 2 else 1
-            MarketChatTimerWidget.RemainingTime = currentMillis + MarketChatTimerDelay * 1000 * timerMultiplier
+            MarketChatTimerWidget.RemainingTime = currentMillis + MarketChatTimerDelay * 60 * 1000 * timerMultiplier
         }
 
         on<StringRenderEvent> {
