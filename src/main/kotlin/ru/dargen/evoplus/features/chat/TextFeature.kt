@@ -23,7 +23,7 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
     val CopyMessages by settings.boolean("Копировать сообщение из чата (ПКМ)", true)
     val EmojiMenu by settings.boolean("Меню эмодзи", true)
     val ReplaceUniqueUsers by settings.boolean("Заменять ники уникальных пользователей EvoPlus", true)
-    val ColorInputs = settings.colorInput("Градиент сообщения в чате")
+    val ColorInputs = settings.colorInput("Градиент сообщения в чате", id = "gradient")
 
     init {
         Emojis

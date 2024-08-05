@@ -10,6 +10,7 @@ import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.state.hbar
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.widget.WidgetBase
+import ru.dargen.evoplus.features.stats.StatisticFeature
 import ru.dargen.evoplus.features.stats.info.StatisticData
 import ru.dargen.evoplus.util.format.color
 import ru.dargen.evoplus.util.format.format
@@ -67,7 +68,7 @@ object LevelWidget : WidgetBase {
                 "Блоки: ${(blocks >= nextBlocks).color}$blocks/$nextBlocks",
                 "Деньги: ${(money >= nextMoney).color}${money.format()}/${nextMoney.format()}"
             )
-            ProgressBar.enabled = true
+            ProgressBar.enabled = StatisticFeature.LevelProgressBarEnabled
             ProgressBar.progress = (min(blocks / nextBlocks.toDouble(), 1.0) + min(money / nextMoney, 1.0)) / 2.0
         }
     }

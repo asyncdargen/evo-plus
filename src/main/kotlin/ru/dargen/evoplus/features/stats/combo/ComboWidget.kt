@@ -10,6 +10,7 @@ import ru.dargen.evoplus.api.render.node.item
 import ru.dargen.evoplus.api.render.node.state.hbar
 import ru.dargen.evoplus.api.render.node.text
 import ru.dargen.evoplus.feature.widget.WidgetBase
+import ru.dargen.evoplus.features.stats.StatisticFeature
 import ru.dargen.evoplus.util.format.color
 import ru.dargen.evoplus.util.format.fix
 import ru.dargen.evoplus.util.math.v3
@@ -59,7 +60,7 @@ object ComboWidget : WidgetBase {
                 "Бустер: §ax${data.booster.fix(2)} §8-> §7x${data.nextBooster.fix(2)}",
                 *(if (data.isExpiring) arrayOf("§cИстекает через ${data.remain} сек.") else emptyArray())
             )
-            ProgressBar.enabled = true
+            ProgressBar.enabled = StatisticFeature.ComboProgressBarEnabled
             ProgressBar.progress = data.progress
         }
     }

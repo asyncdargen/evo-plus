@@ -38,7 +38,7 @@ class ColorInputSetting(
     }
     
     override fun load(element: JsonElement) {
-        element.asJsonObject.apply {
+        element.asJsonObject.get(id)?.asJsonObject?.apply {
             value = get("colorize").asBoolean
             mirroring = get("mirroring").asBoolean
             inputs.forEachIndexed { index, inputNode ->
