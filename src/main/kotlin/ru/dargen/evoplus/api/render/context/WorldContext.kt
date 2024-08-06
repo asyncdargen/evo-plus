@@ -2,6 +2,7 @@ package ru.dargen.evoplus.api.render.context
 
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.gl.VertexBuffer
+import net.minecraft.client.render.BufferBuilderStorage
 import net.minecraft.client.render.Camera
 import net.minecraft.client.render.VertexConsumerProvider.Immediate
 import ru.dargen.evoplus.api.event.on
@@ -9,9 +10,10 @@ import ru.dargen.evoplus.api.event.render.WorldRenderEvent
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Client
 
-data object World : RenderContext() {
+data object WorldContext : RenderContext() {
 
     lateinit var Camera: Camera
+    lateinit var BufferBuilderStorage: BufferBuilderStorage
     lateinit var VertexConsumers: Immediate
 
 //    override var rotation = v3(y = 180.0).radians()
@@ -21,7 +23,8 @@ data object World : RenderContext() {
     override fun registerRenderHandlers() {
         on<WorldRenderEvent> {
             Camera = camera
-            VertexConsumers = vertexConsumers
+            BufferBuilderStorage = bufferBuilderStorage
+            VertexConsumers = BufferBuilderStorage.entityVertexConsumers
 
             matrices.push()
             RenderSystem.disableDepthTest()

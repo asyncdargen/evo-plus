@@ -12,7 +12,7 @@ import ru.dargen.evoplus.api.event.world.ChunkUnloadEvent
 import ru.dargen.evoplus.api.event.world.block.BlockChangeEvent
 import ru.dargen.evoplus.api.event.world.block.BlockEntityLoadEvent
 import ru.dargen.evoplus.api.event.world.block.BlockEntityUpdateEvent
-import ru.dargen.evoplus.api.render.context.World
+import ru.dargen.evoplus.api.render.context.WorldContext
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.plus
 import ru.dargen.evoplus.api.render.node.world.cube
@@ -111,13 +111,13 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         isLuckyBlock: Boolean = true,
         isBarrel: Boolean = true
     ) {
-        if (isShard) Shards.remove(blockPos)?.let { World.removeChildren(it) }
-        if (isLuckyBlock) LuckyBlocks.remove(blockPos)?.let { World.removeChildren(it) }
-        if (isBarrel) Barrels.remove(blockPos)?.let { World.removeChildren(it) }
+        if (isShard) Shards.remove(blockPos)?.let { WorldContext.removeChildren(it) }
+        if (isLuckyBlock) LuckyBlocks.remove(blockPos)?.let { WorldContext.removeChildren(it) }
+        if (isBarrel) Barrels.remove(blockPos)?.let { WorldContext.removeChildren(it) }
     }
 
     private fun BlockPos.renderCube(color: Color) =
-        World + cube {
+        WorldContext + cube {
             position = v3(x.toDouble() + 1, y.toDouble() + 1, z.toDouble())
             this.color = color
             isSeeThrough = true
@@ -126,7 +126,7 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         }
 
     private fun BlockPos.renderLittleCube(color: Color) =
-        World + cube {
+        WorldContext + cube {
             position = v3(x.toDouble() + .75, y.toDouble() + .5, z.toDouble() + 0.25)
             this.color = color
             isSeeThrough = true
@@ -134,7 +134,7 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         }
 
     private fun BlockPos.renderWallLittleCube(color: Color) =
-        World + cube {
+        WorldContext + cube {
             position = v3(x.toDouble() + .3, y.toDouble() + .65, z.toDouble() + 0.2)
             this.color = color
             isSeeThrough = true

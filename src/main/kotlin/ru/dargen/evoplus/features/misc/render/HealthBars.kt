@@ -10,7 +10,7 @@ import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.animate
-import ru.dargen.evoplus.api.render.context.World
+import ru.dargen.evoplus.api.render.context.WorldContext
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.box.vbox
 import ru.dargen.evoplus.api.render.node.minus
@@ -41,7 +41,7 @@ object HealthBars {
         }
         on<EntityRemoveEvent> {
             if (!RenderFeature.HealthBarsRender) return@on
-            renderedHealthBars.remove(entity.uuid)?.let { World - it }
+            renderedHealthBars.remove(entity.uuid)?.let { WorldContext - it }
         }
     }
 
@@ -54,12 +54,12 @@ object HealthBars {
         .filterIsInstance<AbstractClientPlayerEntity>()
         .forEach { it.createHealthBar() }
 
-    fun clearHealthBars() = renderedHealthBars.values.onEach { World - it }.clear()
+    fun clearHealthBars() = renderedHealthBars.values.onEach { WorldContext - it }.clear()
 
     fun Entity.createHealthBar() {
         if (this !is AbstractClientPlayerEntity || isNPC || isMainPlayer || isInvisibleTo(Player)) return
 
-        World + vbox {
+        WorldContext + vbox {
             indent = v3(1.5, 1.5)
 
             origin = Relative.CenterBottom

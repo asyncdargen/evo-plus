@@ -85,6 +85,7 @@ fun MatrixStack.drawTextWithShadow(text: String, position: Vector3 = ZeroPositio
     TextRenderer.drawWithShadow(this, text, position.x.toFloat(), position.y.toFloat(), color)
 }
 
+//TODO: optimize fucking draw
 fun MatrixStack.drawCube(size: Vector3, color: Int) {
     val (r, g, b, a) = color.decomposeColorFloat()
 
@@ -97,50 +98,50 @@ fun MatrixStack.drawCube(size: Vector3, color: Int) {
     val buffer = tesselator.buffer
 
     RenderSystem.setShaderColor(r, g, b, a)
-    RenderSystem.setShader(GameRenderer::getPositionColorProgram)
+    RenderSystem.setShader(GameRenderer::getPositionProgram)
     push()
-    buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR)
+    buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION)
 
     // Bottom edges
-    buffer.vertex(position, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
-    buffer.vertex(position, x, 0.0F, 0.0F).color(r, g, b, a).next()
+    buffer.vertex(position, 0.0F, 0.0F, 0.0F).next()
+    buffer.vertex(position, x, 0.0F, 0.0F).next()
 
-    buffer.vertex(position, x, 0.0F, 0.0F).color(r, g, b, a).next()
-    buffer.vertex(position, x, 0.0F, z).color(r, g, b, a).next()
+    buffer.vertex(position, x, 0.0F, 0.0F).next()
+    buffer.vertex(position, x, 0.0F, z).next()
 
-    buffer.vertex(position, x, 0.0F, z).color(r, g, b, a).next()
-    buffer.vertex(position, 0.0F, 0.0F, z).color(r, g, b, a).next()
+    buffer.vertex(position, x, 0.0F, z).next()
+    buffer.vertex(position, 0.0F, 0.0F, z).next()
 
-    buffer.vertex(position, 0.0F, 0.0F, z).color(r, g, b, a).next()
-    buffer.vertex(position, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
+    buffer.vertex(position, 0.0F, 0.0F, z).next()
+    buffer.vertex(position, 0.0F, 0.0F, 0.0F).next()
 
     // Top edges
-    buffer.vertex(position, 0.0F, y, 0.0F).color(r, g, b, a).next()
-    buffer.vertex(position, x, y, 0.0F).color(r, g, b, a).next()
+    buffer.vertex(position, 0.0F, y, 0.0F).next()
+    buffer.vertex(position, x, y, 0.0F).next()
 
-    buffer.vertex(position, x, y, 0.0F).color(r, g, b, a).next()
-    buffer.vertex(position, x, y, z).color(r, g, b, a).next()
+    buffer.vertex(position, x, y, 0.0F).next()
+    buffer.vertex(position, x, y, z).next()
 
-    buffer.vertex(position, x, y, z).color(r, g, b, a).next()
-    buffer.vertex(position, 0.0F, y, z).color(r, g, b, a).next()
+    buffer.vertex(position, x, y, z).next()
+    buffer.vertex(position, 0.0F, y, z).next()
 
-    buffer.vertex(position, 0.0F, y, z).color(r, g, b, a).next()
-    buffer.vertex(position, 0.0F, y, 0.0F).color(r, g, b, a).next()
+    buffer.vertex(position, 0.0F, y, z).next()
+    buffer.vertex(position, 0.0F, y, 0.0F).next()
 
     // Vertical edges
-    buffer.vertex(position, 0.0F, 0.0F, 0.0F).color(r, g, b, a).next()
-    buffer.vertex(position, 0.0F, y, 0.0F).color(r, g, b, a).next()
+    buffer.vertex(position, 0.0F, 0.0F, 0.0F).next()
+    buffer.vertex(position, 0.0F, y, 0.0F).next()
 
-    buffer.vertex(position, x, 0.0F, 0.0F).color(r, g, b, a).next()
-    buffer.vertex(position, x, y, 0.0F).color(r, g, b, a).next()
+    buffer.vertex(position, x, 0.0F, 0.0F).next()
+    buffer.vertex(position, x, y, 0.0F).next()
 
-    buffer.vertex(position, x, 0.0F, z).color(r, g, b, a).next()
-    buffer.vertex(position, x, y, z).color(r, g, b, a).next()
+    buffer.vertex(position, x, 0.0F, z).next()
+    buffer.vertex(position, x, y, z).next()
 
-    buffer.vertex(position, 0.0F, 0.0F, z).color(r, g, b, a).next()
-    buffer.vertex(position, 0.0F, y, z).color(r, g, b, a).next()
+    buffer.vertex(position, 0.0F, 0.0F, z).next()
+    buffer.vertex(position, 0.0F, y, z).next()
 
-    tesselator.draw()
+    BufferRenderer.drawWithGlobalProgram(buffer.end())
     pop()
 }
 

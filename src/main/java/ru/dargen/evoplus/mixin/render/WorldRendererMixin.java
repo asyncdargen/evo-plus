@@ -20,7 +20,7 @@ public class WorldRendererMixin {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderChunkDebugInfo(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/render/Camera;)V", shift = At.Shift.BEFORE))
     private void beforeRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo ci) {
         EventBus.INSTANCE.fire(new WorldRenderEvent(
-                matrices, tickDelta, camera, bufferBuilders.getEntityVertexConsumers()
+                matrices, tickDelta, camera, bufferBuilders
         ));
     }
 

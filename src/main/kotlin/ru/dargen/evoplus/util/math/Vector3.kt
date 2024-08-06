@@ -17,9 +17,14 @@ val Vec3d.asV3 get() = v3(x, y, z)
 
 
 @KotlinOpens
-
 class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
     constructor(value: Double) : this(value, value, value)
+
+    companion object {
+
+        val Zero = Vector3(.0)
+
+    }
 
     var x: Double = x
     var y: Double = y
@@ -136,6 +141,10 @@ class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
 
     fun clone() = Vector3(x, y, z)
 
+    fun mutable() = if (this !is Mutable) Mutable(this) else this
+
+    fun immutable() = clone()
+
     fun fixIn(minX: Double, maxX: Double, minY: Double, maxY: Double, minZ: Double, maxZ: Double) =
         set(x.fix(minX, maxX), y.fix(minY, maxY), z.fix(minZ, maxZ))
 
@@ -172,5 +181,63 @@ class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
     operator fun component1() = x
     operator fun component2() = y
     operator fun component3() = z
+
+    @KotlinOpens
+    class Mutable(x: Double, y: Double, z: Double) : Vector3(x, y, z) {
+        constructor(value: Double = .0) : this(value, value, value)
+        constructor(vector: Vector3) : this(vector.x, vector.y, vector.z)
+
+        override fun progressTo(x: Double, y: Double, z: Double, progress: Double) =
+            set(this.x.progressTo(x, progress), this.y.progressTo(y, progress), this.z.progressTo(z, progress))
+
+        override fun radians() = set(Math.toRadians(x), Math.toRadians(y), Math.toRadians(z))
+
+        override fun degrees() = set(Math.toDegrees(x), Math.toDegrees(y), Math.toDegrees(z))
+
+        override fun abs() = set(x.absoluteValue, y.absoluteValue, z.absoluteValue)
+
+        override fun cross(x: Double, y: Double, z: Double) = apply {
+            val crossX = this.y * z - this.z * y
+            val crossY = this.z * x - this.x * z
+            val crossZ = this.x * y - this.y * x
+
+            this.x = crossX
+            this.y = crossY
+            this.z = crossZ
+        }
+
+        override fun minus(x: Double, y: Double, z: Double) = apply {
+            this.x -= x
+            this.y -= y
+            this.z -= z
+        }
+
+        override fun plus(x: Double, y: Double, z: Double) = apply {
+            this.x += x
+            this.y += y
+            this.z += z
+        }
+
+        override fun times(x: Double, y: Double, z: Double) = apply {
+            this.x *= x
+            this.y *= y
+            this.z *= z
+        }
+
+        override fun div(x: Double, y: Double, z: Double) = apply {
+            this.x /= x
+            this.y /= y
+            this.z /= z
+        }
+
+        override fun rem(x: Double, y: Double, z: Double) = apply {
+            this.x %= x
+            this.y %= y
+            this.z %= z
+        }
+
+        override operator fun not() = this * -1.0
+
+    }
 
 }

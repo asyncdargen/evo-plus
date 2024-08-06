@@ -7,7 +7,7 @@ import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.context.RenderContext
-import ru.dargen.evoplus.api.render.context.World
+import ru.dargen.evoplus.api.render.context.WorldContext
 import ru.dargen.evoplus.util.collection.anyOfAll
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.cast
@@ -92,17 +92,24 @@ abstract class Node {
     val preTickHandlers = mutableSetOf<TickHandler<Node>>()
     val postTickHandlers = mutableSetOf<TickHandler<Node>>()
 
-    val wholePosition
-        get() = (parent?._wholePosition() ?: Vector3()).plus(
-            (parent?.size?.clone()?.times(align) ?: Vector3())
-                .plus(translation).plus(position).times(wholeScale / scale)
-                .plus((!size).times(origin).times(wholeScale))
-        )
-    val wholeScale get() = (parent?._wholeScale() ?: Vector3(1.0)) * scale
-    val wholeRotation get() = (parent?.rotation ?: Vector3()) + rotation
-    val wholeSize get() = size * wholeScale
+    val wholePosition: Vector3
+        get() {
+//            (parent?.size?.times(align) ?: Vector3.Mutable())
+//                .plus(translation).plus(position)
+//                .times(wholeScale.x / scale.x, wholeScale.y / scale.y, wholeScale.z / scale.z)
+//                .plus((!size).times(origin).times(wholeScale))
+            val wholeScale = wholeScale
+            return (parent?.size?.times(align) ?: Vector3.Mutable())
+                    .plus(translation).plus(position)
+                    .times(wholeScale.x / scale.x, wholeScale.y / scale.y, wholeScale.z / scale.z)
+                    .plus(wholeScale.times(!size).times(origin))
+                    .plus(parent?._wholePosition() ?: Vector3.Zero)
+        }
+    val wholeScale get() = (parent?._wholeScale() ?: Vector3.Mutable(1.0)) * scale
+    val wholeRotation get() = (parent?.rotation ?: Vector3.Mutable()) + rotation
+    val wholeSize get() = size.mutable() * wholeScale
 
-    val isWorldElement get() = context is World
+    val isWorldElement get() = context is WorldContext
     val context: RenderContext? get() = parent?.context ?: safeCast<RenderContext>()
 
     //dispatchers
