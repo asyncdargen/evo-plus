@@ -14,10 +14,10 @@
     "world.ClientWorldMixin",
     "world.ClientChunkManagerMixin",
     "world.LightmapTextureManagerMixin",
-    "world.WorldMixin",
     "world.particle.ParticleManagerMixin",
     "world.particle.ParticleManagerAccessor",
     "world.particle.ParticleAccessor",
+    "world.chunk.WorldChunkMixin",
 
     "render.WindowMixin",
     "render.WorldRendererMixin",

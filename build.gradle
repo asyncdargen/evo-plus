@@ -55,6 +55,10 @@ processResources {
     }
 }
 
+runClient {
+    jvmArgs '-Devo-plus.dev=true'
+    args "--username=${System.getenv('TEST_NAME')}"
+}
 
 jar {
     from('LICENSE')

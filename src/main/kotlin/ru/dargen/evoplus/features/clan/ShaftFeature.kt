@@ -5,7 +5,7 @@ import net.minecraft.entity.decoration.DisplayEntity.ItemDisplayEntity
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.event.evo.ChangeLocationEvent
 import ru.dargen.evoplus.api.event.on
-import ru.dargen.evoplus.api.event.world.BlockChangeEvent
+import ru.dargen.evoplus.api.event.world.block.BlockChangeEvent
 import ru.dargen.evoplus.api.event.world.ChunkLoadEvent
 import ru.dargen.evoplus.api.event.world.ChunkUnloadEvent
 import ru.dargen.evoplus.api.event.world.WorldPreLoadEvent
