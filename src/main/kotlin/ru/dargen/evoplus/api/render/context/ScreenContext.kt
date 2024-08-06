@@ -60,38 +60,37 @@ class ScreenContext(id: String, title: String) : RenderContext() {
         }
 
         override fun mouseMoved(mouseX: Double, mouseY: Double) {
-            mouseMove(v3(mouseX, mouseY))
-            super.mouseMoved(mouseX, mouseY)
+            if (!mouseMove(v3(mouseX, mouseY))) super.mouseMoved(mouseX, mouseY)
         }
 
         override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {
-            mouseClick(v3(mouseX, mouseY), button, true)
-            return super.mouseClicked(mouseX, mouseY, button)
+            return if (mouseClick(v3(mouseX, mouseY), button, true)) true
+            else super.mouseClicked(mouseX, mouseY, button)
         }
 
         override fun mouseReleased(mouseX: Double, mouseY: Double, button: Int): Boolean {
-            mouseClick(v3(mouseX, mouseY), button, false)
-            return super.mouseReleased(mouseX, mouseY, button)
+            return if (mouseClick(v3(mouseX, mouseY), button, false)) true
+            else super.mouseReleased(mouseX, mouseY, button)
         }
 
         override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-            changeKey(keyCode, true)
-            return super.keyPressed(keyCode, scanCode, modifiers) && !passEvents
+            return if (changeKey(keyCode, true)) true
+            else super.keyPressed(keyCode, scanCode, modifiers) && !passEvents
         }
 
         override fun keyReleased(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-            changeKey(keyCode, false)
-            return super.keyReleased(keyCode, scanCode, modifiers) && !passEvents
+            return if (changeKey(keyCode, false)) true
+            else super.keyReleased(keyCode, scanCode, modifiers) && !passEvents
         }
 
         override fun charTyped(chr: Char, modifiers: Int): Boolean {
-            typeChar(chr, 0)
-            return super.charTyped(chr, modifiers) && !passEvents
+            return if (typeChar(chr, 0)) true
+            else super.charTyped(chr, modifiers) && !passEvents
         }
 
         override fun mouseScrolled(mouseX: Double, mouseY: Double, amount: Double): Boolean {
-            mouseWheel(v3(mouseX, mouseY), amount, .0)
-            return super.mouseScrolled(mouseX, mouseY, amount)
+            return if (mouseWheel(v3(mouseX, mouseY), amount, .0)) true
+            else super.mouseScrolled(mouseX, mouseY, amount)
         }
 
         override fun tick() {
