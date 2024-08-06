@@ -18,6 +18,7 @@ import ru.dargen.evoplus.api.event.world.block.BlockEntityUpdateEvent;
 @Mixin(WorldChunk.class)
 public class WorldChunkMixin {
 
+    //TODO: check calls in method code
     @Inject(method = "addBlockEntity", at = @At("HEAD"), cancellable = true)
     private void addBlockEntity(BlockEntity blockEntity, CallbackInfo ci) {
         if (!EventBus.INSTANCE.fireResult(new BlockEntityLoadEvent((WorldChunk) ((Object) this), blockEntity))) {

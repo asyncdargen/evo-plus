@@ -5,12 +5,13 @@ import net.minecraft.entity.decoration.DisplayEntity.ItemDisplayEntity
 import net.minecraft.item.Items
 import ru.dargen.evoplus.api.event.evo.ChangeLocationEvent
 import ru.dargen.evoplus.api.event.on
-import ru.dargen.evoplus.api.event.world.block.BlockChangeEvent
 import ru.dargen.evoplus.api.event.world.ChunkLoadEvent
 import ru.dargen.evoplus.api.event.world.ChunkUnloadEvent
 import ru.dargen.evoplus.api.event.world.WorldPreLoadEvent
+import ru.dargen.evoplus.api.event.world.block.BlockChangeEvent
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.node.text
+import ru.dargen.evoplus.api.scheduler.async
 import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.misc.Notifies
@@ -20,11 +21,7 @@ import ru.dargen.evoplus.util.evo.isBarrel
 import ru.dargen.evoplus.util.evo.isDetonatingBarrel
 import ru.dargen.evoplus.util.format.nounEndings
 import ru.dargen.evoplus.util.math.v3
-import ru.dargen.evoplus.util.minecraft.WorldEntities
-import ru.dargen.evoplus.util.minecraft.customModelData
-import ru.dargen.evoplus.util.minecraft.forEachBlocks
-import ru.dargen.evoplus.util.minecraft.printMessage
-import ru.dargen.evoplus.util.minecraft.sendClanMessage
+import ru.dargen.evoplus.util.minecraft.*
 import kotlin.math.max
 
 object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
@@ -124,13 +121,19 @@ object ShaftFeature : Feature("shaft", "Шахта", Items.DIAMOND_PICKAXE) {
         on<WorldPreLoadEvent> { Barrels = 0 }
 
         on<ChunkLoadEvent> {
-            chunk.forEachBlocks { _, blockState ->
-                if (blockState.isBarrel() || blockState.isDetonatingBarrel()) ++Barrels
+            //TODO: make more better than async
+            async {
+                chunk.forEachBlocks { _, blockState ->
+                    if (blockState.isBarrel() || blockState.isDetonatingBarrel()) ++Barrels
+                }
             }
         }
         on<ChunkUnloadEvent> {
-            chunk.forEachBlocks { _, blockState ->
-                if (blockState.isBarrel() || blockState.isDetonatingBarrel()) Barrels = max(Barrels - 1, 0)
+            //TODO: make more better than async
+            async {
+                chunk.forEachBlocks { _, blockState ->
+                    if (blockState.isBarrel() || blockState.isDetonatingBarrel()) Barrels = max(Barrels - 1, 0)
+                }
             }
         }
 
