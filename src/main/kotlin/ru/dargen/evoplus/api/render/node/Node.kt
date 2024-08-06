@@ -124,7 +124,7 @@ abstract class Node {
     fun mouseMove(mouse: Vector3): Boolean {
         if (!enabled) return false
 
-        if (children.anyOfAll { it.mouseMove(mouse) }) {
+        if (children.any { it.mouseMove(mouse) }) {
             return true
         }
 
@@ -135,7 +135,7 @@ abstract class Node {
     fun mouseClick(mouse: Vector3, button: Int, state: Boolean): Boolean {
         if (!enabled) return false
 
-        if (children.anyOfAll { it.mouseClick(mouse, button, state) }) {
+        if (children.any  { it.mouseClick(mouse, button, state) }) {
             return true
         }
 
@@ -145,7 +145,7 @@ abstract class Node {
     fun mouseWheel(mouse: Vector3, verticalWheel: Double, horizontalWheel: Double): Boolean {
         if (!enabled) return false
 
-        if (children.anyOfAll { it.mouseWheel(mouse, verticalWheel, horizontalWheel) }) {
+        if (children.any  { it.mouseWheel(mouse, verticalWheel, horizontalWheel) }) {
             return true
         }
 
@@ -155,7 +155,7 @@ abstract class Node {
     fun changeKey(key: Int, state: Boolean): Boolean {
         if (!enabled) return false
 
-        if (children.anyOfAll{ it.changeKey(key, state) }) {
+        if (children.any { it.changeKey(key, state) }) {
             return true
         }
 
@@ -165,7 +165,7 @@ abstract class Node {
     fun typeChar(char: Char, code: Int): Boolean {
         if (!enabled) return false
 
-        if (children.anyOfAll { it.typeChar(char, code) }) {
+        if (children.any  { it.typeChar(char, code) }) {
             return true
         }
 
