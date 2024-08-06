@@ -25,7 +25,7 @@ val Logger = java.util.logging.Logger.getLogger("EvoPlus")
 object EvoPlus : ClientModInitializer {
 
     val ModContainer by lazy { FabricLoader.getInstance().getModContainer("evo-plus").get() }
-    
+
     override fun onInitializeClient() {
         EventBus
         Scheduler
@@ -48,7 +48,14 @@ object EvoPlus : ClientModInitializer {
             "Обнаружена новая версия EvoPlus - §e${Updater.LatestVersion}.",
             "Нажмите, чтобы обновиться.",
             delay = 15.0
-        ) { leftClick { _, state -> if (isHovered && state) Updater.tryUpdate() } }
+        ) {
+            leftClick { _, state ->
+                if (isHovered && state) {
+                    Updater.tryUpdate()
+                    true
+                } else false
+            }
+        }
     }
 
 }

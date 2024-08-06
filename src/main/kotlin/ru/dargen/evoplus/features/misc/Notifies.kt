@@ -16,6 +16,7 @@ import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.CurrentScreen
 import java.util.concurrent.TimeUnit
 
+//TODO: make callbacks and processes of element more ez
 object Notifies : WidgetBase {
 
     override val node = vbox {
@@ -79,7 +80,12 @@ object Notifies : WidgetBase {
             }
         }
 
-        click { _, _, state -> if (!isWidgetEditor && CurrentScreen !is GenericContainerScreen && isHovered && state) hide() }
+        click { _, _, state ->
+            if (!isWidgetEditor && CurrentScreen !is GenericContainerScreen && isHovered && state) {
+                hide()
+                true
+            } else false
+        }
         hover { _, hovered ->
             animate("scale", .2) { scale = if (hovered) v3(1.2, 1.2, 1.2) else v3(1.0, 1.0, 1.0) }
             color = if (!isWidgetEditor && hovered) Colors.TransparentBlack.darker() else Colors.TransparentBlack

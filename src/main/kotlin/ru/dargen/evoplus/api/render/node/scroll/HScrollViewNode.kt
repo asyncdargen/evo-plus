@@ -6,12 +6,12 @@ import ru.dargen.evoplus.api.render.animation.animate
 import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.AbstractGridBoxNode
 import ru.dargen.evoplus.api.render.node.box.hbox
-import ru.dargen.evoplus.util.render.alpha
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.math.fix
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.MousePosition
+import ru.dargen.evoplus.util.render.alpha
 
 @KotlinOpens
 class HScrollViewNode : AbstractScrollViewNode() {
@@ -47,11 +47,16 @@ class HScrollViewNode : AbstractScrollViewNode() {
                 animate("scroll", .2) {
                     selector = (selector + wheel * -.9 * (minElementSize / boxSize)).fix(.0, 1.0)
                 }
-            }
+                true
+            } else false
         }
         scrollbar.drag { start, delta ->
             animate("scroll", .08) {
-                selector = ((MousePosition.y - this@HScrollViewNode.wholePosition.x) / (this@HScrollViewNode.wholeSize.x)).fix(.0, 1.0)
+                selector =
+                    ((MousePosition.y - this@HScrollViewNode.wholePosition.x) / (this@HScrollViewNode.wholeSize.x)).fix(
+                        .0,
+                        1.0
+                    )
             }
         }
         hover { _, state ->

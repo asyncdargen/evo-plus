@@ -35,10 +35,14 @@ class Widget(id: String, name: String, supplier: Node.() -> Unit) : Setting<Node
             if (isWidgetEditor && isHovered) {
                 scale = (scale + wheel / 10.0).fixIn(.2, 4.0)
                 fix()
-            }
+                true
+            } else false
         }
         click(2) { _, state ->
-            if (isWidgetEditor && isHovered && state) animate("scale", .2) { scale = v3(1.0, 1.0, 1.0) }
+            if (isWidgetEditor && isHovered && state) {
+                animate("scale", .2) { scale = v3(1.0, 1.0, 1.0) }
+                true
+            } else false
         }
         drag(inOutHandler = {
             if (it && isWidgetEditor) usePosition()

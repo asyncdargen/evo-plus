@@ -6,16 +6,11 @@ import ru.dargen.evoplus.api.keybind.boundKey
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.render.Relative
 import ru.dargen.evoplus.api.render.context.screen
-import ru.dargen.evoplus.api.render.node.Node
+import ru.dargen.evoplus.api.render.node.*
 import ru.dargen.evoplus.api.render.node.box.hbox
 import ru.dargen.evoplus.api.render.node.box.vbox
-import ru.dargen.evoplus.api.render.node.hover
-import ru.dargen.evoplus.api.render.node.hoverIn
 import ru.dargen.evoplus.api.render.node.input.button
 import ru.dargen.evoplus.api.render.node.input.symbolButton
-import ru.dargen.evoplus.api.render.node.releaseKey
-import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.render.node.typeKey
 import ru.dargen.evoplus.api.scheduler.after
 import ru.dargen.evoplus.feature.FeaturesScreen
 import ru.dargen.evoplus.util.kotlin.safeCast
@@ -37,9 +32,9 @@ object FastSelectorScreen {
 
         screen {
             if (setting) color = Colors.TransparentBlack
-            
+
             isPassEvents = !setting
-            
+
             if (!setting) +button("Настройка") {
                 origin = Relative.RightTop
                 align = Relative.RightTop
@@ -56,8 +51,12 @@ object FastSelectorScreen {
             val items = FastSelectorSetting.value.map { line ->
                 line.filter { setting || !it.isInteraction || target.isNotBlank() }.map {
                     it.screenItem.apply {
-                        if (!setting) typeKey { key -> if (key == -1 && isHovered) sendCommand(it.command.interaction()) }
-                        else hoverHandlers.clear()
+                        if (!setting) typeKey { key ->
+                            if (key == -1 && isHovered) {
+                                sendCommand(it.command.interaction())
+                                true
+                            } else false
+                        } else hoverHandlers.clear()
 
                         hoverIn { _ -> label.text = it.name.interaction() }
                     }
@@ -97,7 +96,7 @@ object FastSelectorScreen {
                 recompose()
             }
 
-            if (!setting) releaseKey(Keybinds.FastSelector.boundKey.code) { close() }
+            if (!setting) releaseKey(Keybinds.FastSelector.boundKey.code) { close(); true }
         }.open()
     }
 
@@ -159,7 +158,7 @@ object FastSelectorScreen {
                 on {
                     if (confirmed) {
                         FastSelectorSetting.removeItem(line, index)
-                        if (FastSelectorSetting.items == 0) FastSelectorSetting.addItem(0,0)
+                        if (FastSelectorSetting.items == 0) FastSelectorSetting.addItem(0, 0)
                         open(true)
                     } else {
                         confirmed = true

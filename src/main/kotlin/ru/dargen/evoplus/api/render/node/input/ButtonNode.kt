@@ -41,7 +41,10 @@ class ButtonNode(label: String = "") : RectangleNode() {
                 if (!isSilent) {
                     playSound(SoundEvents.UI_BUTTON_CLICK)
                 }
+                return@leftClick true
             }
+
+            false
         }
     }
 

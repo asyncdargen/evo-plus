@@ -8,6 +8,7 @@ import ru.dargen.evoplus.api.render.animation.property.proxied
 import ru.dargen.evoplus.api.render.context.Overlay
 import ru.dargen.evoplus.api.render.context.RenderContext
 import ru.dargen.evoplus.api.render.context.World
+import ru.dargen.evoplus.util.collection.anyOfAll
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
 import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.kotlin.safeCast
@@ -22,17 +23,18 @@ import java.awt.Color
 
 typealias RenderHandler<N> = N.(matrices: MatrixStack, tickDelta: Float) -> Unit
 
-typealias KeyHandler<N> = N.(key: Int, state: Boolean) -> Unit
-typealias CharHandler<N> = N.(char: Char, code: Int) -> Unit
+typealias KeyHandler<N> = N.(key: Int, state: Boolean) -> Boolean
+typealias CharHandler<N> = N.(char: Char, code: Int) -> Boolean
 
-typealias MouseWheelHandler<N> = N.(mouse: Vector3, verticalWheel: Double, horizontalWheel: Double) -> Unit
-typealias MouseClickHandler<N> = N.(mouse: Vector3, button: Int, state: Boolean) -> Unit
-typealias MouseMoveHandler<N> = N.(mouse: Vector3) -> Unit
+typealias MouseWheelHandler<N> = N.(mouse: Vector3, verticalWheel: Double, horizontalWheel: Double) -> Boolean
+typealias MouseClickHandler<N> = N.(mouse: Vector3, button: Int, state: Boolean) -> Boolean
+typealias MouseMoveHandler<N> = N.(mouse: Vector3) -> Boolean
 
 typealias ResizeHandler<N> = N.() -> Unit
 typealias HoverHandler<N> = N.(mouse: Vector3, state: Boolean) -> Unit
 typealias TickHandler<N> = N.() -> Unit
 
+//TODO: make interactions with states pattern && default supplied as true
 @KotlinOpens
 abstract class Node {
 
@@ -119,35 +121,55 @@ abstract class Node {
         children.forEach { it.resize() }
     }
 
-    fun mouseMove(mouse: Vector3) {
-        if (!enabled) return
+    fun mouseMove(mouse: Vector3): Boolean {
+        if (!enabled) return false
+
+        if (children.anyOfAll { it.mouseMove(mouse) }) {
+            return true
+        }
+
         updateHover(mouse)
-        moveHandlers.forEach { it(mouse) }
-        children.forEach { it.mouseMove(mouse) }
+        return moveHandlers.anyOfAll { it(mouse) }
     }
 
-    fun mouseClick(mouse: Vector3, button: Int, state: Boolean) {
-        if (!enabled) return
-        clickHandlers.forEach { it(mouse, button, state) }
-        children.forEach { it.mouseClick(mouse, button, state) }
+    fun mouseClick(mouse: Vector3, button: Int, state: Boolean): Boolean {
+        if (!enabled) return false
+
+        if (children.anyOfAll { it.mouseClick(mouse, button, state) }) {
+            return true
+        }
+
+        return clickHandlers.anyOfAll { it(mouse, button, state) }
     }
 
-    fun mouseWheel(mouse: Vector3, verticalWheel: Double, horizontalWheel: Double) {
-        if (!enabled) return
-        wheelHandlers.forEach { it(mouse, verticalWheel, horizontalWheel) }
-        children.forEach { it.mouseWheel(mouse, verticalWheel, horizontalWheel) }
+    fun mouseWheel(mouse: Vector3, verticalWheel: Double, horizontalWheel: Double): Boolean {
+        if (!enabled) return false
+
+        if (children.anyOfAll { it.mouseWheel(mouse, verticalWheel, horizontalWheel) }) {
+            return true
+        }
+
+        return wheelHandlers.anyOfAll { it(mouse, verticalWheel, horizontalWheel) }
     }
 
-    fun changeKey(key: Int, state: Boolean) {
-        if (!enabled) return
-        keyHandlers.forEach { it(key, state) }
-        children.forEach { it.changeKey(key, state) }
+    fun changeKey(key: Int, state: Boolean): Boolean {
+        if (!enabled) return false
+
+        if (children.anyOfAll{ it.changeKey(key, state) }) {
+            return true
+        }
+
+        return keyHandlers.anyOfAll { it(key, state) }
     }
 
-    fun typeChar(char: Char, code: Int) {
-        if (!enabled) return
-        charHandlers.forEach { it(char, code) }
-        children.forEach { it.typeChar(char, code) }
+    fun typeChar(char: Char, code: Int): Boolean {
+        if (!enabled) return false
+
+        if (children.anyOfAll { it.typeChar(char, code) }) {
+            return true
+        }
+
+        return charHandlers.anyOfAll { it(char, code) }
     }
 
 
@@ -255,10 +277,10 @@ infix fun <N : Node> N.hoverOut(handler: N.(mouse: Vector3) -> Unit) =
 infix fun <N : Node> N.wheel(handler: MouseWheelHandler<N>) =
     apply { wheelHandlers.add(handler.cast()) }
 
-infix fun <N : Node> N.hWheel(handler: N.(mouse: Vector3, wheel: Double) -> Unit) =
+infix fun <N : Node> N.hWheel(handler: N.(mouse: Vector3, wheel: Double) -> Boolean) =
     wheel { mouse, _, horizontalWheel -> handler(mouse, horizontalWheel) }
 
-infix fun <N : Node> N.vWheel(handler: N.(mouse: Vector3, wheel: Double) -> Unit) =
+infix fun <N : Node> N.vWheel(handler: N.(mouse: Vector3, wheel: Double) -> Boolean) =
     wheel { mouse, verticalWheel, _ -> handler(mouse, verticalWheel) }
 
 //click
@@ -266,13 +288,13 @@ infix fun <N : Node> N.vWheel(handler: N.(mouse: Vector3, wheel: Double) -> Unit
 infix fun <N : Node> N.click(handler: MouseClickHandler<N>) =
     apply { clickHandlers.add(handler.cast()) }
 
-fun <N : Node> N.click(_button: Int, handler: N.(mouse: Vector3, state: Boolean) -> Unit) =
-    click { mouse, button, state -> if (button == _button) handler(this, mouse, state) }
+fun <N : Node> N.click(_button: Int, handler: N.(mouse: Vector3, state: Boolean) -> Boolean) =
+    click { mouse, button, state -> if (button == _button) handler(this, mouse, state) else false }
 
-infix fun <N : Node> N.rightClick(handler: N.(mouse: Vector3, state: Boolean) -> Unit) =
+infix fun <N : Node> N.rightClick(handler: N.(mouse: Vector3, state: Boolean) -> Boolean) =
     click(1, handler)
 
-infix fun <N : Node> N.leftClick(handler: N.(mouse: Vector3, state: Boolean) -> Unit) =
+infix fun <N : Node> N.leftClick(handler: N.(mouse: Vector3, state: Boolean) -> Boolean) =
     click(0, handler)
 
 //move
@@ -286,22 +308,28 @@ fun <N : Node> N.drag(
     var dragged = false
 
     click { mouse, button, state ->
-        if (_button != null && button != _button) return@click
+        if (_button != null && button != _button) return@click false
 
         if (isHovered && state) {
             dragged = true
             inOutHandler(dragged)
             handler(startPosition, 0.v3)
             startPosition = mouse.clone()
+            return@click true
         } else if (dragged && !state) {
             dragged = false
             inOutHandler(dragged)
         }
+
+        return@click false
     }
     mouseMove {
         if (dragged) {
             handler(startPosition, it - startPosition)
+            return@mouseMove true
         }
+
+        return@mouseMove false
     }
 }
 
@@ -312,26 +340,26 @@ infix fun <N : Node> N.mouseMove(handler: MouseMoveHandler<N>) =
 
 infix fun <N : Node> N.key(handler: KeyHandler<N>) = apply { keyHandlers.add(handler.cast()) }
 
-fun <N : Node> N.key(_key: Int, handler: N.(state: Boolean) -> Unit) =
-    key { key, state -> if (key == _key) handler(this, state) }
+fun <N : Node> N.key(_key: Int, handler: N.(state: Boolean) -> Boolean) =
+    key { key, state -> if (key == _key) handler(this, state) else false }
 
-infix fun <N : Node> N.releaseKey(handler: N.(key: Int) -> Unit) =
-    key { key, state -> if (!state) handler(key) }
+infix fun <N : Node> N.releaseKey(handler: N.(key: Int) -> Boolean) =
+    key { key, state -> if (!state) handler(key) else false }
 
-fun <N : Node> N.releaseKey(_key: Int, handler: N.() -> Unit) =
-    releaseKey { if (it == _key) handler() }
+fun <N : Node> N.releaseKey(_key: Int, handler: N.() -> Boolean) =
+    releaseKey { if (it == _key) handler() else false }
 
-infix fun <N : Node> N.typeKey(handler: N.(key: Int) -> Unit) =
-    key { key, state -> if (state) handler(key) }
+infix fun <N : Node> N.typeKey(handler: N.(key: Int) -> Boolean) =
+    key { key, state -> if (state) handler(key) else false }
 
-fun <N : Node> N.typeKey(_key: Int, handler: N.() -> Unit) =
-    typeKey { if (it == _key) handler() }
+fun <N : Node> N.typeKey(_key: Int, handler: N.() -> Boolean) =
+    typeKey { if (it == _key) handler() else false }
 
 infix fun <N : Node> N.type(handler: CharHandler<N>) =
     apply { charHandlers.add(handler.cast()) }
 
-fun <N : Node> N.type(_char: Char, handler: N.() -> Unit) =
-    type { char, _ -> if (char == _char) handler() }
+fun <N : Node> N.type(_char: Char, handler: N.() -> Boolean) =
+    type { char, _ -> if (char == _char) handler() else false }
 
 //tick
 

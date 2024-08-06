@@ -93,7 +93,7 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
 
                 BossHealthsPattern.find(text)?.run {
                     val percent = it.percent.toDouble() * 100.0
-                    
+
                     if (percent >= BossHealthsPercent) return@run
 
                     val isCursed = it.name.siblings.any { it.style.color?.name == "#25D192" }
@@ -119,7 +119,10 @@ object BossFeature : Feature("boss", "Боссы", Items.DIAMOND_SWORD) {
                 "Нажмите, чтобы принять.",
                 delay = 10.0
             ) {
-                leftClick { _, state -> if (isHovered && state) BossReceiveScreen.open(shared) }
+                leftClick { _, state -> if (isHovered && state) {
+                    BossReceiveScreen.open(shared)
+                true
+                } else false }
             }
         }
     }

@@ -42,7 +42,8 @@ class ToggleNode : RectangleNode() {
         leftClick { mouse, state ->
             if (state && isHovered) {
                 toggled = !toggled
-            }
+                true
+            } else false
         }
     }
 

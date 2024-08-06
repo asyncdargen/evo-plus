@@ -22,7 +22,12 @@ object BossReceiveScreen {
                 indent = v3()
                 +toggle
                 +text {
-                    leftClick { mouse, state -> if (state && isHovered) toggle.toggled = !toggle.toggled }
+                    leftClick { mouse, state ->
+                        if (state && isHovered) {
+                            toggle.toggled = !toggle.toggled
+                            true
+                        } else false
+                    }
                     tick {
                         text = "${type.displayName}§f: ${(bosses[type]!! - System.currentTimeMillis()).asTextTime}"
                     }

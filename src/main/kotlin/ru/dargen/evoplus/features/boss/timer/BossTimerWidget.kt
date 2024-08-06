@@ -49,7 +49,10 @@ object BossTimerWidget : WidgetBase {
                     ) { isShadowed = true }
 
                     leftClick { _, state ->
-                        if (isHovered && state && !isWidgetEditor && BossTimerFeature.WidgetTeleport) sendCommand("boss ${type.level}")
+                        if (isHovered && state && !isWidgetEditor && BossTimerFeature.WidgetTeleport) {
+                            sendCommand("boss ${type.level}")
+                            true
+                        } else false
                     }
 
                     recompose()

@@ -43,3 +43,9 @@ fun <V, C : MutableCollection<V>> C.fill(value: V) = apply {
     clear()
     repeat(size) { add(value) }
 }
+
+inline fun <V, C : Collection<V>> C.anyOfAll(block: (V) -> Boolean): Boolean {
+    var passed = false
+    forEach { if (block(it)) passed = true }
+    return passed
+}

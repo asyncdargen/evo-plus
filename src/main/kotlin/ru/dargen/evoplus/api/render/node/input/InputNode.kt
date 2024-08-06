@@ -66,17 +66,59 @@ class InputNode : RectangleNode() {
             if (focused != isHovered) {
                 cursor = if (isHovered) content.length else 0
             }
-            focused = isHovered
+
+            (focused != isHovered).also { focused = isHovered }
         }
-        type { char, _ -> if (focused) put(char.toString()) }
+        type { char, _ ->
+            if (focused) {
+                put(char.toString())
+                true
+            } else false
+        }
 
-        typeKey(InputUtil.GLFW_KEY_ENTER) { if (focused) focused = false }
-        typeKey(InputUtil.GLFW_KEY_RIGHT) { if (focused) cursor++ }
-        typeKey(InputUtil.GLFW_KEY_LEFT) { if (focused) cursor-- }
-        typeKey(InputUtil.GLFW_KEY_DELETE) { if (focused) remove(1) }
-        typeKey(InputUtil.GLFW_KEY_BACKSPACE) { if (focused) remove(-(if (Screen.hasControlDown()) content.length else 1)) }
+        typeKey(InputUtil.GLFW_KEY_ESCAPE) {
+            if (focused) {
+                focused = false
+                true
+            } else false
+        }
+        typeKey(InputUtil.GLFW_KEY_ENTER) {
+            if (focused) {
+                focused = false
+                true
+            } else false
+        }
+        typeKey(InputUtil.GLFW_KEY_RIGHT) {
+            if (focused) {
+                cursor++
+                true
+            } else false
+        }
+        typeKey(InputUtil.GLFW_KEY_LEFT) {
+            if (focused) {
+                cursor--
+                true
+            } else false
+        }
+        typeKey(InputUtil.GLFW_KEY_DELETE) {
+            if (focused) {
+                remove(1)
+                true
+            } else false
+        }
+        typeKey(InputUtil.GLFW_KEY_BACKSPACE) {
+            if (focused) {
+                remove(-(if (Screen.hasControlDown()) content.length else 1))
+                true
+            } else false
+        }
 
-        typeKey { if (focused && Screen.isPaste(it)) paste() }
+        typeKey {
+            if (focused && Screen.isPaste(it)) {
+                paste()
+                true
+            } else false
+        }
 
         preTransform { _, _ ->
             text.text = content
