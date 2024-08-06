@@ -107,7 +107,7 @@ abstract class Node {
         }
     val wholeScale get() = (parent?._wholeScale() ?: Vector3.Mutable(1.0)) * scale
     val wholeRotation get() = (parent?.rotation ?: Vector3.Mutable()) + rotation
-    val wholeSize get() = size.mutable() * wholeScale
+    val wholeSize get() = wholeScale * size
 
     val isWorldElement get() = context is WorldContext
     val context: RenderContext? get() = parent?.context ?: safeCast<RenderContext>()

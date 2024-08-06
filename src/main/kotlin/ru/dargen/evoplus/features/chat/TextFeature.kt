@@ -1,7 +1,7 @@
 package ru.dargen.evoplus.features.chat
 
 import net.minecraft.item.Items
-import ru.dargen.evoplus.ReplacerParser.Replacer
+import ru.dargen.evoplus.ReplacerParser
 import ru.dargen.evoplus.api.event.chat.ChatReceiveEvent
 import ru.dargen.evoplus.api.event.chat.ChatSendEvent
 import ru.dargen.evoplus.api.event.on
@@ -10,7 +10,6 @@ import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.features.chat.market.MarketChatTimerWidget
 import ru.dargen.evoplus.protocol.EvoPlusProtocol
 import ru.dargen.evoplus.util.currentMillis
-import ru.dargen.evoplus.util.kotlin.cast
 import ru.dargen.evoplus.util.minecraft.uncolored
 import ru.dargen.evoplus.util.selector.toSelector
 import kotlin.math.ceil
@@ -59,14 +58,14 @@ object TextFeature : Feature("text", "Текст", Items.WRITABLE_BOOK) {
         on<StringRenderEvent> {
             if (!ReplaceUniqueUsers) return@on
 
-            val text = text ?: return@on
+            text = text?.let(ReplacerParser::replace)
 
-            this.text = Replacer
-                .mapKeys { it.key.cast<String>() }
-                .mapValues { it.value.cast<String>() }
-                .filterKeys { it in text }
-                .entries
-                .fold(text) { currentText, (key, value) -> currentText.replace(key, value).replace("%text%", key) }
+//            this.text = Replacer
+//                .mapKeys { it.key.cast<String>() }
+//                .mapValues { it.value.cast<String>() }
+//                .filterKeys { it in text }
+//                .entries
+//                .fold(text) { currentText, (key, value) -> currentText.replace(key, value).replace("%text%", key) }
         }
     }
 

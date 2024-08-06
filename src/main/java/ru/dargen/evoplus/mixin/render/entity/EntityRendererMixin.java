@@ -23,6 +23,7 @@ public abstract class EntityRendererMixin<T extends Entity> {
     }
 
     @Unique
+    //TODO: reduce low fps
     private boolean isCosmeticStand(T entity) {
         if (entity.getType() != EntityType.ARMOR_STAND) return false;
         val stand = (ArmorStandEntity) entity;
