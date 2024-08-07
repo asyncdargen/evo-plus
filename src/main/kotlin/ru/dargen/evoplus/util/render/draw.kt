@@ -34,16 +34,22 @@ fun MatrixStack.drawTextWithShadow(text: String, x: Float = 0f, y: Float = 0f, c
     TextRenderer.drawWithShadow(this, text, x, y, color.rgb)
 
 fun MatrixStack.drawWorldText(
-    text: String, position: Vector3 = Vector3.Zero,
+    text: String, x: Float, y: Float,
     shadow: Boolean = false, isSeeThrough: Boolean = false,
     color: Color = Color.WHITE
 ) = TextRenderer.draw(
-    text, position.x.toFloat(), position.y.toFloat(),
-    color.rgb, shadow,
+    text, x, y, color.rgb, shadow,
     positionMatrix, BufferBuilderStorage.entityVertexConsumers,
     if (isSeeThrough) TextLayerType.SEE_THROUGH else TextLayerType.NORMAL,
     0, LightmapTextureManager.MAX_LIGHT_COORDINATE
 )
+
+fun MatrixStack.drawWorldText(
+    text: String, position: Vector3 = Vector3.Zero,
+    shadow: Boolean = false, isSeeThrough: Boolean = false,
+    color: Color = Color.WHITE
+) = drawWorldText(text, position.x.toFloat(), position.y.toFloat(), shadow, isSeeThrough, color)
+
 
 fun MatrixStack.drawRectangle(size: Vector3, zLevel: Float = 0f, color: Color = Color.white) =
     drawRectangle(0f, 0f, size.x.toFloat(), size.y.toFloat(), zLevel, color)

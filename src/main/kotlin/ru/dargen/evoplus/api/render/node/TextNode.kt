@@ -3,7 +3,6 @@ package ru.dargen.evoplus.api.render.node
 import net.minecraft.client.util.math.MatrixStack
 import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.util.kotlin.KotlinOpens
-import ru.dargen.evoplus.util.math.Vector3
 import ru.dargen.evoplus.util.render.TextRenderer
 import ru.dargen.evoplus.util.render.drawText
 import ru.dargen.evoplus.util.render.drawWorldText
@@ -46,11 +45,11 @@ class TextNode(lines: List<String>) : Node() {
     override fun renderElement(matrices: MatrixStack, tickDelta: Float) {
         val height = (TextRenderer.fontHeight - 1.0)
         linesWithWidths.forEachIndexed { index, (line, width) ->
-            val x = if (isCentered) size.x / 2.0 - width / 2.0 else .0
-            val y = index * height + index * linesSpace
+            val x = if (isCentered) size.x.toFloat() / 2f - width / 2f else 0f
+            val y = index * height.toFloat() + index * linesSpace.toFloat()
 
-            if (isWorldElement) matrices.drawWorldText(text, Vector3(x, y), isShadowed, isSeeThrough, color)
-            else matrices.drawText(line, Vector3(x, y), isShadowed, color)
+            if (isWorldElement) matrices.drawWorldText(text, x, y, isShadowed, isSeeThrough, color)
+            else matrices.drawText(line, x, y, isShadowed, color)
         }
     }
 
