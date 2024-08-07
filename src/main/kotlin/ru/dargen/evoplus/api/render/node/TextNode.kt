@@ -59,7 +59,6 @@ class TextNode(lines: List<String>) : Node() {
                     if (isSeeThrough) TextLayerType.SEE_THROUGH else TextLayerType.NORMAL,
                     0, LightmapTextureManager.MAX_LIGHT_COORDINATE
                 )
-                WorldContext.VertexConsumers.drawCurrentLayer()
             } else matrices.drawText(line, Vector3(x, y), isShadowed, color.rgb)
         }
     }

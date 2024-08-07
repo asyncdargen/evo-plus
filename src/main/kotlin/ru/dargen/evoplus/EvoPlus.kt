@@ -3,17 +3,11 @@ package ru.dargen.evoplus
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.loader.api.FabricLoader
 import ru.dargen.evoplus.api.event.EventBus
-import ru.dargen.evoplus.api.event.game.MinecraftLoadedEvent
-import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.keybind.KeyBindings
 import ru.dargen.evoplus.api.render.animation.AnimationRunner
 import ru.dargen.evoplus.api.render.context.Overlay
-import ru.dargen.evoplus.api.render.context.ScreenContext
 import ru.dargen.evoplus.api.render.context.WorldContext
 import ru.dargen.evoplus.api.render.node.leftClick
-import ru.dargen.evoplus.api.render.node.plus
-import ru.dargen.evoplus.api.render.node.text
-import ru.dargen.evoplus.api.render.node.tick
 import ru.dargen.evoplus.api.scheduler.Scheduler
 import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Features

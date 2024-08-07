@@ -9,8 +9,6 @@ import ru.dargen.evoplus.api.keybind.boundKey
 import ru.dargen.evoplus.api.keybind.on
 import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.feature.type.clicker.ClickerMode
-import ru.dargen.evoplus.feature.type.clicker.ClickerMouse
 import ru.dargen.evoplus.util.selector.enumSelector
 import ru.dargen.evoplus.util.selector.toSelector
 import java.util.concurrent.TimeUnit

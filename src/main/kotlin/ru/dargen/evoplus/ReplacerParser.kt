@@ -31,6 +31,7 @@ object ReplacerParser {
         }
     }
 
+    //TODO: блять доделать чтобы не было километровых регулярок потом
     fun replace(text: String) = text.replace(BakedPattern) {
         val value = it.value
         ReplaceCache.getOrPut(value) { Replacer.getProperty(value).replace("%text%", value) }

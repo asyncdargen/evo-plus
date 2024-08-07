@@ -15,7 +15,7 @@ import ru.dargen.evoplus.api.event.world.block.BlockEntityUpdateEvent
 import ru.dargen.evoplus.api.render.context.WorldContext
 import ru.dargen.evoplus.api.render.node.Node
 import ru.dargen.evoplus.api.render.node.plus
-import ru.dargen.evoplus.api.render.node.world.cube
+import ru.dargen.evoplus.api.render.node.world.cubeOutline
 import ru.dargen.evoplus.api.scheduler.async
 import ru.dargen.evoplus.feature.Feature
 import ru.dargen.evoplus.util.evo.*
@@ -117,7 +117,7 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
     }
 
     private fun BlockPos.renderCube(color: Color) =
-        WorldContext + cube {
+        WorldContext + cubeOutline {
             position = v3(x.toDouble() + 1, y.toDouble() + 1, z.toDouble())
             this.color = color
             isSeeThrough = true
@@ -126,7 +126,7 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         }
 
     private fun BlockPos.renderLittleCube(color: Color) =
-        WorldContext + cube {
+        WorldContext + cubeOutline {
             position = v3(x.toDouble() + .75, y.toDouble() + .5, z.toDouble() + 0.25)
             this.color = color
             isSeeThrough = true
@@ -134,7 +134,7 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         }
 
     private fun BlockPos.renderWallLittleCube(color: Color) =
-        WorldContext + cube {
+        WorldContext + cubeOutline {
             position = v3(x.toDouble() + .3, y.toDouble() + .65, z.toDouble() + 0.2)
             this.color = color
             isSeeThrough = true

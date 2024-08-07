@@ -15,9 +15,10 @@ import ru.dargen.evoplus.features.chat.TextFeature
 import ru.dargen.evoplus.features.clan.ClanFeature
 import ru.dargen.evoplus.features.clan.ShaftFeature
 import ru.dargen.evoplus.features.clicker.AutoClickerFeature
+import ru.dargen.evoplus.features.dev.DevFeature
 import ru.dargen.evoplus.features.esp.ESPFeature
-import ru.dargen.evoplus.features.game.fishing.FishingFeature
 import ru.dargen.evoplus.features.game.GoldenRushFeature
+import ru.dargen.evoplus.features.game.fishing.FishingFeature
 import ru.dargen.evoplus.features.misc.MiscFeature
 import ru.dargen.evoplus.features.misc.RenderFeature
 import ru.dargen.evoplus.features.potion.PotionFeature
@@ -25,8 +26,9 @@ import ru.dargen.evoplus.features.rune.RuneFeature
 import ru.dargen.evoplus.features.share.ShareFeature
 import ru.dargen.evoplus.features.staff.StaffFeature
 import ru.dargen.evoplus.features.stats.StatisticFeature
-import ru.dargen.evoplus.util.json.Gson
+import ru.dargen.evoplus.util.Updater
 import ru.dargen.evoplus.util.catch
+import ru.dargen.evoplus.util.json.Gson
 import ru.dargen.evoplus.util.json.isNull
 import java.nio.file.Paths
 import java.util.concurrent.TimeUnit
@@ -61,6 +63,9 @@ data object Features {
     }
 
     fun load() {
+        if (Updater.IsDevEnvironment) {
+            DevFeature.register()
+        }
         AutoClickerFeature.register()
         ESPFeature.register()
         BossTimerFeature.register()

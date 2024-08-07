@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.feature.type.clicker
+package ru.dargen.evoplus.features.clicker
 
 enum class ClickerMode(val display: String) {
     

@@ -1,4 +1,4 @@
-package ru.dargen.evoplus.feature.type.clicker
+package ru.dargen.evoplus.features.clicker
 
 import ru.dargen.evoplus.util.minecraft.ClientExtension
 
