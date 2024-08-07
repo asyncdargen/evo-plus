@@ -2,21 +2,15 @@ package ru.dargen.evoplus.api.render.context
 
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.gl.VertexBuffer
-import net.minecraft.client.render.BufferBuilderStorage
-import net.minecraft.client.render.Camera
-import net.minecraft.client.render.VertexConsumerProvider.Immediate
 import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.WorldRenderEvent
 import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.Client
+import ru.dargen.evoplus.util.render.BufferBuilderStorage
+import ru.dargen.evoplus.util.render.Camera
 
 data object WorldContext : RenderContext() {
 
-    lateinit var Camera: Camera
-    lateinit var BufferBuilderStorage: BufferBuilderStorage
-    lateinit var VertexConsumers: Immediate
-
-//    override var rotation = v3(y = 180.0).radians()
     override var scale = v3(-.025, -.025, .025)
     override var translationScale = v3(1.0, 1.0, 1.0) / scale
 
@@ -24,7 +18,6 @@ data object WorldContext : RenderContext() {
         on<WorldRenderEvent> {
             Camera = camera
             BufferBuilderStorage = bufferBuilderStorage
-            VertexConsumers = BufferBuilderStorage.entityVertexConsumers
 
             matrices.push()
             RenderSystem.disableDepthTest()

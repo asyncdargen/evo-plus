@@ -41,7 +41,7 @@ object Tips {
         matrices.translate(indent, indent, 0f)
 
         lines.forEach {
-            matrices.drawText(it, color = textColor.rgb, shadow = shadow)
+            matrices.drawText(it, shadow = shadow, color = textColor)
 
             matrices.translate(0f, TextRenderer.fontHeight + space, 0f)
         }

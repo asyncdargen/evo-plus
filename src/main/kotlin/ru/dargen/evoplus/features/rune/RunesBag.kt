@@ -11,8 +11,8 @@ import ru.dargen.evoplus.api.event.on
 import ru.dargen.evoplus.api.event.render.ScreenRenderEvent
 import ru.dargen.evoplus.api.keybind.Keybinds
 import ru.dargen.evoplus.api.keybind.boundKey
+import ru.dargen.evoplus.api.render.Colors
 import ru.dargen.evoplus.api.scheduler.schedule
-import ru.dargen.evoplus.util.math.v3
 import ru.dargen.evoplus.util.minecraft.*
 import ru.dargen.evoplus.util.render.TextRenderer
 import ru.dargen.evoplus.util.render.drawText
@@ -71,7 +71,7 @@ object RunesBag {
                 RunesProperties.values
                     .filter { it.value != .0 }
                     .forEachIndexed { index, property ->
-                        matrices.drawText(property.toString(), v3(y = (index * height / scale).toDouble()), -1)
+                        matrices.drawText(property.toString(), 0f, index * height / scale, Colors.White)
                     }
 
                 matrices.pop()
@@ -87,14 +87,14 @@ object RunesBag {
 
                 matrices.drawText(
                     SelectedSet.name,
-                    v3((-TextRenderer.getWidth(SelectedSet.name)).toDouble()),
-                    -1
+                    -TextRenderer.getWidth(SelectedSet.name).toFloat(), 0f,
+                    Colors.White
                 )
                 SelectedSet.runes.forEachIndexed { index, line ->
                     matrices.drawText(
                         line,
-                        v3(-(TextRenderer.getWidth(line)).toDouble(), ((index + 1) * height / scale).toDouble()),
-                        -1
+                        -TextRenderer.getWidth(line).toFloat(), (index + 1) * height / scale,
+                        Colors.White
                     )
                 }
 
