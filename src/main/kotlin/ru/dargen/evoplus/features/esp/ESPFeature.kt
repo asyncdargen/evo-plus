@@ -18,7 +18,11 @@ import ru.dargen.evoplus.api.render.node.plus
 import ru.dargen.evoplus.api.render.node.world.cubeOutline
 import ru.dargen.evoplus.api.scheduler.async
 import ru.dargen.evoplus.feature.Feature
-import ru.dargen.evoplus.util.evo.*
+import ru.dargen.evoplus.util.evo.getBarrel
+import ru.dargen.evoplus.util.evo.getLuckyBlock
+import ru.dargen.evoplus.util.evo.getShard
+import ru.dargen.evoplus.util.evo.isHead
+import ru.dargen.evoplus.util.evo.isWallHead
 import ru.dargen.evoplus.util.math.v3
 import java.awt.Color
 
@@ -72,6 +76,8 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
     }
 
     private fun tryToRecognizeBlock(chunk: WorldChunk, blockEntity: BlockEntity) {
+        if (!ShardsEsp && !LuckyBlocksEsp && !BarrelsEsp) return
+        
         val pos = blockEntity.pos
         if (pos in Shards || pos in LuckyBlocks || pos in Barrels) return
 
@@ -79,6 +85,8 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
     }
 
     private fun recognizeBlock(chunk: Chunk, blockPos: BlockPos, blockState: BlockState) {
+        if (!ShardsEsp && !LuckyBlocksEsp && !BarrelsEsp) return
+        
         val shard = blockState.getShard(blockPos, chunk)
         val luckyBlock = blockState.getLuckyBlock(blockPos, chunk)
         val barrel = blockState.getBarrel()
@@ -111,6 +119,8 @@ object ESPFeature : Feature("esp", "Подсветка", Items.SEA_LANTERN) {
         isLuckyBlock: Boolean = true,
         isBarrel: Boolean = true
     ) {
+        if (!ShardsEsp && !LuckyBlocksEsp && !BarrelsEsp) return
+        
         if (isShard) Shards.remove(blockPos)?.let { WorldContext.removeChildren(it) }
         if (isLuckyBlock) LuckyBlocks.remove(blockPos)?.let { WorldContext.removeChildren(it) }
         if (isBarrel) Barrels.remove(blockPos)?.let { WorldContext.removeChildren(it) }
