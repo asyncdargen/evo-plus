@@ -45,7 +45,7 @@ object EvoPlus : ClientModInitializer {
 
     private fun scheduleUpdater() = scheduleEvery(5, 5, unit = TimeUnit.MINUTES) {
         if (Client?.inGameHud != null && Updater.Outdated) Notifies.showText(
-            "Обнаружена новая версия EvoPlus - §e${Updater.LatestVersion}.",
+            "Обнаружена новая версия EvoPlus - §e${Updater.LatestVersion}",
             "Нажмите, чтобы обновиться.",
             delay = 15.0
         ) {
