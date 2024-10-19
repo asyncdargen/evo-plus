@@ -3,7 +3,6 @@ package ru.dargen.evoplus.service
 import feign.Feign
 import feign.gson.GsonDecoder
 import feign.gson.GsonEncoder
-import net.minecraft.text.Text
 import ru.dargen.evoplus.Logger
 import ru.dargen.evoplus.api.event.evo.ChangeLocationEvent
 import ru.dargen.evoplus.api.event.evo.EvoJoinEvent
@@ -73,9 +72,6 @@ object EvoPlusService {
             Logger.log(Level.SEVERE, "Error while fetch ingame players", it)
         }.onSuccess {
             ingamePlayers.addAll(it)
-            Client?.networkHandler?.playerList?.filter { it.profile?.name in ingamePlayers }?.forEach {
-                it.displayName = Text.of("EP ").apply { siblings.add(it.displayName ?: Text.of(it.profile.name)) }
-            }
             Logger.info("${it.size}/${players.size} with EvoPlus!")
         }
     }
