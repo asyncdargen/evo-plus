@@ -39,21 +39,9 @@ object EvoPlusService {
             }
         }
 
-        scheduleEvery(30, 30, unit = SECONDS) { fetchIngamePlayers() }
+        scheduleEvery(10, 10, unit = SECONDS) { fetchIngamePlayers() }
         on<ChangeLocationEvent> {async { fetchIngamePlayers() } }
         on<EvoJoinEvent> { async { fetchIngamePlayers() }}
-
-//        on<PlayerListEvent> {
-//            val players = playersMap
-//                .filterKeys { it === Action.ADD_PLAYER }
-//                .values
-//                .mapNotNull { it.profile?.name }
-//                .map(String::lowercase)
-//                .takeIfNotEmpty()
-//                ?: return@on
-//
-//            async { fetchIngamePlayers(players) }
-//        }
     }
 
     fun isIngame(username: String) = username.lowercase() in ingamePlayers
