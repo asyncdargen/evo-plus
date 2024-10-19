@@ -35,6 +35,7 @@
 
     "entity.EntityAccessor",
     "entity.player.PlayerInventoryAccessor",
+    "entity.player.PlayerEntityMixin",
 
     "network.ClientPlayNetworkHandlerMixin",
     "network.ClientPlayerInteractionManagerMixin",

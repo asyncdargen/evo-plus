@@ -238,6 +238,12 @@ class Vector3(x: Double = .0, y: Double = .0, z: Double = .0) {
 
         override operator fun not() = this * -1.0
 
+        override fun clone() = Mutable(x, y, z)
+
+        override fun toString(): String {
+            return "Vector3.Mutable(x=%.2f, y=%.2f, z=%.2f)".format(x, y, z)
+        }
+
     }
 
 }

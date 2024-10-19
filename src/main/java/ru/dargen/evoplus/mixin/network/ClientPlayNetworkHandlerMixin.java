@@ -2,13 +2,11 @@ package ru.dargen.evoplus.mixin.network;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.mojang.brigadier.ParseResults;
 import lombok.val;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.command.CommandSource;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -36,6 +34,7 @@ import ru.dargen.evoplus.api.event.inventory.InventoryOpenEvent;
 import ru.dargen.evoplus.api.event.inventory.InventorySlotUpdateEvent;
 import ru.dargen.evoplus.api.event.network.ChangeServerEvent;
 import ru.dargen.evoplus.api.event.network.CustomPayloadEvent;
+import ru.dargen.evoplus.api.event.player.PlayerListEvent;
 import ru.dargen.evoplus.api.event.world.ChunkLoadEvent;
 import ru.dargen.evoplus.features.misc.RenderFeature;
 import ru.dargen.evoplus.util.minecraft.Inventories;
@@ -57,9 +56,6 @@ public abstract class ClientPlayNetworkHandlerMixin {
 
     @Shadow
     public abstract void sendPacket(Packet<?> packet);
-
-    @Shadow
-    protected abstract ParseResults<CommandSource> parse(String command);
 
     private static final Cache<Integer, InventoryOpenEvent> INVENTORY_OPEN_EVENTS = CacheBuilder.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
@@ -203,4 +199,11 @@ public abstract class ClientPlayNetworkHandlerMixin {
         val chunk = client.world.getChunk(packet.getX(), packet.getZ());
         EventBus.INSTANCE.fire(new ChunkLoadEvent(chunk));
     }
+
+//    @Inject(method = "onPlayerList", at = @At("TAIL"))
+//    private void onPlayerList(PlayerListS2CPacket packet, CallbackInfo ci) {
+//        EventBus.INSTANCE.fire(new PlayerListEvent(packet.getActions(), packet.getEntries()));
+//    }
+
+
 }

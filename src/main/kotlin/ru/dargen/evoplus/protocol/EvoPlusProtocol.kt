@@ -43,7 +43,7 @@ object EvoPlusProtocol {
             if (value.serverName != field.serverName && "PRISONEVO" in value.serverName) EvoJoinEvent.fire()
             else if ("PRISONEVO" in field.serverName) EvoQuitEvent.fire()
 
-            if (value != ServerInfo.EMPTY) Logger.info("Connected to DiamondWorld ($field)")
+            if (value != ServerInfo.EMPTY) Logger.info("Connected to DiamondWorld ($value)")
 
             field = value
         }

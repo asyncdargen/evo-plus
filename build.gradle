@@ -40,9 +40,14 @@ dependencies {
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
     //Protocol
-    include(implementation("pro.diamondworld.evoplusprotocol:evoplusprotocol:1.4a"))
+    include(implementation("pro.diamondworld.evoplusprotocol:evoplusprotocol:${project.evo_plus_protocol_version}"))
 
-    include(implementation('com.github.asyncdargen.crowbar:crowbar-core:48361c8411'))
+    include(implementation("com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"))
+
+    include(implementation("io.github.openfeign:feign-kotlin:${project.feign_version}"))
+    include(implementation("io.github.openfeign:feign-gson:${project.feign_version}"))
+
+    include(implementation("com.github.asyncdargen.crowbar:crowbar-core:${project.crowbar_version}"))
 }
 
 processResources {

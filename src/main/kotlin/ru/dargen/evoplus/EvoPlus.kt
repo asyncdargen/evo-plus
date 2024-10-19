@@ -13,6 +13,7 @@ import ru.dargen.evoplus.api.scheduler.scheduleEvery
 import ru.dargen.evoplus.feature.Features
 import ru.dargen.evoplus.features.misc.Notifies
 import ru.dargen.evoplus.protocol.EvoPlusProtocol
+import ru.dargen.evoplus.service.EvoPlusService
 import ru.dargen.evoplus.util.Updater
 import ru.dargen.evoplus.util.minecraft.Client
 import java.util.concurrent.TimeUnit
@@ -39,6 +40,7 @@ object EvoPlus : ClientModInitializer {
         AnimationRunner
 
         Features
+        EvoPlusService
 
         scheduleUpdater()
     }
