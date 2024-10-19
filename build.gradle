@@ -44,9 +44,7 @@ dependencies {
 
     include(implementation("com.github.ben-manes.caffeine:caffeine:${project.caffeine_version}"))
 
-    include(implementation("io.github.openfeign:feign-kotlin:${project.feign_version}"))
-    include(implementation("io.github.openfeign:feign-gson:${project.feign_version}"))
-
+//    include(implementation("com.github.asyncdargen:rest-client:${project.rest_client_version}"))
     include(implementation("com.github.asyncdargen.crowbar:crowbar-core:${project.crowbar_version}"))
 }
 
