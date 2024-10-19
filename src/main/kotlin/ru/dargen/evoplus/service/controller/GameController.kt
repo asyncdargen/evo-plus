@@ -2,6 +2,7 @@ package ru.dargen.evoplus.service.controller
 
 import ru.dargen.rest.annotation.RequestHeader
 import ru.dargen.rest.annotation.RequestMapping
+import ru.dargen.rest.annotation.parameter.Body
 import ru.dargen.rest.annotation.parameter.Parameter
 import ru.dargen.rest.request.HttpMethod.POST
 
@@ -14,9 +15,9 @@ interface GameController {
     @RequestMapping("/api/ingame/check")
     fun checkPlayer(@Parameter("username") username: String): Boolean
 
-    @RequestMapping("POST /api/ingame/check/batch")
+    @RequestMapping("/api/ingame/check/batch", method = POST)
     @RequestHeader(key = "Accept", value = "application/json")
     @RequestHeader(key = "Content-Type", value = "application/json")
-    fun checkPlayers(usernames: Collection<String>): Collection<String>
+    fun checkPlayers(@Body usernames: Collection<String>): Collection<String>
 
 }

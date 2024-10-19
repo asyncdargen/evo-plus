@@ -43,7 +43,7 @@ object Updater {
     fun tryUpdate() {
         runCatching {
             if (Outdated) update()
-        }.exceptionOrNull()?.let { Logger.log(Level.SEVERE, "Error while attempting update", it) }
+        }.exceptionOrNull()?.let { Logger.error("Error while attempting update", it) }
     }
 
     fun update() = screen {
@@ -85,7 +85,7 @@ object Updater {
                         }
 
                         thread(true, true) {
-                            Thread.sleep(500)
+                            Thread.sleep(1000)
                             ModFiles.forEach { it.deleteIfExists() }
 
                             Client.scheduleStop()

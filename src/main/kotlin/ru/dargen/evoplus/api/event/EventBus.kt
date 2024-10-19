@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import ru.dargen.evoplus.Logger
 import ru.dargen.evoplus.util.kotlin.cast
-import java.util.logging.Level
 
 typealias EventHandler<E> = E.() -> Unit
 
@@ -19,7 +18,7 @@ object EventBus {
         Handlers[event.javaClass]?.forEach { handler ->
             runCatching { handler.cast<EventHandler<E>>()(event) }
                 .exceptionOrNull()
-                ?.let { Logger.log(Level.SEVERE, "Error while event dispatch ${event.javaClass}", it) }
+                ?.let { Logger.error("Error while event dispatch ${event.javaClass}", it) }
         }
     }
 

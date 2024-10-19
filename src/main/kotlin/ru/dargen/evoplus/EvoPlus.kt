@@ -2,6 +2,7 @@ package ru.dargen.evoplus
 
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.loader.api.FabricLoader
+import org.slf4j.LoggerFactory
 import ru.dargen.evoplus.api.event.EventBus
 import ru.dargen.evoplus.api.keybind.KeyBindings
 import ru.dargen.evoplus.api.render.animation.AnimationRunner
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit
 
 val ModLabel = "§f§lEvo§6§lPlus"
 
-val Logger = java.util.logging.Logger.getLogger("EvoPlus")
+val Logger = LoggerFactory.getLogger(EvoPlus::class.java)
 
 object EvoPlus : ClientModInitializer {
 
